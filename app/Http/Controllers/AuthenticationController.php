@@ -4,9 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Authentication;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Gate;
+
+use App\Services\AuthenticationService;
 
 class AuthenticationController extends Controller
 {
+    protected $authService;
+
+    public function __construct(AuthenticationService $authService) {
+        $this->authService = $authService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +24,21 @@ class AuthenticationController extends Controller
      */
     public function index()
     {
-        //
+        $authentications = $this->authService->findAllFromUser(auth()->user()->id);
+
+        return view('models.authentications.index', compact('authentications'));
+    }
+
+    /**
+     * Show the form for selecting a new resource via the wizard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create($connection)
+    {
+        $options = $this->authService->getAuthTypes();
+        
+        return view('models.authentications.wizard', compact('options', 'connection'));
     }
 
     /**
@@ -22,9 +46,15 @@ class AuthenticationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function wizard($connection, Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'option' => ['required']
+        ]);
+
+        $type = $validatedData['option'];
+
+        return view('models.authentications.forms.create.' . strtolower($type), compact('connection', 'type'));
     }
 
     /**
@@ -33,20 +63,22 @@ class AuthenticationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store($connection, Request $request)
     {
-        //
-    }
+        $validatedData = $request->validate([
+            'title' => ['required', Rule::unique('authentications')->where('connection_id', $connection), 'max:255'],
+            'type' => ['required', 'string', 'max:50'],
+            'username' => ['required_if:type,==,basic|nullable'],
+            'password' => ['required_if:type,==,basic|nullable'],
+            'key' => ['required_if:type,==,key|nullable'],
+            'token' => ['required_if:type,==,token|nullable']
+        ]);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Authentication  $authentication
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Authentication $authentication)
-    {
-        //
+        $validatedData['connection_id'] = $connection;
+
+        $authentication = $this->authService->store($validatedData);
+
+        return redirect('/connections/' . $authentication->connection_id)->with('success', 'Authentication with name "' . $authentication->title . '" has succesfully been created!');
     }
 
     /**
@@ -57,7 +89,9 @@ class AuthenticationController extends Controller
      */
     public function edit(Authentication $authentication)
     {
-        //
+        Gate::authorize('mutate_or_view_authentication', $authentication);
+
+        return view('models.authentications.forms.edit.' . strtolower($authentication->type), compact('authentication'));
     }
 
     /**
@@ -69,7 +103,20 @@ class AuthenticationController extends Controller
      */
     public function update(Request $request, Authentication $authentication)
     {
-        //
+        Gate::authorize('mutate_or_view_authentication', $authentication);
+
+        $validatedData = $request->validate([
+            'title' => ['required', Rule::unique('authentications')->where('connection_id', $authentication->connection_id)->ignore($authentication->id), 'max:255'],
+            'type' => ['required', 'string', 'max:50'],
+            'username' => ['required_if:type,==,basic|nullable'],
+            'password' => ['required_if:type,==,basic|nullable'],
+            'key' => ['required_if:type,==,key|nullable'],
+            'token' => ['required_if:type,==,token|nullable']
+        ]);
+
+        $authentication = $this->authService->update($validatedData, $authentication);
+
+        return redirect('/connections/' . $authentication->connection_id)->with('success', 'Authentication with name "' . $authentication->title . '" has succesfully been updated!');
     }
 
     /**
@@ -80,6 +127,10 @@ class AuthenticationController extends Controller
      */
     public function destroy(Authentication $authentication)
     {
-        //
+        Gate::authorize('mutate_or_view_authentication', $authentication);
+
+        $this->authService->delete($authentication);
+
+        redirect('/connections/' . $authentication->connection_id)->with('success', 'Authentication with name "' . $authentication->title . '" has succesfully been deleted!');
     }
 }

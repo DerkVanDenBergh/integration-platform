@@ -20,6 +20,7 @@ class CreateRolesTable extends Migration
             $table->boolean('can_manage_roles')->default(false);
             $table->boolean('can_manage_users')->default(false);
             $table->boolean('can_manage_functions')->default(false);
+            $table->boolean('can_manage_templates')->default(false);
         });
     }
 
