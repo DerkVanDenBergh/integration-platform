@@ -15,6 +15,12 @@ class CreateEndpointsTable extends Migration
     {
         Schema::create('endpoints', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->string('endpoint');
+            $table->string('protocol');
+            $table->string('method');
+            $table->integer('connection_id');
+            $table->boolean('template')->default(false);
             $table->timestamps();
         });
     }

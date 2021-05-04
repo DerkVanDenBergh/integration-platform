@@ -3,7 +3,7 @@
         {{ __('Manage') }}
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 grid grid-cols-2 gap-6">
             <x-action-card>
                 <x-slot name="title">
@@ -41,7 +41,20 @@
                 </x-slot>
 
                 <x-slot name="link">
-                    /roles
+                    /logs
+                </x-slot>
+            </x-action-card>
+            <x-action-card>
+                <x-slot name="title">
+                    Templates
+                </x-slot>
+
+                <x-slot name="description">
+                    Connection templates. Put in some work so you can save some work when saving some work on your normal work.
+                </x-slot>
+
+                <x-slot name="link">
+                    /templates
                 </x-slot>
             </x-action-card>
         </div>

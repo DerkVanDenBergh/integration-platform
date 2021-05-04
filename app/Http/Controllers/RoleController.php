@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Gate;
 
 use App\Services\RoleService;
 
@@ -25,9 +26,11 @@ class RoleController extends Controller
      */
     public function index()
     {
+        Gate::authorize('manage_roles');
+
         $roles = $this->roleService->findAll();
 
-        return view('roles.index', compact('roles'));
+        return view('models.roles.index', compact('roles'));
     }
 
     /**
@@ -37,7 +40,9 @@ class RoleController extends Controller
      */
     public function create()
     {
-        return view('roles.create');
+        Gate::authorize('manage_roles');
+
+        return view('models.roles.create');
     }
 
     /**
@@ -48,6 +53,8 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
+        Gate::authorize('manage_roles');
+
         $validatedData = $request->validate([
             'title' => ['required', 'unique:roles', 'max:255'],
             'can_manage_users' => ['nullable'],
@@ -68,7 +75,9 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
-        return view('roles.show', compact('role'));
+        Gate::authorize('manage_roles');
+
+        return view('models.roles.show', compact('role'));
     }
 
     /**
@@ -79,7 +88,9 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
-        return view('roles.edit', compact('role'));
+        Gate::authorize('manage_roles');
+
+        return view('models.roles.edit', compact('role'));
     }
 
     /**
@@ -91,6 +102,8 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
+        Gate::authorize('manage_roles');
+
         $validatedData = $request->validate([
             'title' => ['required', Rule::unique('roles')->ignore($role->id), 'max:255'],
             'can_manage_users' => ['nullable'],
@@ -98,7 +111,7 @@ class RoleController extends Controller
             'can_manage_functions' => ['nullable'],
         ]);
 
-        $this->roleService->update($validatedData, $role);
+        $role = $this->roleService->update($validatedData, $role);
 
         return redirect('/roles')->with('success', 'Role with name "' . $role->title . '" has succesfully been updated!');
     }
@@ -111,6 +124,8 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
+        Gate::authorize('manage_roles');
+        
         $this->roleService->delete($role);
 
         return redirect('/roles')->with('success', 'Role with name "' . $role->title . '" has succesfully been deleted!');

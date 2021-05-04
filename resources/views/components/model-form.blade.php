@@ -1,24 +1,32 @@
-<div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-5">
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+<div class="py-4">
+    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-5">
+        <!-- Session Status -->
+        <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <!-- Validation Errors -->
-    <x-auth-validation-errors class="mb-4" :errors="$errors" />
+        <!-- Validation Errors -->
+        <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
-    <form method="POST" action="{{ $action }}">
-        @csrf
+        @if(isset($header))
+            <h2 class="font-semibold text-l text-indigo-600 leading-tight pb-3">
+                {{ $header }}
+            </h2>
+        @endif
 
-        {{ $method }}
+        <form method="POST" action="{{ $action }}">
+            @csrf
 
-        <div class="grid grid-cols-4 gap-4">
-            {{ $fields }}
-        </div>
+            {{ $method }}
+
+            <div class="grid grid-cols-4 gap-4">
+                {{ $fields }}
+            </div>
 
 
-        <div class="flex items-center justify-end">
-            <x-button class="ml-3">
-                {{ __('Save') }}
-            </x-button>
-        </div>
-    </form>
+            <div class="flex items-center justify-end">
+                <x-button class="ml-3">
+                    {{ __('Save') }}
+                </x-button>
+            </div>
+        </form>
+    </div>
 </div>

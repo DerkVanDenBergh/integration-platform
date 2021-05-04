@@ -15,6 +15,14 @@ class CreateAuthenticationsTable extends Migration
     {
         Schema::create('authentications', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->string('type');
+            $table->string('username')->nullable();
+            $table->string('password')->nullable();
+            $table->string('key')->nullable();
+            $table->string('token')->nullable();
+            $table->integer('connection_id');
+            $table->boolean('template')->default(false);
             $table->timestamps();
         });
     }

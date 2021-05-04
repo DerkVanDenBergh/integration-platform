@@ -92,16 +92,18 @@
                                     <span>Authentications</span>
                                 </x-nav-sidebar-link>
                             </li>
-                            <li>
-                                <x-nav-sidebar-link :href="route('manage')" :active="request()->routeIs('manage')" class="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline">
-                                    <span class="text-gray-600">
-                                        <svg class="h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
-                                        </svg>
-                                    </span>
-                                    <span>Manage</span>
-                                </x-nav-sidebar-link>
-                            </li>
+                            @can('manage')
+                                <li>
+                                    <x-nav-sidebar-link :href="route('manage')" :active="request()->routeIs('manage')" class="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline">
+                                        <span class="text-gray-600">
+                                            <svg class="h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+                                            </svg>
+                                        </span>
+                                        <span>Manage</span>
+                                    </x-nav-sidebar-link>
+                                </li>
+                            @endcan
                             <li>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
@@ -122,13 +124,13 @@
                     <div class="w-9/12 h-screen overflow-y-scroll pt-10 grid grid-cols-6 gap-4">
 
                         <div class="col-start-2 col-span-4">
-                            <h2 class="font-semibold text-3xl text-gray-800 leading-tight">
+                            <h2 class="font-semibold text-3xl text-gray-800 leading-tight pb-4">
                                 {{ $header }}
                             </h2>
 
 
                             <!-- Page Content -->
-                            <main>
+                            <main class="pb-12">
                                 {{ $slot }}
                             </main>
                         </div>

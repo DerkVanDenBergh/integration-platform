@@ -5,6 +5,11 @@ namespace App\Providers;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
+use App\Models\Role;
+use App\Models\Connection;
+use App\Models\Authentication;
+use App\Models\Endpoint;
+
 class AuthServiceProvider extends ServiceProvider
 {
     /**
@@ -24,7 +29,47 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
+        
+        // TODO: make policies out of these
 
-        //
+        Gate::define('manage', function ($user) {
+            $role = Role::find($user->role_id);
+
+            return $role->can_manage_users || $role->can_manage_functions || $role->can_manage_roles;
+        });
+
+        Gate::define('manage_users', function ($user) {
+            $role = Role::find($user->role_id);
+
+            return $role->can_manage_users;
+        });
+
+        Gate::define('manage_roles', function ($user) {
+            $role = Role::find($user->role_id);
+
+            return $role->can_manage_roles;
+        });
+
+        Gate::define('manage_functions', function ($user) {
+            $role = Role::find($user->role_id);
+
+            return $role->can_manage_functions;
+        });
+
+        Gate::define('mutate_or_view_connection', function ($user, Connection $connection) {
+            return $user->id === $connection->user_id;
+        });
+
+        Gate::define('mutate_or_view_authentication', function ($user, Authentication $authentication) {
+            $connection = Connection::find($authentication->connection_id);
+            
+            return $user->id === $connection->user_id;
+        });
+
+        Gate::define('mutate_or_view_endpoints', function ($user, Endpoint $endpoint) {
+            $connection = Connection::find($endpoint->connection_id);
+            
+            return $user->id === $connection->user_id;
+        });
     }
 }
