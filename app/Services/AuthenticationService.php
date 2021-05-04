@@ -20,8 +20,6 @@ class AuthenticationService
     {
         $authentication->update($data);
 
-        $authentication->save();
-
         return $authentication;
     }
 
@@ -64,5 +62,25 @@ class AuthenticationService
                                             ->get();
 
         return $authentications;
+    }
+
+    public function getAuthTypes()
+    {
+        $options = collect([
+            (object) [
+                'option' => 'Key',
+                'label' => 'Create an API key authentication.'
+            ],
+            (object) [
+                'option' => 'Token',
+                'label' => 'Create an API token authentication.'
+            ],
+            (object) [
+                'option' => 'Basic',
+                'label' => 'Create an username and password authentication.'
+            ]
+        ]);
+
+        return $options;
     }
 }

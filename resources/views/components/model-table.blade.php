@@ -1,7 +1,7 @@
 <div class="py-4">
     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-5">
 
-        @if(isset($header))
+        @if($header ?? false)
             <h2 class="font-semibold text-l text-indigo-600 leading-tight pb-3">
                 {{ $header }}
             </h2>
@@ -23,17 +23,17 @@
                                 </td>
                             @endforeach
                             <td class="text-center py-2">
-                                @if(!isset($hideView))
-                                    <a class="inline-block mr-2 hover:text-indigo-600 transition"@if(isset($nestedResource)) href="/{{ $nestedResource }}/{{ $model->id }}" @else href="/{{ $resource }}/{{ $model->id }}" @endif>
+                                @if($showView ?? true)
+                                    <a class="inline-block mr-2 hover:text-indigo-600 transition"href="/{{ $resource }}/{{ $model->id }}">
                                         <x-svg-view class="h-5 w-5"></x-svg-view>
                                     </a>
                                 @endif
-                                @if(!isset($hideEdit))
+                                @if($showEdit ?? true)
                                     <a class="inline-block mr-2 hover:text-indigo-600 transition" href="/{{ $resource }}/{{ $model->id }}/edit">
                                         <x-svg-edit class="h-5 w-5"></x-svg-edit>
                                     </a>
                                 @endif
-                                @if(!isset($hideDelete))
+                                @if($showDelete ?? true)
                                     <form class="inline-block" method="POST" action="/{{ $resource }}/{{ $model->id }}">
                                         @csrf
 
@@ -65,8 +65,8 @@
             </div>
         @endif
 
-        @if(!isset($hideCreate))
-            <a @if(isset($nestedResource)) href="/{{ $nestedResource }}/create" @else href="/{{ $resource }}/create" @endif class="mt-5 bg-gray-100 hover:bg-indigo-400 hover:text-white transition text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
+        @if($showCreate ?? true)
+            <a @if($nestedResource ?? false) href="/{{ $nestedResource }}/create" @else href="/{{ $resource }}/create" @endif class="mt-5 bg-gray-100 hover:bg-indigo-400 hover:text-white transition text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
                 <x-svg-plus class="h-5 w-5 mr-2"></x-svg-plus>
                 <span>Add new</span>
             </a>

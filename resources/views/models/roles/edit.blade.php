@@ -39,6 +39,13 @@
                 </label>
             </div>
 
+            <div class="col-span-1">
+                <label for="can_manage_templates" class="inline-flex items-center">
+                    <input id="can_manage_templates" type="checkbox" @if($role->can_manage_templates) checked @endif  class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" name="can_manage_templates">
+                    <span class="ml-2 text-sm text-gray-600">{{ __('Can manage templates') }}</span>
+                </label>
+            </div>
+
         </x-slot>
     
     </x-model-form>

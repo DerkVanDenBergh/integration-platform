@@ -35,7 +35,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('manage', function ($user) {
             $role = Role::find($user->role_id);
 
-            return $role->can_manage_users || $role->can_manage_functions || $role->can_manage_roles;
+            return $role->can_manage_users || $role->can_manage_functions || $role->can_manage_roles || $role->can_manage_templates;
         });
 
         Gate::define('manage_users', function ($user) {
@@ -56,6 +56,12 @@ class AuthServiceProvider extends ServiceProvider
             return $role->can_manage_functions;
         });
 
+        Gate::define('manage_templates', function ($user) {
+            $role = Role::find($user->role_id);
+
+            return $role->can_manage_templates;
+        });
+
         Gate::define('mutate_or_view_connection', function ($user, Connection $connection) {
             return $user->id === $connection->user_id;
         });
@@ -66,7 +72,7 @@ class AuthServiceProvider extends ServiceProvider
             return $user->id === $connection->user_id;
         });
 
-        Gate::define('mutate_or_view_endpoints', function ($user, Endpoint $endpoint) {
+        Gate::define('mutate_or_view_endpoint', function ($user, Endpoint $endpoint) {
             $connection = Connection::find($endpoint->connection_id);
             
             return $user->id === $connection->user_id;

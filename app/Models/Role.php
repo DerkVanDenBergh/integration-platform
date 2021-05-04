@@ -13,6 +13,7 @@ class Role extends Model
         'title', 
         'can_manage_users',
         'can_manage_functions',
-        'can_manage_roles'
+        'can_manage_roles',
+        'can_manage_templates'
     );
 }

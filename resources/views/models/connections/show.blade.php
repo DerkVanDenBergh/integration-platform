@@ -30,7 +30,7 @@
     
     </x-model-view>
 
-    <x-model-table :header="__('Authentications')" :fields="array('title', 'type')" :list="$authentications" :nestedResource="__('connections/' . $connection->id . '/authentications')" :resource="__('authentications')" :hideView="__(true)">
+    <x-model-table :header="__('Authentications')" :fields="array('title', 'type')" :list="$authentications" :nestedResource="__('connections/' . $connection->id . '/authentications')" :resource="__('authentications')" :showView="__(false)">
         <x-slot name="headers">
             <th class="w-3/8 py-2">Title</th>
             <th class="w-3/8 py-2">Type</th>
@@ -38,11 +38,12 @@
         </x-slot>
     </x-model-table>
 
-    <x-model-table :header="__('Endpoints')" :fields="array('endpoint', 'protocol', 'method')" :list="$endpoints" :resource="__('connections/' . $connection->id . '/endpoints')" :hideEdit="__(true)">
+    <x-model-table :header="__('Endpoints')" :fields="array('title', 'endpoint', 'protocol', 'method')" :list="$endpoints" :nestedResource="__('connections/' . $connection->id . '/endpoints')" :resource="__('endpoints')">
         <x-slot name="headers">
-            <th class="w-1/4 py-2">Endpoint</th>
-            <th class="w-1/4 py-2">Protocol</th>
-            <th class="w-1/4 py-2">Method</th>
+            <th class="w-3/16 py-2">Title</th>
+            <th class="w-3/16 py-2">Endpoint</th>
+            <th class="w-3/16 py-2">Protocol</th>
+            <th class="w-3/16 py-2">Method</th>
             <th class="w-1/4 py-2">Actions</th>
         </x-slot>
     </x-model-table>

@@ -19,8 +19,8 @@ class EndpointSeeder extends Seeder
             1000, 
             'Add new user', 
             '/user', 
-            'http',
-            'post',
+            'HTTP',
+            'POST',
             1000
         ));
         
@@ -30,8 +30,8 @@ class EndpointSeeder extends Seeder
             1001, 
             'Get users', 
             '/users', 
-            'http',
-            'get',
+            'HTTP',
+            'GET',
             1000
         ));
 

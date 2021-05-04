@@ -3,7 +3,7 @@
         {{ __('Users') }}
     </x-slot>
 
-    <x-model-table :fields="array('name', 'email')" :list="$users" :resource="__('users')" :hideEdit="__(true)">
+    <x-model-table :fields="array('name', 'email')" :list="$users" :resource="__('users')" :showEdit="__(false)">
 
         <x-slot name="headers">
             <th class="w-3/8 py-2">Name</th>

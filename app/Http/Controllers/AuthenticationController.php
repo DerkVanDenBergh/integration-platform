@@ -36,20 +36,7 @@ class AuthenticationController extends Controller
      */
     public function create($connection)
     {
-        $options = collect([
-            (object) [
-                'option' => 'key',
-                'label' => 'Create an API key authentication.'
-            ],
-            (object) [
-                'option' => 'token',
-                'label' => 'Create an API token authentication.'
-            ],
-            (object) [
-                'option' => 'basic',
-                'label' => 'Create an username and password authentication.'
-            ]
-        ]);
+        $options = $this->authService->getAuthTypes();
         
         return view('models.authentications.wizard', compact('options', 'connection'));
     }
@@ -66,23 +53,8 @@ class AuthenticationController extends Controller
         ]);
 
         $type = $validatedData['option'];
-        
-        switch($type) {
-            case 'key':
-                $view = 'key';
-                break;
-            case 'token':
-                $view = 'token';
-                break;
-            case 'basic':
-                $view = 'basic';
-                break;
-            default:
-                $view = 'basic';
-                break;
-        };
 
-        return view('models.authentications.forms.create.' . $view, compact('connection', 'type'));
+        return view('models.authentications.forms.create.' . strtolower($type), compact('connection', 'type'));
     }
 
     /**
@@ -96,10 +68,10 @@ class AuthenticationController extends Controller
         $validatedData = $request->validate([
             'title' => ['required', Rule::unique('authentications')->where('connection_id', $connection), 'max:255'],
             'type' => ['required', 'string', 'max:50'],
-            'username' => ['required_if:type,==,basic', 'nullable'],
-            'password' => ['required_if:type,==,basic', 'nullable'],
-            'key' => ['required_if:type,==,key', 'nullable'],
-            'token' => ['required_if:type,==,token', 'nullable']
+            'username' => ['required_if:type,==,basic|nullable'],
+            'password' => ['required_if:type,==,basic|nullable'],
+            'key' => ['required_if:type,==,key|nullable'],
+            'token' => ['required_if:type,==,token|nullable']
         ]);
 
         $validatedData['connection_id'] = $connection;
@@ -119,22 +91,7 @@ class AuthenticationController extends Controller
     {
         Gate::authorize('mutate_or_view_authentication', $authentication);
 
-        switch($authentication->type) {
-            case 'key':
-                $view = 'key';
-                break;
-            case 'token':
-                $view = 'token';
-                break;
-            case 'basic':
-                $view = 'basic';
-                break;
-            default:
-                $view = 'basic';
-                break;
-        };
-
-        return view('models.authentications.forms.edit.' . $view, compact('authentication'));
+        return view('models.authentications.forms.edit.' . strtolower($authentication->type), compact('authentication'));
     }
 
     /**
@@ -151,11 +108,10 @@ class AuthenticationController extends Controller
         $validatedData = $request->validate([
             'title' => ['required', Rule::unique('authentications')->where('connection_id', $authentication->connection_id)->ignore($authentication->id), 'max:255'],
             'type' => ['required', 'string', 'max:50'],
-            'username' => ['required_if:type,==,basic', 'nullable'],
-            'password' => ['required_if:type,==,basic', 'nullable'],
-            'key' => ['required_if:type,==,key', 'nullable'],
-            'token' => ['required_if:type,==,token', 'nullable'],
-            'connection_id' => ['required']
+            'username' => ['required_if:type,==,basic|nullable'],
+            'password' => ['required_if:type,==,basic|nullable'],
+            'key' => ['required_if:type,==,key|nullable'],
+            'token' => ['required_if:type,==,token|nullable']
         ]);
 
         $authentication = $this->authService->update($validatedData, $authentication);

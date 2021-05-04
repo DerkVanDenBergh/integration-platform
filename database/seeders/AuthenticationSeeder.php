@@ -18,7 +18,7 @@ class AuthenticationSeeder extends Seeder
         $authentication_key = new Authentication($this->definition(
             1000, 
             'API key', 
-            'key', 
+            'Key', 
             '',
             '',
             'dfsgjijehhbfaijfjsaibhndkj#@42kjmn3iu2ghjbnaiudas==',
@@ -31,7 +31,7 @@ class AuthenticationSeeder extends Seeder
         $authentication_basic = new Authentication($this->definition(
             1001, 
             'API key', 
-            'basic', 
+            'Basic', 
             'test_account',
             'Wachtwoord_123',
             '',

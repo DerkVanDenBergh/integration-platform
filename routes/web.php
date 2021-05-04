@@ -15,7 +15,7 @@ use App\Http\Controllers\StepFunctionController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\ConnectionTemplateController;
+use App\Http\Controllers\TemplateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,18 +52,19 @@ Route::resource('mappings', MappingController::class)->middleware(['auth']);
 Route::resource('connections', ConnectionController::class)->middleware(['auth']);
 
 Route::post('/connections/create', [ConnectionController::class, 'wizard'])->middleware(['auth'])->name('connections.wizard');
+Route::post('/connections/create/template', [ConnectionController::class, 'template'])->middleware(['auth'])->name('connections.template');
 
 
 // Connection templates
 
-Route::resource('templates', ConnectionTemplateController::class)->middleware(['auth']);
+Route::get('/templates', [ConnectionController::class, 'templates'])->middleware(['auth'])->name('templates');
 
 
 // Endpoints
 
 Route::resource('connections.endpoints', EndpointController::class)->shallow()->middleware(['auth']);
 
-Route::get('/endpoints', [EndpointController::class, 'index'])->name('endpoints.index')->middleware(['auth']);
+Route::post('/connections/{connection}/endpoints/create', [EndpointController::class, 'wizard'])->middleware(['auth'])->name('connections.endpoints.wizard');
 
 
 // Authentications

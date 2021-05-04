@@ -60,6 +60,7 @@ class RoleController extends Controller
             'can_manage_users' => ['nullable'],
             'can_manage_roles' => ['nullable'],
             'can_manage_functions' => ['nullable'],
+            'can_manage_templates' => ['nullable']
         ]);
 
         $role = $this->roleService->store($validatedData);
@@ -109,6 +110,7 @@ class RoleController extends Controller
             'can_manage_users' => ['nullable'],
             'can_manage_roles' => ['nullable'],
             'can_manage_functions' => ['nullable'],
+            'can_manage_templates' => ['nullable']
         ]);
 
         $role = $this->roleService->update($validatedData, $role);

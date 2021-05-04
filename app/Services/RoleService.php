@@ -15,7 +15,7 @@ class RoleService
         $role->can_manage_users = array_key_exists('can_manage_users', $data);
         $role->can_manage_roles = array_key_exists('can_manage_roles', $data);
         $role->can_manage_functions = array_key_exists('can_manage_functions', $data);
-
+        $role->can_manage_templates= array_key_exists('can_manage_templates', $data);
         $role->save();
 
         return $role;
@@ -30,6 +30,7 @@ class RoleService
         $role->can_manage_users = array_key_exists('can_manage_users', $data);
         $role->can_manage_roles = array_key_exists('can_manage_roles', $data);
         $role->can_manage_functions = array_key_exists('can_manage_functions', $data);
+        $role->can_manage_templates = array_key_exists('can_manage_templates', $data);
 
         $role->save();
 

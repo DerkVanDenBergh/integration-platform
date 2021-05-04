@@ -4,7 +4,7 @@
         {{ __('Connections') }}
     </x-slot>
 
-    <x-model-table :fields="array('title')" :list="$connections" :resource="__('connections')" :showEdit="__(false)">
+    <x-model-table :fields="array('title')" :list="$connections" :resource="__('connections')">
 
         <x-slot name="headers">
             <th class="w-3/4 py-2">Name</th>
