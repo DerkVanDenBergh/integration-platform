@@ -1,32 +1,16 @@
 os:
-  - linux
+- linux
 
 language: php
 
 php:
-  - '8.0'
-  
-# before_script:
-#   - composer self-update
-#   - composer install --no-interaction
-#   - cp .env.travis .env
-#   - pear install pear/PHP_CodeSniffer
-#   - phpenv rehash
-#   - nvm install 7.7.1
-#   - npm install npm@latest -g
-#   - npm install -g jshint
-#   - npm install
-  
-# script:
-#   - vendor/bin/phpunit --coverage-text
-#   - phpcs --ignore=app/Http/Controllers/Auth,app/Http/Controllers/Controller.php app/Http/Controllers
-#   - npm run production
-#   - jshint resources/assets/js/modules/*
+- '8.0'
+
 
 deploy:
   provider: heroku
   api_key:
-    secure: KEY
-  app: rails-test-app-article
+    secure: Jz70PLQ4+TUCI4EXGC3z2+ehtEhuejxe466UvqDMvWLwwCs2bmwGryTJppkFyZfDaWGUWYqnp9qj+UwXFYYzw6OfFW1LoHbH9CXxUcoA1XNoQRhiz8EzfDoItsIVZR+eztucdr1h1b+KkCnLPKSIrn2CM0S8hYtoJYV60nWHM0Qu7thLjdIb+287U8plaE8HYIoHLo9T1F4rvj3h6gjqicF5t/BRYF8ZY6f5dn9aQKButCAzMynh/rpuOBJS8tQPV7jXEdy7VZ2U4XuIVzZUr8/AAG4va1SeCmhxKQGKtP6fcZW9GocXBvVjtwKEDtyY5NJYQd9EIIsrlI+NEGFx4dVnHlcqZmO23JxQ507BAsNknFvKLHBdoA3Y1z3cZYB4Sc7wDhQWcM3F+OJAku1uxjn3qyTrvd447VmFFrOvHV13F81Fe18kEbrfdfSYQwetbfTs4Y3gd7hCFzNHzdKTicPq4bK0Qx5HKHLwoW+Hay1NhAMGvNk4+cLUsblSiQozDCk78Bf+ey9ilp/xomstawO4W0TjvtkK7sfWds52t39gBAAGo1w2e0frefF5xCW5x9h8R+8pI7bNycc7064VaeA9fiT7QZAJUdG/AiIyih1AzeuW8h4JwW8vt3SIclHnWsgttQlSEYz6qnGu3zzsTmbWI80bNh/byLBUcWIHa/Q=
+  app: mintegration
   on:
-    repo: felipeluizsoares/rails-test-app
+    repo: DerkVanDenBergh/mintegration
