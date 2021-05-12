@@ -1,10 +1,13 @@
 os:
-- linux
+  - linux
 
 language: php
 
 php:
-- '8.0'
+  - '8.0'
+
+services:
+  - mysql
 
 before_script:  
   - cp .env.travis .env  
