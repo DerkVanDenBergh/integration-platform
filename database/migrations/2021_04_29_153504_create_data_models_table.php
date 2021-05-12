@@ -16,7 +16,7 @@ class CreateDataModelsTable extends Migration
         Schema::create('data_models', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->
+            $table->description('Description');
             $table->timestamps();
         });
     }
