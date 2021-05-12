@@ -4,6 +4,6 @@
         <p class="mt-2 text-gray-600">{{ $description }}</p>
     </div>
     <div class="flex justify-end mt-4">
-        <a href="{{ $link }}" class="text-xl font-medium text-indigo-500">Go ></a>
+        <a href="{{ $link }}" class="text-xl font-medium text-green-500">Go ></a>
     </div>
 </div>

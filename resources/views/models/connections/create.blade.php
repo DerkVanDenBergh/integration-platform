@@ -34,7 +34,7 @@
                 <!-- TODO redirect to /templates after activating this -->
                 <div class="col-span-2">
                     <label for="template" class="inline-flex items-center">
-                        <input id="template" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" name="template">
+                        <input id="template" type="checkbox" class="rounded border-gray-300 text-green-500 shadow-sm focus:border-green-400 focus:ring focus:ring-green-200 focus:ring-opacity-50" name="template">
                         <span class="ml-2 text-sm text-gray-600">{{ __('Connection template') }}</span>
                     </label>
                 </div>
