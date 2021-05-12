@@ -2,7 +2,7 @@
     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-5">
 
         @if($header ?? false)
-            <h2 class="font-semibold text-l text-indigo-600 leading-tight pb-3">
+            <h2 class="font-semibold text-l text-green-400 leading-tight pb-3">
                 {{ $header }}
             </h2>
         @endif
@@ -24,12 +24,12 @@
                             @endforeach
                             <td class="text-center py-2">
                                 @if($showView ?? true)
-                                    <a class="inline-block mr-2 hover:text-indigo-600 transition"href="/{{ $resource }}/{{ $model->id }}">
+                                    <a class="inline-block mr-2 hover:text-green-400 transition"href="/{{ $resource }}/{{ $model->id }}">
                                         <x-svg-view class="h-5 w-5"></x-svg-view>
                                     </a>
                                 @endif
                                 @if($showEdit ?? true)
-                                    <a class="inline-block mr-2 hover:text-indigo-600 transition" href="/{{ $resource }}/{{ $model->id }}/edit">
+                                    <a class="inline-block mr-2 hover:text-green-400 transition" href="/{{ $resource }}/{{ $model->id }}/edit">
                                         <x-svg-edit class="h-5 w-5"></x-svg-edit>
                                     </a>
                                 @endif
@@ -50,7 +50,7 @@
                 </tbody>
             </table>
         @else
-            <div class="border-t-4 border-indigo-500 rounded-b text-indigo-900 px-4 py-3 shadow-md" role="alert">
+            <div class="border-t-4 border-green-400 rounded-b text-green-900 px-4 py-3 shadow-md" role="alert">
                 <div class="flex">
                     <div class="py-1">
                         <svg class="fill-current h-6 w-6 text-teal-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -66,7 +66,7 @@
         @endif
 
         @if($showCreate ?? true)
-            <a @if($nestedResource ?? false) href="/{{ $nestedResource }}/create" @else href="/{{ $resource }}/create" @endif class="mt-5 bg-gray-100 hover:bg-indigo-400 hover:text-white transition text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
+            <a @if($nestedResource ?? false) href="/{{ $nestedResource }}/create" @else href="/{{ $resource }}/create" @endif class="mt-5 bg-gray-100 hover:bg-green-400 hover:text-white transition text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
                 <x-svg-plus class="h-5 w-5 mr-2"></x-svg-plus>
                 <span>Add new</span>
             </a>
