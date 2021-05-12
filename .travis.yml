@@ -1,33 +1,27 @@
 os:
-  - linux
-
+- linux
 language: php
-
 php:
-  - '8.0'
-
+- '8.0'
 services:
-  - mysql
-
+- mysql
 cache:
   directories:
-    - node_modules
-    - vendor
-
-before_script:  
-  - cp .env.travis .env  
-  - sudo mysql -e 'create database homestead;'  
-  - composer self-update  
-  - composer install --prefer-source --no-interaction 
-  - php artisan key:generate  
-  - php artisan migrate
-  - php artisan db:seed --class=DatabaseSeeder
-
+  - node_modules
+  - vendor
+before_script:
+- cp .env.travis .env
+- sudo mysql -e 'create database homestead;'
+- composer self-update
+- composer install --prefer-source --no-interaction
+- php artisan key:generate
+- php artisan migrate
+- php artisan db:seed --class=DatabaseSeeder
 deploy:
   provider: heroku
   api_key:
-    secure: "Jz70PLQ4+TUCI4EXGC3z2+ehtEhuejxe466UvqDMvWLwwCs2bmwGryTJppkFyZfDaWGUWYqnp9qj+UwXFYYzw6OfFW1LoHbH9CXxUcoA1XNoQRhiz8EzfDoItsIVZR+eztucdr1h1b+KkCnLPKSIrn2CM0S8hYtoJYV60nWHM0Qu7thLjdIb+287U8plaE8HYIoHLo9T1F4rvj3h6gjqicF5t/BRYF8ZY6f5dn9aQKButCAzMynh/rpuOBJS8tQPV7jXEdy7VZ2U4XuIVzZUr8/AAG4va1SeCmhxKQGKtP6fcZW9GocXBvVjtwKEDtyY5NJYQd9EIIsrlI+NEGFx4dVnHlcqZmO23JxQ507BAsNknFvKLHBdoA3Y1z3cZYB4Sc7wDhQWcM3F+OJAku1uxjn3qyTrvd447VmFFrOvHV13F81Fe18kEbrfdfSYQwetbfTs4Y3gd7hCFzNHzdKTicPq4bK0Qx5HKHLwoW+Hay1NhAMGvNk4+cLUsblSiQozDCk78Bf+ey9ilp/xomstawO4W0TjvtkK7sfWds52t39gBAAGo1w2e0frefF5xCW5x9h8R+8pI7bNycc7064VaeA9fiT7QZAJUdG/AiIyih1AzeuW8h4JwW8vt3SIclHnWsgttQlSEYz6qnGu3zzsTmbWI80bNh/byLBUcWIHa/Q="
+    secure: RII313kU9JXqcpHak/T80oUybn31v1h+Oz/wDKs7CP7E9FPBuzxbOLvvpsw7BpXJHkaIclmtCxyikQZWrGOkQDO2QqrUnvNQHXJmFrsbW13e14WskZhtrMhEi5HyyNueH1xqhGxsOHDLzvw4Z0FPe/0ZAtxIYAh3ND9+e1oXwbyOGq6c7AfbA5koRPAZZDNDLRd+G4rBPq5ZImBLKGUCStW1Yk0M/1kgaPlu09MdXQ7EujRvD++Y0mfw8E+vMzopOOBdfaKCYpTbun1WzBSYYS27NLAc7B3UBivOm085o/huam3bcz1grPHmutVmhsIpyisFh0FR2qpdtzLIgBsh0V26XbU8YwDVUcaoKCUSK30lp7VZ7TW6KYirfm3fsEUxxIfJlpRvGivK2zNGg1qco90Ys9GR0w6iuZDASIBEFnVbTpmcCJy5Y01aVhk76tpYimM6fF9CnjQ4bj2LR3sjmNgCXPc72m7kqtfEqv2W5kqaGLnpPDRo0redmig/dh8cx91U4b+lqVexxyifoSWnk4S1FBCj1Lp+7PopxN4DzKtct6LZUAudk4cjURk+RpcXLN6nvs3klnwN58wcayGRN1G4bDaai9lLV+lp1QbeLYvuzYTg8dBDD3dvAurOskptEU79P63XcSF1V5UYuWOftBGAynKGCbC/r5lwLky5C1Q=
   app: mintegration
   on: main
   run:
-    - "php artisan migrate"
+  - php artisan migrate
