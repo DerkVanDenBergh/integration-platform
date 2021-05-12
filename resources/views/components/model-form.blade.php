@@ -7,7 +7,7 @@
         <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
         @if($header ?? false)
-            <h2 class="font-semibold text-l text-green-500 leading-tight pb-3">
+            <h2 class="font-semibold text-l text-green-400 leading-tight pb-3">
                 {{ $header }}
             </h2>
         @endif

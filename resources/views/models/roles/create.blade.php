@@ -20,28 +20,28 @@
 
             <div class="col-span-1">
                 <label for="can_manage_users" class="inline-flex items-center">
-                    <input id="can_manage_users" type="checkbox" class="rounded border-gray-300 text-green-500 shadow-sm focus:border-green-400 focus:ring focus:ring-green-200 focus:ring-opacity-50" name="can_manage_users">
+                    <input id="can_manage_users" type="checkbox" class="rounded border-gray-300 text-green-400 shadow-sm focus:border-green-400 focus:ring focus:ring-green-200 focus:ring-opacity-50" name="can_manage_users">
                     <span class="ml-2 text-sm text-gray-600">{{ __('Can manage users') }}</span>
                 </label>
             </div>
 
             <div class="col-span-1">
                 <label for="can_manage_roles" class="inline-flex items-center">
-                    <input id="can_manage_roles" type="checkbox" class="rounded border-gray-300 text-green-500 shadow-sm focus:border-green-400 focus:ring focus:ring-green-200 focus:ring-opacity-50" name="can_manage_roles">
+                    <input id="can_manage_roles" type="checkbox" class="rounded border-gray-300 text-green-400 shadow-sm focus:border-green-400 focus:ring focus:ring-green-200 focus:ring-opacity-50" name="can_manage_roles">
                     <span class="ml-2 text-sm text-gray-600">{{ __('Can manage roles') }}</span>
                 </label>
             </div>
 
             <div class="col-span-1">
                 <label for="can_manage_functions" class="inline-flex items-center">
-                    <input id="can_manage_functions" type="checkbox" class="rounded border-gray-300 text-green-500 shadow-sm focus:border-green-400 focus:ring focus:ring-green-200 focus:ring-opacity-50" name="can_manage_functions">
+                    <input id="can_manage_functions" type="checkbox" class="rounded border-gray-300 text-green-400 shadow-sm focus:border-green-400 focus:ring focus:ring-green-200 focus:ring-opacity-50" name="can_manage_functions">
                     <span class="ml-2 text-sm text-gray-600">{{ __('Can manage functions') }}</span>
                 </label>
             </div>
 
             <div class="col-span-1">
                 <label for="can_manage_templates" class="inline-flex items-center">
-                    <input id="can_manage_templates" type="checkbox" class="rounded border-gray-300 text-green-500 shadow-sm focus:border-green-400 focus:ring focus:ring-green-200 focus:ring-opacity-50" name="can_manage_templates">
+                    <input id="can_manage_templates" type="checkbox" class="rounded border-gray-300 text-green-400 shadow-sm focus:border-green-400 focus:ring focus:ring-green-200 focus:ring-opacity-50" name="can_manage_templates">
                     <span class="ml-2 text-sm text-gray-600">{{ __('Can manage templates') }}</span>
                 </label>
             </div>
