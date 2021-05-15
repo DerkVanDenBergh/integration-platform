@@ -3,7 +3,7 @@
         {{ __('Users') }}
     </x-slot>
 
-    <x-model-table :fields="array('name', 'email')" :list="$users" :resource="__('users')" :showEdit="__(false)">
+    <x-subpages.model-table :fields="array('name', 'email')" :list="$users" :resource="__('users')" :showEdit="__(false)">
 
         <x-slot name="headers">
             <th class="w-3/8 py-2">Name</th>
@@ -11,6 +11,6 @@
             <th class="w-1/4 py-2">Actions</th>
         </x-slot>
     
-    </x-model-table>
+    </x-subpages.model-table>
 
 </x-app-layout>

@@ -18,5 +18,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ConnectionSeeder::class);
         $this->call(AuthenticationSeeder::class);
         $this->call(EndpointSeeder::class);
+        $this->call(DataModelSeeder::class);
+        $this->call(DataModelFieldSeeder::class);
     }
 }

@@ -4,7 +4,7 @@
         {{ __($role->title . ' - edit') }}
     </x-slot>
 
-    <x-model-form :action="__('/roles/') . $role->id">
+    <x-subpages.model-form :action="__('/roles/') . $role->id">
 
         <x-slot name="method">
             <input name="_method" type="hidden" value="PUT">
@@ -13,9 +13,9 @@
         <x-slot name="fields">
 
             <div class="col-span-4">
-                <x-label for="title" :value="__('Role name')" />
+                <x-forms.label for="title" :value="__('Role name')" />
 
-                <x-input id="title" class="block mt-1 w-full" type="text" name="title" value="{{ $role->title }}" required autofocus />
+                <x-forms.input id="title" class="block mt-1 w-full" type="text" name="title" value="{{ $role->title }}" required autofocus />
             </div>
 
             <div class="col-span-1">
@@ -48,6 +48,6 @@
 
         </x-slot>
     
-    </x-model-form>
+    </x-subpages.model-form>
 
 </x-app-layout>

@@ -3,7 +3,7 @@
         {{ __('Authentication - create') }}
     </x-slot>
 
-    <x-model-form :action="__('/connections/' . $connection . '/authentications')">
+    <x-subpages.model-form :action="__('/connections/' . $connection . '/authentications')">
 
         <x-slot name="method">
             <input name="_method" type="hidden" value="POST">
@@ -12,29 +12,29 @@
         <x-slot name="fields">
 
             <div class="col-span-4">
-                <x-input id="type" type="hidden" name="type" value="{{ $type }}" required autofocus />
+                <x-forms.input id="type" type="hidden" name="type" value="{{ $type }}" required autofocus />
             </div>
 
             <div class="col-span-4">
-                <x-label for="title" :value="__('Name')" />
+                <x-forms.label for="title" :value="__('Name')" />
 
-                <x-input id="title" class="block mt-1 w-full" type="text" name="title" :value="old('title')" required autofocus />
+                <x-forms.input id="title" class="block mt-1 w-full" type="text" name="title" :value="old('title')" required autofocus />
             </div>
             
             <div class="col-span-2">
-                <x-label for="username" :value="__('Username')" />
+                <x-forms.label for="username" :value="__('Username')" />
 
-                <x-input id="username" class="block mt-1 w-full" type="text" name="username" :value="old('username')" required autofocus />
+                <x-forms.input id="username" class="block mt-1 w-full" type="text" name="username" :value="old('username')" required autofocus />
             </div>
 
             <div class="col-span-2">
-                <x-label for="password" :value="__('Password')" />
+                <x-forms.label for="password" :value="__('Password')" />
 
-                <x-input id="password" class="block mt-1 w-full" type="password" name="password" :value="old('password')" required autofocus />
+                <x-forms.input id="password" class="block mt-1 w-full" type="password" name="password" :value="old('password')" required autofocus />
             </div>
             
         </x-slot>
     
-    </x-model-form>
+    </x-subpages.model-form>
 
 </x-app-layout>

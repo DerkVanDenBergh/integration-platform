@@ -19,15 +19,15 @@
                 <!-- Guest Navigation Links -->
                 @guest
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex float-right">
-                        <x-nav-link :href="route('login')" :active="request()->routeIs('login')">
+                        <x-nav.nav-link :href="route('login')" :active="request()->routeIs('login')">
                             {{ __('Login') }}
-                        </x-nav-link>
+                        </x-nav.nav-link>
                     </div>
 
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex float-right">
-                        <x-nav-link :href="route('register')" :active="request()->routeIs('register')">
+                        <x-nav.nav-link :href="route('register')" :active="request()->routeIs('register')">
                             {{ __('Register') }}
-                        </x-nav-link>
+                        </x-nav.nav-link>
                     </div>
                 @endguest
             </div>

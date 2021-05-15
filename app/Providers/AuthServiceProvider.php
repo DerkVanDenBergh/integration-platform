@@ -9,6 +9,8 @@ use App\Models\Role;
 use App\Models\Connection;
 use App\Models\Authentication;
 use App\Models\Endpoint;
+use App\Models\DataModel;
+use App\Models\DataModelField;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -76,6 +78,16 @@ class AuthServiceProvider extends ServiceProvider
             $connection = Connection::find($endpoint->connection_id);
             
             return $user->id === $connection->user_id;
+        });
+
+        Gate::define('mutate_or_view_data_model', function ($user, DataModel $dataModel) {
+            return $user->id === $dataModel->user_id;
+        });
+
+        Gate::define('mutate_or_view_data_model_field', function ($user, DataModelField $dataModelField) {
+            $dataModel = DataModel::find($dataModelField->model_id);
+            
+            return $user->id === $dataModel->user_id;
         });
     }
 }

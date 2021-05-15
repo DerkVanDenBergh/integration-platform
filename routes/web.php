@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\ConnectionController;
 use App\Http\Controllers\DataModelController;
+use App\Http\Controllers\DataModelFieldController;
 use App\Http\Controllers\EndpointController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\MappingController;
@@ -41,6 +42,14 @@ Route::get('/manage', [PageController::class, 'manage'])->middleware(['auth'])->
 
 Route::resource('models', DataModelController::class)->middleware(['auth']);
 
+Route::post('/models/create', [DataModelController::class, 'wizard'])->middleware(['auth'])->name('models.wizard');
+Route::post('/models/create/definition', [DataModelController::class, 'definition'])->middleware(['auth'])->name('models.definition');
+
+
+// Data model fields
+
+Route::resource('models.fields', DataModelFieldController::class)->middleware(['auth'])->shallow()->middleware(['auth']);
+
 
 // Data mappings
 
@@ -66,6 +75,8 @@ Route::resource('connections.endpoints', EndpointController::class)->shallow()->
 
 Route::post('/connections/{connection}/endpoints/create', [EndpointController::class, 'wizard'])->middleware(['auth'])->name('connections.endpoints.wizard');
 
+Route::get('/endpoints/{endpoint}/model', [EndpointController::class, 'model_edit'])->middleware(['auth'])->name('endpoints.model_edit');
+Route::post('/endpoints/{endpoint}/model', [EndpointController::class, 'model_update'])->middleware(['auth'])->name('endpoints.model_update');
 
 // Authentications
 
@@ -93,12 +104,12 @@ Route::resource('roles', RoleController::class)->middleware(['auth']);
 
 // Functions
 
-Route::resource('functions', FunctionController::class)->middleware(['auth']);
+//Route::resource('functions', FunctionController::class)->middleware(['auth']);
 
 
 // Logs
 
-Route::resource('logs', LogController::class)->middleware(['auth']);
+//Route::resource('logs', LogController::class)->middleware(['auth']);
 
 
 // Notifications

@@ -22,6 +22,15 @@ class EndpointService
         return $endpoint;
     }
 
+    public function updateModel($model_id, Endpoint $endpoint)
+    {
+        $endpoint->model_id = $model_id;
+
+        $endpoint->save();
+
+        return $endpoint;
+    }
+
     public function delete(Endpoint $endpoint)
     {
        $endpoint->delete();

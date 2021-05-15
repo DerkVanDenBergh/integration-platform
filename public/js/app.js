@@ -690,7 +690,7 @@
       if (el.type === 'radio') {
         // Set radio value from x-bind:value, if no "value" attribute exists.
         // If there are any initial state values, radio will have a correct
-        // "checked" value since x-bind:value is processed before x-model.
+        // "checked" value since x-bind:value is processed before x-subpages.model.
         if (el.attributes.value === undefined && attrType === 'bind') {
           el.value = value;
         } else if (attrType !== 'bind') {
@@ -1015,7 +1015,7 @@
     if (el.type === 'radio') {
       // Radio buttons only work properly when they share a name attribute.
       // People might assume we take care of that for them, because
-      // they already set a shared "x-model" attribute.
+      // they already set a shared "x-subpages.model" attribute.
       if (!el.hasAttribute('name')) el.setAttribute('name', expression);
     }
 
