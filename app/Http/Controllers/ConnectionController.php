@@ -15,17 +15,9 @@ class ConnectionController extends Controller
 {
 
     protected $connectionService;
-    protected $authService;
-    protected $endpointService;
 
-    public function __construct(
-        ConnectionService $connectionService, 
-        AuthenticationService $authService,
-        EndpointService $endpointService
-    ) {
+    public function __construct(ConnectionService $connectionService) {
         $this->connectionService = $connectionService;
-        $this->authService = $authService;
-        $this->endpointService = $endpointService;
     }
 
     /**
@@ -141,11 +133,7 @@ class ConnectionController extends Controller
     {
         Gate::authorize('mutate_or_view_connection', $connection);
 
-        $authentications = $this->authService->findAllFromConnection($connection->id);
-        
-        $endpoints = $this->endpointService->findAllFromConnection($connection->id);
-
-        return view('models.connections.show', compact('connection', 'authentications', 'endpoints'));
+        return view('models.connections.show', compact('connection'));
     }
 
     /**

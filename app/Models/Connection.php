@@ -22,4 +22,14 @@ class Connection extends Model
         'template'
     ];
 
+    public function authentications()
+    {
+        return $this->hasMany( 'App\Models\Authentication', 'connection_id', 'id' )->get();
+    }
+      
+    public function endpoints()
+    {
+        return $this->hasMany( 'App\Models\Endpoint', 'connection_id', 'id' )->get();
+    }
+
 }
