@@ -22,14 +22,19 @@
             @auth
                 <div class="flex flex-wrap bg-gray-100 w-full h-screen">
                     <div class="w-3/12 bg-white rounded p-3 shadow-lg">
-                        <div class="flex items-center space-x-4 p-2 mb-5">
-                            <img class="h-12 w-12 rounded-full" src="{{ URL::asset('images/mountains.jpeg') }}" alt="pic">
-                            <div>
-                                <h4 class="font-semibold text-lg text-gray-700 capitalize font-poppins tracking-wide">{{ Auth::user()->name }}</h4>
-                                <span class="text-sm tracking-wide flex items-center space-x-1">
-                                    <span class="text-gray-600">{{ Auth::user()->email }}</span>
-                                </span>
-                            </div>
+                        <div class="space-x-4 p-5 text-center">
+                            <a href="{{ route('dashboard') }}">
+                                <x-miscs.application-logo class="inline-block h-20 w-auto fill-current" />
+                                <div class="block align-middle mt-3">
+                                    <h4 class="w-full font-semibold text-lg text-gray-700 capitalize font-poppins tracking-wide">{{ Auth::user()->name }}</h4>
+                                    <span class="w-full text-sm tracking-wide space-x-1 text-gray-600">
+                                        {{ Auth::user()->email }}
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="grid grid-cols-5 gap-4">
+                            <div class="col-start-2 col-span-3 border-b border-gray-400 m-5 mb-7 mt-2"></div>
                         </div>
                         <ul class="space-y-2 text-sm">
                             <li>

@@ -6,7 +6,7 @@
                 <!-- Logo -->
                 <div class="flex-shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-10 w-auto fill-current text-gray-600" />
+                        <x-miscs.application-logo class="block h-10 w-auto fill-current" />
                     </a>
                     <div class="ml-5">
                         @if($header)
@@ -47,13 +47,13 @@
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             @guest
-                <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                <x-nav.responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Login') }}
-                </x-responsive-nav-link>
+                </x-nav.responsive-nav-link>
 
-                <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                <x-nav.responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Register') }}
-                </x-responsive-nav-link>
+                </x-nav.responsive-nav-link>
             @endguest
         </div>
 
@@ -78,11 +78,11 @@
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
 
-                        <x-responsive-nav-link :href="route('logout')"
+                        <x-nav.responsive-nav-link :href="route('logout')"
                                 onclick="event.preventDefault();
                                             this.closest('form').submit();">
                             {{ __('Log out') }}
-                        </x-responsive-nav-link>
+                        </x-nav.responsive-nav-link>
                     </form>
                 </div>
             </div>
