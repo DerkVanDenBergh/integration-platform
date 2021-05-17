@@ -15,11 +15,29 @@ class ConnectionSeeder extends Seeder
      */
     public function run()
     {
-        $beeceptor_a = new Connection($this->definition(1000, 'Beeceptor 1', 'A connection to a beeceptor endpoint', 'https://integration-platform.free.beeceptor.com', 1002, false));
-        $beeceptor_a->save();
+        $beeceptor_user_management = new Connection($this->definition(
+            1000, 
+            'Beeceptor User Management', 
+            'A connection to Mintegration Beeceptor User Management', 
+            'https://mintegration-user-management.free.beeceptor.com', 
+            1002, 
+            false
+        ));
+
+        $beeceptor_user_management->save();
         
-        $beeceptor_b = new Connection($this->definition(1001, 'Beeceptor 2', 'A connection to a beeceptor endpoint', 'https://integration-platform-2.free.beeceptor.com', 1002, false));
+        $beeceptor_b = new Connection($this->definition(
+            1001, 
+            'Beeceptor Employee Management', 
+            'A connection to Mintegration Beeceptor Employee Management', 
+            'https://mintegration-employee-management.free.beeceptor.com', 
+            1002, 
+            false
+        ));
+
         $beeceptor_b->save();
+
+        \Illuminate\Support\Facades\DB::statement("ALTER SEQUENCE connections_id_seq RESTART 11000;");
     }
 
     private function definition($id, $title, $description, $base_url, $user_id, $template)

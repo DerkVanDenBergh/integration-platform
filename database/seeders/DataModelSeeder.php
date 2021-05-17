@@ -18,11 +18,22 @@ class DataModelSeeder extends Seeder
         $model_user = new DataModel($this->definition(
             1000, 
             'User',
-            'A model for a user', 
+            'A model for a MBUM user', 
             1002
         ));
         
         $model_user->save();
+
+        $model_employee = new DataModel($this->definition(
+            1001, 
+            'Employee',
+            'A model for a MBEM employee', 
+            1002
+        ));
+        
+        $model_employee->save();
+
+        \Illuminate\Support\Facades\DB::statement("ALTER SEQUENCE data_models_id_seq RESTART 11000;");
     }
 
     private function definition($id, $title, $description, $user_id)

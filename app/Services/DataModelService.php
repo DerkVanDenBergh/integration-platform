@@ -45,8 +45,7 @@ class DataModelService
 
     public function findAllFromUser($id)
     {
-
-        $dataModels = DataModel::where('user_id', auth()->user()->id)->get();
+        $dataModels = DataModel::where('user_id', $id)->get();
 
         return $dataModels;
     }

@@ -5,8 +5,6 @@ namespace App\Services;
 use Illuminate\Support\Facades\Gate;
 
 use App\Models\Connection;
-use App\Models\Endpoint;
-use App\Models\Authentication;
 
 class ConnectionService
 {
@@ -39,18 +37,14 @@ class ConnectionService
         $connection->base_url = $template->base_url;
 
         $connection->save();
-
-        $endpoints = Endpoint::where('connection_id', $template->id)->get();
         
-        foreach($endpoints as $templateEndpoint) {
+        foreach($template->endpoints as $templateEndpoint) {
             $endpoint = $templateEndpoint->replicate();
             $endpoint->connection_id = $connection->id;
             $endpoint->save();
         }
 
-        $authentications = Authentication::where('connection_id', $template->id)->get();
-
-        foreach($authentications as $templateAuthentication) {
+        foreach($template->authentications as $templateAuthentication) {
             $authentication = $templateAuthentication->replicate();
             $authentication->connection_id = $connection->id;
             $authentication->save();

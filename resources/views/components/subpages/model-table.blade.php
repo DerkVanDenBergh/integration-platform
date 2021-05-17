@@ -18,7 +18,7 @@
                     @foreach($list as $model)
                         <tr>
                             @foreach($fields as $field)
-                                <td class="text-center py-2">
+                                <td class="text-center py-2 truncate">
                                     {{ $model->$field }}
                                 </td>
                             @endforeach

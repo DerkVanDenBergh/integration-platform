@@ -15,6 +15,9 @@ class CreateMappingFieldsTable extends Migration
     {
         Schema::create('mapping_fields', function (Blueprint $table) {
             $table->id();
+            $table->integer('input_field');
+            $table->integer('output_field');
+            $table->integer('mapping_id');
             $table->timestamps();
         });
     }

@@ -15,7 +15,7 @@ class DataModelFieldSeeder extends Seeder
      */
     public function run()
     {
-        $field_id = new DataModelField($this->definition(
+        $user_field_id = new DataModelField($this->definition(
             1000,
             1000,
             null,
@@ -24,9 +24,9 @@ class DataModelFieldSeeder extends Seeder
             'integer'
         ));
         
-        $field_id->save();
+        $user_field_id->save();
 
-        $field_name = new DataModelField($this->definition(
+        $user_field_name = new DataModelField($this->definition(
             1001,
             1000,
             null,
@@ -35,9 +35,9 @@ class DataModelFieldSeeder extends Seeder
             null
         ));
         
-        $field_name->save();
+        $user_field_name->save();
 
-        $field_name_first = new DataModelField($this->definition(
+        $user_field_name_first = new DataModelField($this->definition(
             1002,
             1000,
             1001,
@@ -46,9 +46,9 @@ class DataModelFieldSeeder extends Seeder
             'string'
         ));
         
-        $field_name_first->save();
+        $user_field_name_first->save();
 
-        $field_name_last = new DataModelField($this->definition(
+        $user_field_name_last = new DataModelField($this->definition(
             1003,
             1000,
             1001,
@@ -57,29 +57,53 @@ class DataModelFieldSeeder extends Seeder
             'string'
         ));
         
-        $field_name_last->save();
+        $user_field_name_last->save();
 
-        $field_age = new DataModelField($this->definition(
+        $employee_field_id = new DataModelField($this->definition(
             1004,
-            1000,
+            1001,
             null,
-            'age',
+            'employee_id',
             'attribute',
             'integer'
         ));
         
-        $field_age->save();
+        $employee_field_id->save();
 
-        $field_role = new DataModelField($this->definition(
+        $employee_field_name = new DataModelField($this->definition(
             1005,
-            1000,
+            1001,
             null,
-            'role',
+            'employee_name',
+            'set',
+            null
+        ));
+        
+        $employee_field_name->save();
+
+        $employee_field_name_first = new DataModelField($this->definition(
+            1006,
+            1001,
+            1005,
+            'first',
             'attribute',
             'string'
         ));
         
-        $field_role->save();
+        $employee_field_name_first->save();
+
+        $employee_field_name_last = new DataModelField($this->definition(
+            1007,
+            1001,
+            1005,
+            'last',
+            'attribute',
+            'string'
+        ));
+        
+        $employee_field_name_last->save();
+
+        \Illuminate\Support\Facades\DB::statement("ALTER SEQUENCE data_model_fields_id_seq RESTART 11000;");
     }
 
     private function definition($id, $model_id, $parent_id, $name, $node_type, $data_type)

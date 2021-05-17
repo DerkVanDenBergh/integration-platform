@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Mapping;
 use Illuminate\Http\Request;
 
+use App\Models\Route;
+
 class MappingController extends Controller
 {
     /**
@@ -12,7 +14,7 @@ class MappingController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Route $route)
     {
         //
     }
@@ -22,7 +24,7 @@ class MappingController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Route $route)
     {
         //
     }
@@ -33,7 +35,7 @@ class MappingController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Route $route)
     {
         //
     }
@@ -44,7 +46,7 @@ class MappingController extends Controller
      * @param  \App\Models\Mapping  $mapping
      * @return \Illuminate\Http\Response
      */
-    public function show(Mapping $mapping)
+    public function show(Route $route, Mapping $mapping)
     {
         //
     }
@@ -55,7 +57,7 @@ class MappingController extends Controller
      * @param  \App\Models\Mapping  $mapping
      * @return \Illuminate\Http\Response
      */
-    public function edit(Mapping $mapping)
+    public function edit(Route $route, Mapping $mapping)
     {
         //
     }
@@ -67,7 +69,7 @@ class MappingController extends Controller
      * @param  \App\Models\Mapping  $mapping
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Mapping $mapping)
+    public function update(Request $request, Route $route, Mapping $mapping)
     {
         //
     }
@@ -78,7 +80,7 @@ class MappingController extends Controller
      * @param  \App\Models\Mapping  $mapping
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Mapping $mapping)
+    public function destroy(Route $route, Mapping $mapping)
     {
         //
     }

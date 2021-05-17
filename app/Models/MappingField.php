@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class MappingField extends Model
 {
     use HasFactory;
+
+    public function mapping()
+    {
+        return $this->belongsTo(Mapping::class);
+    }
 }

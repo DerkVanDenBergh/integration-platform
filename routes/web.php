@@ -53,7 +53,7 @@ Route::resource('models.fields', DataModelFieldController::class)->middleware(['
 
 // Data mappings
 
-Route::resource('mappings', MappingController::class)->middleware(['auth']);
+Route::resource('routes.mappings', MappingController::class)->middleware(['auth']);
 
 
 // Connections

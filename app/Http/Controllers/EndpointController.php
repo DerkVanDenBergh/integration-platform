@@ -109,6 +109,8 @@ class EndpointController extends Controller
     {
         Gate::authorize('mutate_or_view_endpoint', $endpoint);
 
+        // TODO: deze naar model
+
         $connection = $this->connectionService->findById($endpoint->connection_id);
 
         $fields = $this->fieldService->findAllFromModel($endpoint->model_id);
@@ -126,6 +128,8 @@ class EndpointController extends Controller
     {
         Gate::authorize('mutate_or_view_endpoint', $endpoint);
 
+        // TODO deze naar model
+        
         $methods = $this->endpointService->getMethods($endpoint->protocol);
 
         return view('models.endpoints.forms.edit.' . strtolower($endpoint->protocol), compact('endpoint', 'methods'));

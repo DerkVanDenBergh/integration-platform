@@ -2,11 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Route;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Gate;
+
+use App\Models\Route;
+use App\Services\RouteService;
+use App\Services\MappingService;
+use App\Services\MappingFieldService;
 
 class RouteController extends Controller
 {
+
+    protected $routeService;
+    protected $mappingService;
+    protected $fieldService;
+
+    public function __construct(
+        RouteService $routeService,
+        MappingService $mappingService,
+        MappingFieldService $fieldService
+    ) {
+        $this->routeService = $routeService;
+        $this->mappingService = $mappingService;
+        $this->fieldService = $fieldService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +35,9 @@ class RouteController extends Controller
      */
     public function index()
     {
-        //
+        $routes = $this->routeService->findAllFromUser(auth()->user()->id);
+
+        return view('models.routes.index', compact('routes'));
     }
 
     /**
@@ -24,7 +47,7 @@ class RouteController extends Controller
      */
     public function create()
     {
-        //
+        return view('models.routes.create');
     }
 
     /**
@@ -35,7 +58,17 @@ class RouteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'title' => ['required', Rule::unique('routes')->where('user_id', auth()->user()->id), 'max:255'],
+            'description' => ['nullable'],
+            'slug' => ['required', 'max:255']
+        ]);
+
+        $validatedData['user_id'] = auth()->user()->id;
+
+        $route = $this->routeService->store($validatedData);
+
+        return redirect('/routes')->with('success', 'Route with name "' . $route->title . '" has succesfully been created!');
     }
 
     /**
@@ -46,7 +79,13 @@ class RouteController extends Controller
      */
     public function show(Route $route)
     {
-        //
+        Gate::authorize('mutate_or_view_route', $route);
+
+        $mapping = $this->mappingService->findByRouteId($route->id);
+
+        $fields = $this->fieldService->findAllFromMapping($mapping->id);
+
+        return view('models.routes.show', compact('route', 'mapping', 'fields'));
     }
 
     /**
@@ -57,7 +96,9 @@ class RouteController extends Controller
      */
     public function edit(Route $route)
     {
-        //
+        Gate::authorize('mutate_or_view_route', $route);
+
+        return view('models.routes.edit', compact('route'));
     }
 
     /**
@@ -69,7 +110,20 @@ class RouteController extends Controller
      */
     public function update(Request $request, Route $route)
     {
-        //
+        Gate::authorize('mutate_or_view_route', $route);
+
+        $validatedData = $request->validate([
+            'title' => ['required', Rule::unique('routes')->where('user_id', auth()->user()->id)->ignore($route->id), 'max:255'],
+            'description' => ['nullable'],
+            'active' => ['nullable'],
+            'slug' => ['required', 'max:255']
+        ]);
+
+        // TODO: make sure the route cant be set to active if one of the endpoints in the mapping is not filled
+
+        $route = $this->routeService->update($validatedData, $route);
+
+        return redirect('/routes/' . $route->id)->with('success', 'Route with name ' . $route->title . ' has successfully been updated!');
     }
 
     /**
@@ -80,6 +134,10 @@ class RouteController extends Controller
      */
     public function destroy(Route $route)
     {
-        //
+        Gate::authorize('mutate_or_view_route', $route);
+
+        $this->routeService->delete($route);
+
+        return redirect('/routes')->with('success', 'Route with name "' . $route->title . '" has succesfully been deleted!');
     }
 }

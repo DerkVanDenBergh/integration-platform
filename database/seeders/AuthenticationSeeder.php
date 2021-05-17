@@ -32,14 +32,16 @@ class AuthenticationSeeder extends Seeder
             1001, 
             'API key', 
             'Basic', 
-            'test_account',
-            'Wachtwoord_123',
+            'test_user_account',
+            'VerySecurePassword123!',
             '',
             '', 
             1001
         ));
 
         $authentication_basic->save();
+
+        \Illuminate\Support\Facades\DB::statement("ALTER SEQUENCE authentications_id_seq RESTART 11000;");
     }
 
     private function definition($id, $title, $type, $username, $password, $key, $token, $connection_id)
