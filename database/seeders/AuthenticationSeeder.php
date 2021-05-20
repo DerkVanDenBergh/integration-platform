@@ -38,6 +38,8 @@ class AuthenticationSeeder extends Seeder
             '', 
             1001
         ));
+
+        $authentication_basic->save();
     }
 
     private function definition($id, $title, $type, $username, $password, $key, $token, $connection_id)
