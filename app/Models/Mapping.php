@@ -10,6 +10,7 @@ class Mapping extends Model
     use HasFactory;
 
     protected $fillable = [
+        'input_model',
         'input_endpoint',
         'output_endpoint',
         'route_id'

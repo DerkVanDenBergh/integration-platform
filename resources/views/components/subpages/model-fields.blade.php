@@ -7,16 +7,7 @@
             </h2>
         @endif
 
-        @if($fields->count() > 0)
-            <div class="px-2">
-                @foreach ($fields as $field)
-                    <x-subpages.model-field :field="$field" :level="__(1)" :showEdit="$showEdit" :showDelete="$showDelete" :resource="$resource ?? ''"></x-subpages.model-field>
-                @endforeach
-            </div>
-            
-        @else
-            <x-alerts.model-empty></x-alerts.model-empty>
-        @endif
+        <x-subpages.model-fields-repeater :fields="$fields" :showEdit="$showEdit" :showDelete="$showDelete" :resource="$resource ?? ''"></x-subpages.model-fields-repeater>        
 
         @if($showCreate ?? true)
             <a href="{{ $nestedResource ?? ''}}/{{ $resource }}/create" class="mt-5 bg-gray-100 hover:bg-green-400 hover:text-white transition text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">

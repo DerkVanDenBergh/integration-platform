@@ -20,7 +20,7 @@ class RouteSeeder extends Seeder
             'Beeceptor User -> Beeceptor Employee', 
             'A route to integrate a user model from Beeceptor User Management to Beeceptor Employee Management.', 
             true, 
-            '/usermanagement/addUser',
+            '85jGeLxPQbXDqrpsp6CZis6tg',
             1002
         ));
 

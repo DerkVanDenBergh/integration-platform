@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
         $this->call(EndpointSeeder::class);
         $this->call(RouteSeeder::class);
         $this->call(MappingSeeder::class);
+        $this->call(MappingFieldSeeder::class);
         
         
     }

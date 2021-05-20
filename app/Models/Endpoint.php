@@ -23,4 +23,12 @@ class Endpoint extends Model
         'connection_id',
         'template'
     ];
+
+    public function connection() {
+        return $this->hasOne( 'App\Models\Connection', 'id', 'connection_id' );
+    }
+
+    public function authentication() {
+        return $this->hasOne( 'App\Models\Authentication', 'id', 'authentication_id' );
+    }
 }

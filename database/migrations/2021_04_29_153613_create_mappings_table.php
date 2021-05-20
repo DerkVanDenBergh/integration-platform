@@ -15,6 +15,8 @@ class CreateMappingsTable extends Migration
     {
         Schema::create('mappings', function (Blueprint $table) {
             $table->id();
+            $table->string('type');
+            $table->integer('input_model')->nullable();
             $table->integer('input_endpoint')->nullable();
             $table->integer('output_endpoint')->nullable();
             $table->integer('route_id');

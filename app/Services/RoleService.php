@@ -4,8 +4,18 @@ namespace App\Services;
 
 use App\Models\Role;
 
+use App\Services\LogService;
+
 class RoleService
 {
+    protected $logService;
+
+    public function __construct(
+        LogService $logService
+    ) {
+        $this->logService = $logService;
+    }
+    
     public function store(array $data)
     {
         $role = Role::create($data);
@@ -17,6 +27,8 @@ class RoleService
         $role->can_manage_functions = array_key_exists('can_manage_functions', $data);
         $role->can_manage_templates= array_key_exists('can_manage_templates', $data);
         $role->save();
+
+        $this->logService->push('info','created role with id ' . $role->id . '.', json_encode($role));
 
         return $role;
     }
@@ -34,12 +46,16 @@ class RoleService
 
         $role->save();
 
+        $this->logService->push('info','updated role with id ' . $role->id . '.', json_encode($role));
+
         return $role;
     }
 
     public function delete(Role $role)
     {
        $role->delete();
+
+       $this->logService->push('info','deleted role with id ' . $role->id . '.', json_encode($role));
 
        return $role;
     }
@@ -48,12 +64,16 @@ class RoleService
     {
        $role = Role::find($id);
 
+       $this->logService->push('info','requested role with id ' . $role->id . '.', json_encode($role));
+
        return $role;
     }
 
     public function findAll()
     {
        $roles = Role::all();
+
+       $this->logService->push('info','requested all roles.');
 
        return $roles;
     }

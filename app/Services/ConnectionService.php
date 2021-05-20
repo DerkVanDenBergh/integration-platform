@@ -5,9 +5,19 @@ namespace App\Services;
 use Illuminate\Support\Facades\Gate;
 
 use App\Models\Connection;
+use App\Services\LogService;
 
 class ConnectionService
 {
+    
+    protected $logService;
+
+    public function __construct(
+        LogService $logService
+    ) {
+        $this->logService = $logService;
+    }
+
     public function store(array $data)
     {
         $connection = Connection::create($data);
@@ -19,6 +29,8 @@ class ConnectionService
         }
 
         $connection->save();
+
+        $this->logService->push('info','created connection with id ' . $connection->id . '.', json_encode($connection));
 
         return $connection;
     }
@@ -50,6 +62,8 @@ class ConnectionService
             $authentication->save();
         }
 
+        $this->logService->push('info','created connection with id ' . $connection->id . ' from a template with id ' . $data['template_id'] . '.', json_encode($connection));
+
         return $connection;
     }
 
@@ -65,12 +79,16 @@ class ConnectionService
             $connection->save();
         }
 
+        $this->logService->push('info','updated connection with id ' . $connection->id . '.', json_encode($connection));
+
         return $connection;
     }
 
     public function delete(Connection $connection)
     {
        $connection->delete();
+
+       $this->logService->push('info','deleted connection with id ' . $connection->id . '.', json_encode($connection));
 
        return $connection;
     }
@@ -79,12 +97,16 @@ class ConnectionService
     {
        $connection = Connection::find($id);
 
+       $this->logService->push('info','requested connection with id ' . $connection->id . '.', json_encode($connection));
+
        return $connection;
     }
 
     public function findAll()
     {
        $connections = Connection::where('template', false);
+
+       $this->logService->push('info','requested all connections.');
 
        return $connections;
     }
@@ -93,12 +115,16 @@ class ConnectionService
     {
         $connections = Connection::where('user_id', $id)->where('template', false)->get();
 
+        $this->logService->push('info','requested all connections associated with user with id ' . $id . '.');
+
         return $connections;
     }
 
     public function findAllTemplates()
     {
         $connections = Connection::where('template', true)->get();
+
+        $this->logService->push('info','requested all templates.');
 
         return $connections;
     }

@@ -12,22 +12,16 @@
 
         <x-slot name="fields">
 
-            <div class="col-span-2">
+            <div class="col-span-4">
                 <x-forms.label for="title" :value="__('Name')" />
 
                 <x-forms.input id="title" class="block mt-1 w-full" type="text" name="title" value="{{ $route->title }}" required autofocus />
             </div>
 
-            <div class="col-span-2">
-                <x-forms.label for="slug" :value="__('Slug')" />
-
-                <x-forms.input id="slug" class="block mt-1 w-full" type="text" name="slug" value="{{ $route->slug }}" required autofocus />
-            </div>
-
             <div class="col-span-4">
                 <x-forms.label for="description" :value="__('Description')" />
 
-                <x-forms.input id="description" class="block mt-1 w-full" type="text" name="description" value="{{ $route->description }}" required autofocus />
+                <x-forms.input id="description" class="block mt-1 w-full" type="text" name="description" value="{{ $route->description }}"  autofocus />
             </div>
 
             <div class="col-span-1">

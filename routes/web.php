@@ -8,6 +8,7 @@ use App\Http\Controllers\DataModelFieldController;
 use App\Http\Controllers\EndpointController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\MappingController;
+use App\Http\Controllers\MappingFieldController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RouteController;
@@ -17,6 +18,8 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TemplateController;
+use App\Http\Controllers\HookController;
+use App\Http\Controllers\RunController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +31,14 @@ use App\Http\Controllers\TemplateController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+// Hooks
+
+Route::get('/hooks/{slug}', [HookController::class, 'get'])->name('hook.get');
+Route::post('/hooks/{slug}', [HookController::class, 'post'])->name('hook.post');
+Route::patch('/hooks/{slug}', [HookController::class, 'patch'])->name('hook.patch');
+Route::put('/hooks/{slug}', [HookController::class, 'put'])->name('hook.put');
+Route::delete('/hooks/{slug}', [HookController::class, 'delete'])->name('hook.delete');
 
 // Non-model pages
 
@@ -50,10 +61,6 @@ Route::post('/models/create/definition', [DataModelController::class, 'definitio
 
 Route::resource('models.fields', DataModelFieldController::class)->middleware(['auth'])->shallow()->middleware(['auth']);
 
-
-// Data mappings
-
-Route::resource('routes.mappings', MappingController::class)->middleware(['auth']);
 
 
 // Connections
@@ -92,6 +99,23 @@ Route::post('/connections/{connection}/authentications/create', [AuthenticationC
 Route::resource('routes', RouteController::class)->middleware(['auth']);
 
 
+// Data mappings
+
+Route::resource('routes.mappings', MappingController::class)->middleware(['auth']);
+
+
+// Data mapping fields  
+
+Route::get('/routes/{route}/mappings/{mapping}/fields', [MappingFieldController::class, 'edit'])->middleware(['auth']);
+
+Route::post('/routes/{route}/mappings/{mapping}/fields', [MappingFieldController::class, 'update'])->middleware(['auth']);
+
+
+// Mapping steps
+
+Route::resource('routes.steps', StepController::class)->middleware(['auth']);
+
+
 // Tasks
 
 Route::resource('tasks', TaskController::class)->middleware(['auth']);
@@ -109,12 +133,12 @@ Route::resource('roles', RoleController::class)->middleware(['auth']);
 
 // Logs
 
-//Route::resource('logs', LogController::class)->middleware(['auth']);
+Route::resource('logs', LogController::class)->middleware(['auth']);
 
 
-// Notifications
+// Runs
 
-Route::resource('notifications', NotificationController::class)->middleware(['auth']);
+Route::resource('runs', RunController::class)->middleware(['auth']);
 
 
 // Users

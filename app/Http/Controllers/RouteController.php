@@ -10,22 +10,42 @@ use App\Models\Route;
 use App\Services\RouteService;
 use App\Services\MappingService;
 use App\Services\MappingFieldService;
+use App\Services\DataModelService;
+use App\Services\DataModelFieldService;
+use App\Services\EndpointService;
+use App\Services\StepService;
+use App\Services\RunService;
 
 class RouteController extends Controller
 {
 
     protected $routeService;
     protected $mappingService;
-    protected $fieldService;
+    protected $modelFieldService;
+    protected $mappingFieldService;
+    protected $modelService;
+    protected $endpointService;
+    protected $stepService;
+    protected $runService;
 
     public function __construct(
         RouteService $routeService,
         MappingService $mappingService,
-        MappingFieldService $fieldService
+        MappingFieldService $mappingFieldService,
+        DataModelFieldService $modelFieldService,
+        DataModelService $modelService,
+        EndpointService $endpointService,
+        StepService $stepService,
+        RunService $runService
     ) {
         $this->routeService = $routeService;
         $this->mappingService = $mappingService;
-        $this->fieldService = $fieldService;
+        $this->modelFieldService = $modelFieldService;
+        $this->mappingFieldService = $mappingFieldService;
+        $this->modelService = $modelService;
+        $this->endpointService = $endpointService;
+        $this->stepService = $stepService;
+        $this->runService = $runService;
     }
 
     /**
@@ -60,8 +80,7 @@ class RouteController extends Controller
     {
         $validatedData = $request->validate([
             'title' => ['required', Rule::unique('routes')->where('user_id', auth()->user()->id), 'max:255'],
-            'description' => ['nullable'],
-            'slug' => ['required', 'max:255']
+            'description' => ['nullable']
         ]);
 
         $validatedData['user_id'] = auth()->user()->id;
@@ -83,9 +102,57 @@ class RouteController extends Controller
 
         $mapping = $this->mappingService->findByRouteId($route->id);
 
-        $fields = $this->fieldService->findAllFromMapping($mapping->id);
+        $mappingFields = $this->mappingFieldService->findAllFromMapping($mapping->id);
 
-        return view('models.routes.show', compact('route', 'mapping', 'fields'));
+        $models = $this->modelService->findAllFromUser(auth()->user()->id);
+
+        $endpoints = $this->endpointService->findAllFromUser(auth()->user()->id);
+
+        $steps = $this->stepService->findAllFromRoute($route->id);
+
+        $runs = $this->runService->findAllFromRoute($route->id);
+
+        if($mapping->output_endpoint != null) {
+            $outputEndpoint = $this->endpointService->findById($mapping->output_endpoint);
+
+            $outputModel = $this->modelService->findById($outputEndpoint->model_id);
+
+            $outputModelFields = $this->modelFieldService->findAllFromModel($outputModel->id);
+
+            $inputModel = $this->modelService->findById($mapping->input_model);
+
+            $inputModelFields = $this->modelFieldService->findAllFromModel($inputModel->id);
+
+            return view(
+                'models.routes.show', 
+                compact(
+                    'route', 
+                    'mapping', 
+                    'mappingFields',
+                    'models', 
+                    'endpoints',
+                    'steps',
+                    'outputModel',
+                    'outputModelFields',
+                    'inputModel',
+                    'inputModelFields', 
+                    'runs'
+                )
+            );
+        }
+
+        return view(
+            'models.routes.show', 
+            compact(
+                'route', 
+                'mapping', 
+                'mappingFields',
+                'models', 
+                'endpoints',
+                'steps', 
+                'runs'
+            )
+        );
     }
 
     /**
@@ -115,8 +182,7 @@ class RouteController extends Controller
         $validatedData = $request->validate([
             'title' => ['required', Rule::unique('routes')->where('user_id', auth()->user()->id)->ignore($route->id), 'max:255'],
             'description' => ['nullable'],
-            'active' => ['nullable'],
-            'slug' => ['required', 'max:255']
+            'active' => ['nullable']
         ]);
 
         // TODO: make sure the route cant be set to active if one of the endpoints in the mapping is not filled

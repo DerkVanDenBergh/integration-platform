@@ -22,6 +22,7 @@ class EndpointSeeder extends Seeder
             'HTTP',
             'POST',
             1000,
+            1000,
             1000
         ));
 
@@ -33,6 +34,7 @@ class EndpointSeeder extends Seeder
             '/users', 
             'HTTP',
             'GET',
+            1000,
             1000,
             1000
         ));
@@ -46,6 +48,7 @@ class EndpointSeeder extends Seeder
             'HTTP',
             'POST',
             1001,
+            1001,
             1001
         ));
 
@@ -58,6 +61,7 @@ class EndpointSeeder extends Seeder
             'HTTP',
             'GET',
             1001,
+            1001,
             1001
         ));
         
@@ -66,7 +70,7 @@ class EndpointSeeder extends Seeder
         \Illuminate\Support\Facades\DB::statement("ALTER SEQUENCE endpoints_id_seq RESTART 11000;");
     }
 
-    private function definition($id, $title, $endpoint, $protocol, $method, $connection_id, $model_id)
+    private function definition($id, $title, $endpoint, $protocol, $method, $connection_id, $authentication_id, $model_id)
     {
         $parameters = [
             'id' => $id,
@@ -75,6 +79,7 @@ class EndpointSeeder extends Seeder
             'protocol' => $protocol,
             'method' => $method,
             'connection_id' => $connection_id,
+            'authentication_id' => $authentication_id,
             'model_id' => $model_id
         ];
 

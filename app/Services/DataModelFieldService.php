@@ -7,6 +7,14 @@ use App\Models\DataModelField;
 
 class DataModelFieldService
 {
+    protected $logService;
+
+    public function __construct(
+        LogService $logService
+    ) {
+        $this->logService = $logService;
+    }
+    
     public function store(array $data)
     {
         $dataModelField = DataModelField::create($data);
@@ -46,7 +54,6 @@ class DataModelFieldService
 
     public function findAllFromModel($id)
     {
-
         $dataModelFields = DataModelField::where('model_id', $id)->whereNull('parent_id')->get();
 
         return $dataModelFields;
@@ -56,6 +63,20 @@ class DataModelFieldService
     {
 
         $dataModelFields = DataModelField::where('model_id', $id)->whereIn('node_type', ['set', 'array'])->get();
+
+        return $dataModelFields;
+    }
+
+    public function findAllFieldNamesFromModel($id)
+    {
+        $dataModelFields = DataModelField::where('model_id', $id)->pluck('name');
+
+        return $dataModelFields;
+    }
+
+    public function findAllAttributesFromModel($id)
+    {
+        $dataModelFields = DataModelField::where('model_id', $id)->where('node_type', 'attribute')->get();
 
         return $dataModelFields;
     }
@@ -106,10 +127,11 @@ class DataModelFieldService
                 'option' => 'set',
                 'label' => 'Set'
             ],
-            (object) [
-                'option' => 'array',
-                'label' => 'List'
-            ]
+            // TODO Make this supported in logic
+            //(object) [
+            //    'option' => 'array',
+            //    'label' => 'List'
+            //]
         ]);
 
         return $options;

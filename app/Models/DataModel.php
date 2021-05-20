@@ -19,4 +19,8 @@ class DataModel extends Model
         'description',
         'user_id'
     ];
+
+    public function fields(){
+        return $this->hasMany( 'App\Models\DataModelField', 'model_id', 'id' );
+    }
 }

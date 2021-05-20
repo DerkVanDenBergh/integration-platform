@@ -17,20 +17,24 @@ class MappingSeeder extends Seeder
     {
         $beeceptor_user_to_beeceptor_employee_mapping = new Mapping($this->definition(
             1000, 
+            'route',
             1000,
+            null,
             1002,
             1000
         ));
 
         $beeceptor_user_to_beeceptor_employee_mapping->save();
 
-        \Illuminate\Support\Facades\DB::statement("ALTER SEQUENCE routes_id_seq RESTART 11000;");
+        \Illuminate\Support\Facades\DB::statement("ALTER SEQUENCE mappings_id_seq RESTART 11000;");
     }
 
-    private function definition($id, $input_endpoint, $output_endpoint, $route_id)
+    private function definition($id, $type, $input_model, $input_endpoint, $output_endpoint, $route_id)
     {
         $parameters = [
             'id' => $id,
+            'type' => $type,
+            'input_model' => $input_model,
             'input_endpoint' => $input_endpoint,
             'output_endpoint' => $output_endpoint,
             'route_id' => $route_id

@@ -46,6 +46,13 @@
                 </div>
             @endif
 
+            <div class="col-span-4">
+                <x-forms.label for="authentication_id" :value="__('Authentication')" />
+
+                <x-forms.select id="authentication_id" :value="__('id')" :label="__('title')" :options="$authentications" :selected="$endpoint->authentication_id" class="block mt-1 w-full" name="authentication_id" required disabled autofocus />
+            </div>
+
+
         </x-slot>
     
     </x-subpages.model-view>

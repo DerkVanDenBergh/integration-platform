@@ -15,10 +15,16 @@
                 <x-forms.input id="protocol" type="hidden" name="protocol" value="{{ $endpoint->protocol }}" required autofocus />
             </div>
 
-            <div class="col-span-4">
+            <div class="col-span-2">
                 <x-forms.label for="title" :value="__('Name')" />
 
                 <x-forms.input id="title" class="block mt-1 w-full" type="text" name="title" value="{{ $endpoint->title}}" required autofocus />
+            </div>
+
+            <div class="col-span-2">
+                <x-forms.label for="authentication_id" :value="__('Authentication')" />
+
+                <x-forms.select id="authentication_id" :value="__('id')" :label="__('title')" :options="$authentications" :selected="$endpoint->authentication_id" class="block mt-1 w-full" name="authentication_id" required autofocus />
             </div>
 
             <div class="col-span-2">

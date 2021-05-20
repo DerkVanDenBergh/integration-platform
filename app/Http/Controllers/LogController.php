@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Log;
 use Illuminate\Http\Request;
 
+use App\Services\LogService;
+
 class LogController extends Controller
 {
 
@@ -22,7 +24,9 @@ class LogController extends Controller
      */
     public function index()
     {
-       
+       $logs = $this->logService->findAll();
+
+       return view('models.logs.index', compact('logs'));
     }
 
     /**
@@ -33,6 +37,6 @@ class LogController extends Controller
      */
     public function show(Log $log)
     {
-        //
+        return view('models.logs.show', compact('log'));
     }
 }

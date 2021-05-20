@@ -9,8 +9,13 @@ class MappingField extends Model
 {
     use HasFactory;
 
-    public function mapping()
-    {
-        return $this->belongsTo(Mapping::class);
+    protected $fillable = [
+        'mapping_id',
+        'input_field',
+        'output_field'
+    ];
+
+    public function mapping(){
+        return $this->hasOne( 'App\Models\Mapping', 'id', 'mapping_id' );
     }
 }

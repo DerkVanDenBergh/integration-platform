@@ -3,14 +3,27 @@
 namespace App\Services;
 
 use App\Models\Endpoint;
+use App\Models\Connection;
+
+use App\Services\LogService;
 
 class EndpointService
 {
+    protected $logService;
+
+    public function __construct(
+        LogService $logService
+    ) {
+        $this->logService = $logService;
+    }
+    
     public function store(array $data)
     {
         $endpoint = Endpoint::create($data);
 
         $endpoint->save();
+
+        $this->logService->push('info','created endpoint with id ' . $endpoint->id . '.', json_encode($endpoint));
 
         return $endpoint;
     }
@@ -18,6 +31,8 @@ class EndpointService
     public function update(array $data, Endpoint $endpoint)
     {
         $endpoint->update($data);
+
+        $this->logService->push('info','updated endpoint with id ' . $endpoint->id . '.', json_encode($endpoint));
 
         return $endpoint;
     }
@@ -28,12 +43,16 @@ class EndpointService
 
         $endpoint->save();
 
+        $this->logService->push('info','updated the model for endpoint with id ' . $endpoint->id . '.', json_encode($endpoint));
+
         return $endpoint;
     }
 
     public function delete(Endpoint $endpoint)
     {
        $endpoint->delete();
+
+       $this->logService->push('info','deleted endpoint with id ' . $endpoint->id . '.', json_encode($endpoint));
 
        return $endpoint;
     }
@@ -42,12 +61,16 @@ class EndpointService
     {
        $endpoint = Endpoint::find($id);
 
+       $this->logService->push('info','requested endpoint with id ' . $id . '.');
+
        return $endpoint;
     }
 
     public function findAll()
     {
        $endpoints = Endpoint::all();
+
+       $this->logService->push('info','requested all endpoints');
 
        return $endpoints;
     }
@@ -56,16 +79,34 @@ class EndpointService
     {
         $endpoints = Endpoint::where('connection_id', $id)->get();
 
+        $this->logService->push('info','requested all endpoints associated with connection with id ' . $id . '.');
+
         return $endpoints;
     }
 
     public function findAllFromUser($id)
     {
+        // TODO: is a service call, make it a service call
         $connections = Connection::select('id')->where('user_id', $id)->get();
 
-        $endpoints = Endpoint::whereIn('connection_id', $connections)->get();
+        $authentications = Endpoint::whereIn('connection_id', $connections)
+                                            ->addSelect(['connection_name' => Connection::select('title')
+                                                ->whereColumn('connection_id', 'connections.id')
+                                                ->limit(1)])
+                                            ->get();
 
-        return $endpoints;
+        $this->logService->push('info','requested all endpoints associated with user with id ' . $id . '.');
+
+        return $authentications;
+    }
+
+    public function getUrlById($id)
+    {
+        $endpoint = Endpoint::find($id);
+
+        $connection = $endpoint->connection()->first();
+
+        return $connection->base_url . $endpoint->endpoint;
     }
 
     public function getProtocols()

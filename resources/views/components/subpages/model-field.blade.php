@@ -1,11 +1,30 @@
-<div class="border-2 border-indigo-{{ $level % 9 }}00 overflow-hidden sm:rounded-lg p-2 pl-4 pr-4 mt-4 mb-2">
+<div class="border-2 @if($field->node_type != 'attribute') border-green-300 @else border-indigo-300 @endif overflow-hidden sm:rounded-lg p-2 pl-4 pr-4 mt-4 mb-2">
     <div class="mr-3 inline-block">
-        {{ $field->name }}
+        
+        @if($mappingFields ?? false)
+            @if( $field->node_type != 'attribute' )
+                <div> {{ $field->name }} </div>
+            @else
+                @if($field->getMappedInputField($mapping->id, $field->id))
+                    @foreach($mappingFields as $mappingField)
+                        @if($mappingField->output_field == $field->id)
+                            <div class="inline-block mr-1">{{ $field->name }} -></div><div class="inline-block sm:rounded-lg bg-gray-200 px-1"> {{ $mappingField->field_name }} </div>
+                        @endif
+                    @endforeach
+                @else
+                    <div class="inline-block mr-1">{{ $field->name }} -></div><div class="inline-block sm:rounded-lg bg-gray-200 px-1"> no changes </div>
+                @endif
+            @endif
+        @else
+            {{ $field->name }}
+        @endif
     </div>
 
-    <div class="text-gray-400 inline-block">
-        {{ $field->node_type }}@if($field->data_type ?? false), {{ $field->data_type }} @endif
-    </div>
+    @if(!($mappingFields ?? true) || ($field->node_type != 'attribute'))
+        <div class="text-gray-400 inline-block">
+            {{ $field->node_type }}@if($field->data_type ?? false), {{ $field->data_type }} @endif
+        </div>
+    @endif
 
     <div class="inline-block text-gray-400 float-right">
         @if($showEdit ?? true)
@@ -29,7 +48,7 @@
     @if (count($field->children()->get()) > 0)
         <div class="gap-4 mt-3">
             @foreach($field->children()->get() as $child)
-                <x-subpages.model-field :field="$child" :level="$level + 1" :showEdit="$showEdit" :showDelete="$showDelete" :resource="$resource ?? ''"></x-subpages.model-field>
+                <x-subpages.model-field :mapping="$mapping" :mappingFields="$mappingFields ?? ''" :field="$child" :showEdit="$showEdit" :showDelete="$showDelete" :resource="$resource ?? ''"></x-subpages.model-field>
             @endforeach
         </div>
 	@endif

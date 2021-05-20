@@ -4,13 +4,25 @@ namespace App\Services;
 
 use App\Models\Mapping;
 
+use App\Services\LogService;
+
 class MappingService
 {
-    public function store(array $data)
+    protected $logService;
+
+    public function __construct(
+        LogService $logService
+    ) {
+        $this->logService = $logService;
+    }
+    
+    public function store(array $data, $type)
     {
         $mapping = Mapping::create($data);
 
         $mapping->save();
+
+        $this->logService->push('info','created mapping with id ' . $mapping->id . '.', json_encode($mapping));
 
         return $mapping;
     }
@@ -19,12 +31,16 @@ class MappingService
     {
         $mapping->update($data);
 
+        $this->logService->push('info','updated mapping with id ' . $mapping->id . '.', json_encode($mapping));
+
         return $mapping;
     }
 
     public function delete(Mapping $mapping)
     {
        $mapping->delete();
+
+       $this->logService->push('info','deleted mapping with id ' . $mapping->id . '.', json_encode($mapping));
 
        return $mapping;
     }
@@ -33,6 +49,8 @@ class MappingService
     {
        $mapping = Mapping::find($id);
 
+       $this->logService->push('info','requested mapping with id ' . $mapping->id . '.', json_encode($mapping));
+
        return $mapping;
     }
 
@@ -40,12 +58,16 @@ class MappingService
     {
        $mappings = Mapping::all();
 
+       $this->logService->push('info','requested all mappings.');
+
        return $mappings;
     }
 
     public function findAllFromUser($id)
     {
         $mappings = Mapping::where('user_id', $id)->get();
+
+        $this->logService->push('info','requested all mappings associated with user with id ' . $id . '.');
 
         return $mappings;
     }
@@ -59,9 +81,10 @@ class MappingService
 
     public function createMappingForRoute($id)
     {
-        $mapping = Mapping::create([
-            'route_id' => $id
-        ]);
+        $mapping = new Mapping();
+
+        $mapping->route_id = $id;
+        $mapping->type = 'route';
 
         $mapping->save();
 
