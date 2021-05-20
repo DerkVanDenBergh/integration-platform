@@ -72,4 +72,13 @@ class StepArgumentService
 
        return $stepArguments;
     }
+
+    public function findAllFromStep($id)
+    {
+        $stepArguments = StepArgument::with('step_function_parameter')->where('step_id', $id)->get();
+
+        $this->logService->push('info','requested all stepArguments from step with id' . $id . '.');
+
+        return $stepArguments;
+    }
 }

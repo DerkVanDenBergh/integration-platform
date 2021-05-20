@@ -92,14 +92,14 @@ class HookService
         $fieldMapping = $this->mappingFieldService->findByMappingAndOutputFieldId($mapping->id, $field->id);
 
         if($fieldMapping) {
-            if($fieldMapping->type == 'model') {
+            if($fieldMapping->input_field_type == 'model') {
                 $inputField = $this->modelFieldService->findById($fieldMapping->input_field);
 
                 $path = $this->getFullKeyPath($inputField);
             } else {
                 $step = $this->stepService->findById($fieldMapping->input_field);
 
-                $path = $stepField->name;
+                $path = [$step->name];
             }
 
             $reference = $this->array_access($requestFields, $path);
@@ -110,7 +110,7 @@ class HookService
         }
     }
 
-    private function getFullKeyPath($field)
+    private static function getFullKeyPath($field)
     {
         $key = [];
 
@@ -127,12 +127,12 @@ class HookService
         return array_reverse($key);
     }
 
-    private function array_access(&$array, $keys) {
+    private static function array_access(&$array, $keys) {
 
         if ($keys) {
             $key = array_shift($keys);
     
-            $sub = $this->array_access(
+            $sub = self::array_access(
                 $array[$key],
                 $keys
             );

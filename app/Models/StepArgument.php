@@ -15,7 +15,7 @@ class StepArgument extends Model
         'parameter_id'
     ];
 
-    public function parameter () {
+    public function step_function_parameter () {
         return $this->hasOne( 'App\Models\StepFunctionParameter', 'id', 'parameter_id' );
     }
 }

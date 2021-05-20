@@ -35,7 +35,7 @@ class StepArgumentSeeder extends Seeder
 
         $append_initials_value_1 = new StepArgument($this->definition(
             1002, 
-            '![first_name] (D.P.)', 
+            '![name.first_name] (D.P.)', 
             1001, 
             1002
         ));

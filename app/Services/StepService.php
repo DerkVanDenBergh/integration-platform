@@ -10,11 +10,17 @@ use App\Services\LogService;
 class StepService
 {
     protected $logService;
+    protected $stepFunctionService;
+    protected $stepArgumentService;
 
     public function __construct(
-        LogService $logService
+        LogService $logService,
+        StepFunctionService $stepFunctionService,
+        StepArgumentService $stepArgumentService
     ) {
         $this->logService = $logService;
+        $this->stepFunctionService = $stepFunctionService;
+        $this->stepArgumentService = $stepArgumentService;
     }
     
     public function store(array $data)
@@ -59,7 +65,7 @@ class StepService
     {
         $step = Step::find($id);
 
-        $this->logService->push('info','requested step with id ' . $step->id . '.', json_encode($step));
+        $this->logService->push('info','requested step with id ' . $id . '.', json_encode($step));
 
         return $step;
     }
@@ -82,7 +88,7 @@ class StepService
                         })
                         ->orderBy('order')
                         ->get();
-                        
+
         return $steps;
     }   
 
@@ -98,6 +104,18 @@ class StepService
 
     public function processSteps($route, $data)
     {
-        return $data; // TODO process steps defined in route
+        $steps = $this->findAllFromRoute($route->id);
+
+        foreach($steps as $step) {
+            $function = $this->stepFunctionService->findById($step->step_function_id);
+
+            $arguments = $this->stepArgumentService->findAllFromStep($step->id);
+            if($step->id != 1000) {
+                $data[$step->name] = $this->stepFunctionService->executeFunction($function, $arguments, $data);
+        
+            }
+        }
+        
+        return $data;
     }
 }

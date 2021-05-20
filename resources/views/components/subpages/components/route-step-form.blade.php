@@ -19,16 +19,20 @@
 
         </div>
 
+        <div class="text-sm pt-2">
+            {{ $function->description }}
+        </div>
+
         <div class="grid grid-cols-4 gap-4 argument-container">
             @if($arguments ?? false)
                 @foreach($arguments as $argument)
 
                     <div class="col-span-2 py-4">
-                        <x-forms.label for="steps[{{ $number }}][arguments][{{ $argument->parameter()->first()->id }}]" :value="__('Parameter ' . $loop->index + 1 . ': '. $argument->parameter()->first()->name)" />
-                        @if($argument->parameter()->first()->is_nullable)
-                            <x-forms.input id="steps[{{ $number }}][arguments][{{ $argument->parameter()->first()->id }}]" class="block mt-1 w-full" type="text" name="steps[{{ $number }}][arguments][{{ $argument->parameter()->first()->id }}]" value="{{ $argument->value }}" autofocus />
+                        <x-forms.label for="steps[{{ $number }}][arguments][{{ $argument->step_function_parameter()->first()->id }}]" :value="__('Parameter ' . $loop->index + 1 . ': '. $argument->step_function_parameter()->first()->name)" />
+                        @if($argument->step_function_parameter()->first()->is_nullable)
+                            <x-forms.input id="steps[{{ $number }}][arguments][{{ $argument->step_function_parameter()->first()->id }}]" class="block mt-1 w-full" type="text" name="steps[{{ $number }}][arguments][{{ $argument->step_function_parameter()->first()->id }}]" value="{{ $argument->value }}" autofocus />
                         @else
-                            <x-forms.input id="steps[{{ $number }}][arguments][{{ $argument->parameter()->first()->id }}]" class="block mt-1 w-full" type="text" name="steps[{{ $number }}][arguments][{{ $argument->parameter()->first()->id }}]" value="{{ $argument->value }}" required autofocus />
+                            <x-forms.input id="steps[{{ $number }}][arguments][{{ $argument->step_function_parameter()->first()->id }}]" class="block mt-1 w-full" type="text" name="steps[{{ $number }}][arguments][{{ $argument->step_function_parameter()->first()->id }}]" value="{{ $argument->value }}" required autofocus />
                         @endif
                     </div>
                     

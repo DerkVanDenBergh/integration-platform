@@ -7,6 +7,8 @@ use App\Models\StepFunction;
 
 use App\Services\LogService;
 
+use App\Logic\Routes\StepFunctions;
+
 class StepFunctionService
 {
     protected $logService;
@@ -71,5 +73,10 @@ class StepFunctionService
        $this->logService->push('info','requested all step functions with parameters.');
 
        return $stepFunctions;
+    }
+
+    public function executeFunction($function, $arguments, $data)
+    {
+        return StepFunctions::execute($function, $arguments, $data);
     }
 }
