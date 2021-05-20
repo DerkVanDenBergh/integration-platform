@@ -10,13 +10,31 @@ use App\Models\Endpoint;
 use App\Models\Connection;
 
 use App\Services\EndpointService;
+use App\Services\ConnectionService;
+use App\Services\DataModelService;
+use App\Services\DataModelFieldService;
+use App\Services\AuthenticationService;
 
 class EndpointController extends Controller
 {
     protected $endpointService;
+    protected $connectionService;
+    protected $dataModelService;
+    protected $fieldService;
+    protected $authenticationService;
 
-    public function __construct(EndpointService $endpointService) {
+    public function __construct(
+        EndpointService $endpointService, 
+        ConnectionService $connectionService, 
+        DataModelService $dataModelService,
+        DataModelFieldService $fieldService,
+        AuthenticationService $authenticationService
+    ) {
         $this->endpointService = $endpointService;
+        $this->connectionService = $connectionService;
+        $this->dataModelService = $dataModelService;
+        $this->fieldService = $fieldService;
+        $this->authenticationService = $authenticationService;
     }
 
     /**
@@ -46,7 +64,9 @@ class EndpointController extends Controller
 
         $methods = $this->endpointService->getMethods($type);
 
-        return view('models.endpoints.forms.create.' . strtolower($type), compact('connection', 'type', 'methods'));
+        $authentications = $this->authenticationService->findAllFromUser(auth()->user()->id);
+
+        return view('models.endpoints.forms.create.' . strtolower($type), compact('connection', 'type', 'methods', 'authentications'));
     }
 
     /**
@@ -72,6 +92,7 @@ class EndpointController extends Controller
                         'max:255'],
             'protocol' => ['required'],
             'method' => ['required'],
+            'authentication_id' => ['required'], // TODO add rule where it checks if user owns auth
             'port' => ['required_if:protocol,==,tcp|nullable', 'integer']
         ]);
 
@@ -95,9 +116,15 @@ class EndpointController extends Controller
     {
         Gate::authorize('mutate_or_view_endpoint', $endpoint);
 
-        $connection = Connection::find($endpoint->connection_id);
+        // TODO: deze naar model
 
-        return view('models.endpoints.show', compact('endpoint', 'connection'));
+        $connection = $this->connectionService->findById($endpoint->connection_id);
+
+        $fields = $this->fieldService->findAllFromModel($endpoint->model_id);
+
+        $authentications = $this->authenticationService->findAllFromUser(auth()->user()->id);
+
+        return view('models.endpoints.show', compact('endpoint', 'connection', 'fields', 'authentications'));
     }
 
     /**
@@ -110,9 +137,13 @@ class EndpointController extends Controller
     {
         Gate::authorize('mutate_or_view_endpoint', $endpoint);
 
+        // TODO deze naar model
+        
         $methods = $this->endpointService->getMethods($endpoint->protocol);
 
-        return view('models.endpoints.forms.edit.' . strtolower($endpoint->protocol), compact('endpoint', 'methods'));
+        $authentications = $this->authenticationService->findAllFromUser(auth()->user()->id);
+
+        return view('models.endpoints.forms.edit.' . strtolower($endpoint->protocol), compact('endpoint', 'methods', 'authentications'));
     }
 
     /**
@@ -143,6 +174,7 @@ class EndpointController extends Controller
                         'max:255'],
             'protocol' => ['required'],
             'method' => ['required'],
+            'authentication_id' => ['required'], // TODO add rule where it checks if user owns auth
             'port' => ['required_if:protocol,==,tcp|nullable' ,'integer']
         ]);
 
@@ -167,5 +199,36 @@ class EndpointController extends Controller
         $this->endpointService->delete($endpoint);
 
         return redirect('/connections/' . $endpoint->connection_id)->with('success', 'Endpoint with name "' . $endpoint->title . '" has succesfully been deleted!');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Endpoint  $endpoint
+     * @return \Illuminate\Http\Response
+     */
+    public function model_edit(EndPoint $endpoint)
+    {
+        $models = $this->dataModelService->findAllFromUser(auth()->user()->id);
+
+        return view('models.endpoints.model', compact('endpoint', 'models'));
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Endpoint  $endpoint
+     * @return \Illuminate\Http\Response
+     */
+    public function model_update(Request $request, Endpoint $endpoint)
+    {
+        $validatedData = $request->validate([
+            'option' => ['required']
+        ]);
+
+        $endpoint = $this->endpointService->updateModel($validatedData['option'], $endpoint);
+
+        return redirect('/endpoints/' . $endpoint->id)->with('success', 'Endpoint with name "' . $endpoint->title . '" has succesfully been updated!');
     }
 }

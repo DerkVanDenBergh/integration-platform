@@ -4,14 +4,14 @@
         {{ __($role->title . ' - view') }}
     </x-slot>
 
-    <x-model-view :model="$role" :resource="__('roles')">
+    <x-subpages.model-view :model="$role" :resource="__('roles')">
 
         <x-slot name="fields">
 
             <div class="col-span-4">
-                <x-label for="title" :value="__('Role name')" />
+                <x-forms.label for="title" :value="__('Role name')" />
 
-                <x-input id="title" class="block mt-1 w-full" type="text" name="title" value="{{ $role->title }}" required disabled autofocus />
+                <x-forms.input id="title" class="block mt-1 w-full" type="text" name="title" value="{{ $role->title }}" required disabled autofocus />
             </div>
 
             <div class="col-span-1">
@@ -44,6 +44,6 @@
 
         </x-slot>
     
-    </x-model-view>
+    </x-subpages.model-view>
 
 </x-app-layout>

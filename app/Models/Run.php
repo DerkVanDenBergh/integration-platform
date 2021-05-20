@@ -5,7 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Notification extends Model
+class Run extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'process_id',
+        'type',
+        'status',
+        'input',
+        'output'
+    ];
 }

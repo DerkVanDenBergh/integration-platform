@@ -1,4 +1,4 @@
-# Open Source Integration Platform
+# MIntegration
 
 A lightweight open source integration platform.
 

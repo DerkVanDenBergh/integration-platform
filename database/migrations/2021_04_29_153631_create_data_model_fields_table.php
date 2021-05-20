@@ -15,6 +15,11 @@ class CreateDataModelFieldsTable extends Migration
     {
         Schema::create('data_model_fields', function (Blueprint $table) {
             $table->id();
+            $table->integer('model_id');
+            $table->integer('parent_id')->nullable();
+            $table->string('name');
+            $table->string('node_type');
+            $table->string('data_type')->nullable();
             $table->timestamps();
         });
     }

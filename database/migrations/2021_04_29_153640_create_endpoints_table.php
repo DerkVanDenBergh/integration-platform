@@ -21,6 +21,8 @@ class CreateEndpointsTable extends Migration
             $table->string('method');
             $table->integer('port')->nullable();
             $table->integer('connection_id');
+            $table->integer('authentication_id');
+            $table->integer('model_id')->nullable();
             $table->boolean('template')->default(false);
             $table->timestamps();
         });

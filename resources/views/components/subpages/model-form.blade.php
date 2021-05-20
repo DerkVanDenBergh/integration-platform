@@ -1,10 +1,10 @@
 <div class="py-4">
     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-5">
         <!-- Session Status -->
-        <x-auth-session-status class="mb-4" :status="session('status')" />
+        <x-session.auth-session-status class="mb-4" :status="session('status')" />
 
         <!-- Validation Errors -->
-        <x-auth-validation-errors class="mb-4" :errors="$errors" />
+        <x-session.auth-validation-errors class="mb-4" :errors="$errors" />
 
         @if($header ?? false)
             <h2 class="font-semibold text-l text-green-400 leading-tight pb-3">
@@ -23,9 +23,9 @@
 
 
             <div class="flex items-center justify-end">
-                <x-button class="ml-3">
+                <x-buttons.button class="ml-3">
                     {{ __('Save') }}
-                </x-button>
+                </x-buttons.button>
             </div>
         </form>
     </div>

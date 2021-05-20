@@ -1,16 +1,16 @@
 <x-app-layout>
 
     <x-slot name="header">
-        {{ __('Connections') }}
+        {{ __('Authentications') }}
     </x-slot>
 
-    <x-model-table :fields="array('title', 'type', 'connection_name')" :list="$authentications" :resource="__('authentications')" :showView="__(false)">
+    <x-subpages.model-table :fields="array('title', 'type', 'connection_name')" :list="$authentications" :resource="__('authentications')" :showView="__(false)" :showCreate="__(false)">
         <x-slot name="headers">
             <th class="w-1/4 py-2">Title</th>
             <th class="w-1/4 py-2">Type</th>
             <th class="w-1/4 py-2">Connection</th>
             <th class="w-1/4 py-2">Actions</th>
         </x-slot>
-    </x-model-table>
+    </x-subpages.model-table>
 
 </x-app-layout>
