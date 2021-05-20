@@ -41,8 +41,6 @@ class MappingFieldSeeder extends Seeder
         ));
 
         $id_mapping->save();
-
-        \Illuminate\Support\Facades\DB::statement("ALTER SEQUENCE mapping_fields_id_seq RESTART 11000;");
     }
 
     private function definition($id, $output_field, $input_field, $mapping_id)

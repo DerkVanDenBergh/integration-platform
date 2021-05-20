@@ -25,8 +25,6 @@ class RouteSeeder extends Seeder
         ));
 
         $beeceptor_user_to_beeceptor_employee->save();
-
-        \Illuminate\Support\Facades\DB::statement("ALTER SEQUENCE routes_id_seq RESTART 11000;");
     }
 
     private function definition($id, $title, $description, $active, $slug, $user_id)

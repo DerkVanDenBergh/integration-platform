@@ -36,8 +36,6 @@ class ConnectionSeeder extends Seeder
         ));
 
         $beeceptor_b->save();
-
-        \Illuminate\Support\Facades\DB::statement("ALTER SEQUENCE connections_id_seq RESTART 11000;");
     }
 
     private function definition($id, $title, $description, $base_url, $user_id, $template)

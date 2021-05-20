@@ -17,8 +17,6 @@ class RoleSeeder extends Seeder
     {
         $admin = new Role($this->definition(1001, 'Administrator', true, true, true, true));
         $admin->save();
-
-        \Illuminate\Support\Facades\DB::statement("ALTER SEQUENCE roles_id_seq RESTART 11000;");
     }
 
     private function definition($id, $title, $users, $functions, $roles, $templates)

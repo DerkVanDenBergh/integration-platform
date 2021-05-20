@@ -32,8 +32,6 @@ class DataModelSeeder extends Seeder
         ));
         
         $model_employee->save();
-
-        \Illuminate\Support\Facades\DB::statement("ALTER SEQUENCE data_models_id_seq RESTART 11000;");
     }
 
     private function definition($id, $title, $description, $user_id)

@@ -66,8 +66,6 @@ class EndpointSeeder extends Seeder
         ));
         
         $employee_get->save();
-
-        \Illuminate\Support\Facades\DB::statement("ALTER SEQUENCE endpoints_id_seq RESTART 11000;");
     }
 
     private function definition($id, $title, $endpoint, $protocol, $method, $connection_id, $authentication_id, $model_id)

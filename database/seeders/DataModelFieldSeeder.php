@@ -102,8 +102,6 @@ class DataModelFieldSeeder extends Seeder
         ));
         
         $employee_field_name_last->save();
-
-        \Illuminate\Support\Facades\DB::statement("ALTER SEQUENCE data_model_fields_id_seq RESTART 11000;");
     }
 
     private function definition($id, $model_id, $parent_id, $name, $node_type, $data_type)

@@ -33,6 +33,22 @@ class DatabaseSeeder extends Seeder
         $this->call(MappingSeeder::class);
         $this->call(MappingFieldSeeder::class);
         
+        foreach(['role','user','data_model','data_model_field','template','connection','authentication','endpoint','route','mapping','mapping_field'] as $model) {
+            $this->increaseSequence($model);
+        }
+        
+    }
+
+    public function increaseSequence($model)
+    {
+        $connection = config('database.default');
+
+        $driver = config("database.connections.{$connection}.driver");
+
+        if($driver == 'pgsql') {
+            \Illuminate\Support\Facades\DB::statement("ALTER SEQUENCE {$model}s_id_seq RESTART 2000;");
+        }
+
         
     }
 }

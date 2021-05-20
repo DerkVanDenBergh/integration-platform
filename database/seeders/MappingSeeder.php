@@ -25,8 +25,6 @@ class MappingSeeder extends Seeder
         ));
 
         $beeceptor_user_to_beeceptor_employee_mapping->save();
-
-        \Illuminate\Support\Facades\DB::statement("ALTER SEQUENCE mappings_id_seq RESTART 11000;");
     }
 
     private function definition($id, $type, $input_model, $input_endpoint, $output_endpoint, $route_id)
