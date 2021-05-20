@@ -15,7 +15,7 @@ before_script:
 - composer self-update
 - composer install --prefer-source --no-interaction
 - php artisan key:generate
-- php artisan migrate
+- php artisan migrate:fresh
 - php artisan db:seed --class=DatabaseSeeder
 deploy:
   provider: heroku
@@ -24,4 +24,5 @@ deploy:
   app: mintegration
   on: main
   run:
-  - php artisan migrate
+  - php artisan migrate:fresh
+  - php artisan db:seed --class=DatabaseSeeder
