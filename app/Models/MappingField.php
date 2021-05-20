@@ -12,6 +12,7 @@ class MappingField extends Model
     protected $fillable = [
         'mapping_id',
         'input_field',
+        'input_field_type',
         'output_field'
     ];
 

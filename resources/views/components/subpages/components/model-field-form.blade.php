@@ -7,7 +7,7 @@
 
             <div class="ml-2 col-span-4 inline-block">
                 <!-- TODO Make the selected work with a static function or something --> 
-                <x-forms.select id="{{ $field->id }}" name="fields[{{ $field->id }}]"  :value="__('id')" :label="__('name')" :selected="$field->getMappedInputField($mapping->id, $field->id)" :options="$availableFields" class="block w-full" required autofocus />
+                <x-forms.select id="{{ $field->id }}" name="fields[{{ $field->id }}]"  :value="__('id')" :secondValue="__('field_type')" :label="__('name')" :selected="__($field->getMappedInputField($mapping->id, $field->id) . '-' . $field->getMappedInputFieldType($mapping->id, $field->id))" :options="$availableFields" class="block w-full" required autofocus />
             </div>
         @else
             {{ $field->name }}
@@ -21,7 +21,7 @@
     @if (count($field->children()->get()) > 0)
         <div class="gap-4 mt-3">
             @foreach($field->children()->get() as $child)
-                <x-subpages.model-field-form :availableFields="$availableFields" :mapping="$mapping" :field="$child" ></x-subpages.model-field-form>
+                <x-subpages.components.model-field-form :availableFields="$availableFields" :mapping="$mapping" :field="$child" ></x-subpages.components.model-field-form>
             @endforeach
         </div>
 	@endif

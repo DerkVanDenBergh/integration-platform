@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\DataModel;
 use App\Models\DataModelField;
 use App\Models\MappingField;
+use App\Models\Step;
 
 
 class MappingFieldService
@@ -57,8 +58,11 @@ class MappingFieldService
     public function findAllFromMapping($id)
     {
         $mappingFields = MappingField::where('mapping_id', $id)
-                                        ->addSelect(['field_name' => DataModelField::select('name')
+                                        ->addSelect(['model_field_name' => DataModelField::select('name')
                                         ->whereColumn('input_field', 'data_model_fields.id')
+                                        ->limit(1)])
+                                        ->addSelect(['step_field_name' => Step::select('name')
+                                        ->whereColumn('input_field', 'steps.id')
                                         ->limit(1)])
                                     ->get();
 

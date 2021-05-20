@@ -1,4 +1,4 @@
-<div {!! $attributes->merge(['class' => 'border-t-4 border-indigo-400 rounded-b text-indigo-900 px-4 py-3 shadow-md', 'role' => 'alert']) !!}>
+<div {!! $attributes->merge(['class' => 'border-t-4 border-blue-400 rounded-b text-gray-700 px-4 py-3 shadow-md', 'role' => 'alert']) !!}>
     <div class="flex">
         <div class="py-1">
             <svg class="fill-current h-6 w-6 text-teal-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">

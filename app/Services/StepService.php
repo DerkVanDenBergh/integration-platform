@@ -46,23 +46,45 @@ class StepService
        return $step;
     }
 
+    public function deleteAllFromRoute($id)
+    {
+        $steps = Step::where('route_id', $id)->get();
+        
+        foreach($steps as $step) {
+            $this->delete($step);
+        }
+    }
+
     public function findById($id)
     {
-       $step = Step::find($id);
+        $step = Step::find($id);
 
-       $this->logService->push('info','requested step with id ' . $step->id . '.', json_encode($step));
+        $this->logService->push('info','requested step with id ' . $step->id . '.', json_encode($step));
 
-       return $step;
+        return $step;
     }
 
     public function findAll()
     {
-       $steps = Step::all();
+        $steps = Step::all();
 
-       $this->logService->push('info','requested all steps.');
+        $this->logService->push('info','requested all steps.');
 
-       return $steps;
+        return $steps;
     }
+
+    public function findAllStepsWithReturnValueFromRoute($id)
+    {
+        $steps = Step::with('step_function')
+                        ->where('route_id', $id)
+                        ->whereHas('step_function', function($query) {
+                            $query->where('has_return_value', '=', true);
+                        })
+                        ->orderBy('order')
+                        ->get();
+                        
+        return $steps;
+    }   
 
     public function findAllFromRoute($id)
     {

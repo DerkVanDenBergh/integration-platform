@@ -6,11 +6,19 @@
                 <div> {{ $field->name }} </div>
             @else
                 @if($field->getMappedInputField($mapping->id, $field->id))
-                    @foreach($mappingFields as $mappingField)
-                        @if($mappingField->output_field == $field->id)
-                            <div class="inline-block mr-1">{{ $field->name }} -></div><div class="inline-block sm:rounded-lg bg-gray-200 px-1"> {{ $mappingField->field_name }} </div>
-                        @endif
-                    @endforeach
+                    @if($field->getMappedInputFieldType($mapping->id, $field->id) == 'model')
+                        @foreach($mappingFields as $mappingField)
+                            @if($mappingField->output_field == $field->id)
+                                <div class="inline-block mr-1">{{ $field->name }} -></div><div class="inline-block sm:rounded-lg bg-gray-200 px-1"> {{ $mappingField->model_field_name }} </div>
+                            @endif
+                        @endforeach
+                    @else
+                        @foreach($mappingFields as $mappingField)
+                            @if($mappingField->output_field == $field->id)
+                                <div class="inline-block mr-1">{{ $field->name }} -></div><div class="inline-block sm:rounded-lg bg-gray-200 px-1"> {{ $mappingField->step_field_name }} </div>
+                            @endif
+                        @endforeach
+                    @endif
                 @else
                     <div class="inline-block mr-1">{{ $field->name }} -></div><div class="inline-block sm:rounded-lg bg-gray-200 px-1"> no changes </div>
                 @endif
@@ -48,7 +56,7 @@
     @if (count($field->children()->get()) > 0)
         <div class="gap-4 mt-3">
             @foreach($field->children()->get() as $child)
-                <x-subpages.model-field :mapping="$mapping" :mappingFields="$mappingFields ?? ''" :field="$child" :showEdit="$showEdit" :showDelete="$showDelete" :resource="$resource ?? ''"></x-subpages.model-field>
+                <x-subpages.components.model-field :mapping="$mapping" :mappingFields="$mappingFields ?? ''" :field="$child" :showEdit="$showEdit" :showDelete="$showDelete" :resource="$resource ?? ''"></x-subpages.components.model-field>
             @endforeach
         </div>
 	@endif

@@ -39,5 +39,17 @@ class DataModelField extends Model
             return null;
         }
     }
+
+    public function getMappedInputFieldType($mapping_id) {
+        
+        // is a service call, make it a service call
+        $mappingField = MappingField::where('mapping_id', $mapping_id)->where('output_field', $this->id)->first();
+
+        if($mappingField) {
+            return $mappingField->input_field_type;
+        } else {
+            return null;
+        }
+    }
       
 }

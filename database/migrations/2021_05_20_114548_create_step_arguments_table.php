@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStepsTable extends Migration
+class CreateStepArgumentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateStepsTable extends Migration
      */
     public function up()
     {
-        Schema::create('steps', function (Blueprint $table) {
+        Schema::create('step_arguments', function (Blueprint $table) {
             $table->id();
-            $table->integer('route_id');
-            $table->string('name');
-            $table->integer('step_function_id');
-            $table->integer('order');
+            $table->string('value');
+            $table->integer('step_id');
+            $table->integer('parameter_id');
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ class CreateStepsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('steps');
+        Schema::dropIfExists('step_arguments');
     }
 }
