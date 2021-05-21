@@ -19,20 +19,22 @@
 
         </div>
 
-        <div class="text-sm pt-2">
-            {{ $function->description }}
-        </div>
+        @if($function ?? false)
+            <div class="text-sm pt-2">
+                {{ $function->description }}
+            </div>
+        @endif
 
         <div class="grid grid-cols-4 gap-4 argument-container">
-            @if($arguments ?? false)
-                @foreach($arguments as $argument)
+            @if($parameters ?? false)
+                @foreach($parameters as $parameter)
 
                     <div class="col-span-2 py-4">
-                        <x-forms.label for="steps[{{ $number }}][arguments][{{ $argument->step_function_parameter()->first()->id }}]" :value="__('Parameter ' . $loop->index + 1 . ': '. $argument->step_function_parameter()->first()->name)" />
-                        @if($argument->step_function_parameter()->first()->is_nullable)
-                            <x-forms.input id="steps[{{ $number }}][arguments][{{ $argument->step_function_parameter()->first()->id }}]" class="block mt-1 w-full" type="text" name="steps[{{ $number }}][arguments][{{ $argument->step_function_parameter()->first()->id }}]" value="{{ $argument->value }}" autofocus />
+                        <x-forms.label for="steps[{{ $number }}][arguments][{{ $parameter->id }}]" :value="__('Parameter ' . $loop->index + 1 . ': '. $parameter->name)" />
+                        @if($parameter->is_nullable)
+                            <x-forms.input id="steps[{{ $number }}][arguments][{{ $parameter->id }}]" class="block mt-1 w-full" type="text" name="steps[{{ $number }}][arguments][{{ $parameter->id }}]" value="{{ $parameter->getArgumentValueByStepAndParameterId($step->id, $parameter->id) }}" autofocus />
                         @else
-                            <x-forms.input id="steps[{{ $number }}][arguments][{{ $argument->step_function_parameter()->first()->id }}]" class="block mt-1 w-full" type="text" name="steps[{{ $number }}][arguments][{{ $argument->step_function_parameter()->first()->id }}]" value="{{ $argument->value }}" required autofocus />
+                            <x-forms.input id="steps[{{ $number }}][arguments][{{ $parameter->id }}]" class="block mt-1 w-full" type="text" name="steps[{{ $number }}][arguments][{{ $parameter->id }}]" value="{{ $parameter->getArgumentValueByStepAndParameterId($step->id, $parameter->id) }}" required autofocus />
                         @endif
                     </div>
                     

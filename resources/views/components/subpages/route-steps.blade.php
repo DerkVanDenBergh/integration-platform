@@ -21,7 +21,7 @@
                 <div class="px-2" id="stepTable">
                     @if($steps->count() > 0)
                         @foreach ($steps as $step)
-                            <x-subpages.components.route-step-form :number="$loop->index" :step="$step" :route="$route" :functions="$functions" :function="$step->step_function()->first()" :arguments="$step->arguments()->orderBy('parameter_id')->get()"></x-subpages.components.route-step-form>
+                            <x-subpages.components.route-step-form :number="$loop->index" :step="$step" :route="$route" :functions="$functions" :function="$step->step_function()->first()" :parameters="$step->step_function()->first()->step_function_parameters()->get()" :arguments="$step->arguments()->orderBy('parameter_id')->get()"></x-subpages.components.route-step-form>
                         @endforeach
 
                     @else

@@ -26,7 +26,7 @@
             @endif
 
             <div class="col-span-2">
-                <x-forms.label for="output_endpoint" :value="__('Input Endpoint')" />
+                <x-forms.label for="output_endpoint" :value="__('Output Endpoint')" />
 
                 <x-forms.select id="output_endpoint" :value="__('id')" :label="__('title')" :options="$endpoints" :selected="$mapping->output_endpoint" class="block mt-1 w-full" name="output_endpoint" required autofocus />
             </div>
