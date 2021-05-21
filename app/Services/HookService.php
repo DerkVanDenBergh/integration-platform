@@ -151,20 +151,26 @@ class HookService
 
         $authentication = $endpoint->authentication()->first();
 
-        switch ($authentication->type) {
-            case "Basic":
-                $response = Http::withBasicAuth($authentication->username, $authentication->password)
-                    ->post($url, $model);
-                break;
-            case "Key":
-                $response = Http::withToken($authentication->key)
-                    ->post($url, $model);
-                break;
-            case "Token":
-                $response = Http::withToken($authentication->token)
-                    ->post($url, $model);
-                break;
+        if($authentication) {
+            switch ($authentication->type) {
+                case "Basic":
+                    $response = Http::withBasicAuth($authentication->username, $authentication->password)
+                        ->post($url, $model);
+                    break;
+                case "Key":
+                    $response = Http::withToken($authentication->key)
+                        ->post($url, $model);
+                    break;
+                case "Token":
+                    $response = Http::withToken($authentication->token)
+                        ->post($url, $model);
+                    break;
+                
+            }
+        } else {
+            $response = Http::post($url, $model);
         }
+        
 
         return $response;
     }
