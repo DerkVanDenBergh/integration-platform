@@ -6,13 +6,13 @@
 
     <x-subpages.card :header="__('Mapping')">
         <x-slot name="content">
-            <x-subpages.model-fields-repeater 
+            <x-subpages.components.model-fields-repeater 
                 :availableFields="$availableFields"
                 :form="__(true)"
                 :fields="$fields" 
                 :mapping="$mapping">
             
-            </x-subpages.model-fields-repeater>
+            </x-subpages.components.model-fields-repeater>
         </x-slot>
     </x-subpages.card>
 

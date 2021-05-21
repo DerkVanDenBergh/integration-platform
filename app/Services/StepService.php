@@ -10,11 +10,17 @@ use App\Services\LogService;
 class StepService
 {
     protected $logService;
+    protected $stepFunctionService;
+    protected $stepArgumentService;
 
     public function __construct(
-        LogService $logService
+        LogService $logService,
+        StepFunctionService $stepFunctionService,
+        StepArgumentService $stepArgumentService
     ) {
         $this->logService = $logService;
+        $this->stepFunctionService = $stepFunctionService;
+        $this->stepArgumentService = $stepArgumentService;
     }
     
     public function store(array $data)
@@ -46,23 +52,45 @@ class StepService
        return $step;
     }
 
+    public function deleteAllFromRoute($id)
+    {
+        $steps = Step::where('route_id', $id)->get();
+        
+        foreach($steps as $step) {
+            $this->delete($step);
+        }
+    }
+
     public function findById($id)
     {
-       $step = Step::find($id);
+        $step = Step::find($id);
 
-       $this->logService->push('info','requested step with id ' . $step->id . '.', json_encode($step));
+        $this->logService->push('info','requested step with id ' . $id . '.', json_encode($step));
 
-       return $step;
+        return $step;
     }
 
     public function findAll()
     {
-       $steps = Step::all();
+        $steps = Step::all();
 
-       $this->logService->push('info','requested all steps.');
+        $this->logService->push('info','requested all steps.');
 
-       return $steps;
+        return $steps;
     }
+
+    public function findAllStepsWithReturnValueFromRoute($id)
+    {
+        $steps = Step::with('step_function')
+                        ->where('route_id', $id)
+                        ->whereHas('step_function', function($query) {
+                            $query->where('has_return_value', '=', true);
+                        })
+                        ->orderBy('order')
+                        ->get();
+
+        return $steps;
+    }   
 
     public function findAllFromRoute($id)
     {
@@ -76,6 +104,18 @@ class StepService
 
     public function processSteps($route, $data)
     {
-        return $data; // TODO process steps defined in route
+        $steps = $this->findAllFromRoute($route->id);
+
+        foreach($steps as $step) {
+            $function = $this->stepFunctionService->findById($step->step_function_id);
+
+            $arguments = $this->stepArgumentService->findAllFromStep($step->id);
+            if($step->id != 1000) {
+                $data[$step->name] = $this->stepFunctionService->executeFunction($function, $arguments, $data);
+        
+            }
+        }
+        
+        return $data;
     }
 }

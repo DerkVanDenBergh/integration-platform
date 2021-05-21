@@ -6,13 +6,13 @@ use Illuminate\Support\Facades\Http;
 
 class HookService
 {
-
     protected $routeService;
     protected $mappingService;
     protected $modelService;
     protected $mappingFieldService;
     protected $modelFieldService;
     protected $endpointService;
+    protected $stepService;
 
     public function __construct(
         RouteService $routeService,
@@ -20,7 +20,8 @@ class HookService
         DataModelService $modelService,
         MappingFieldService $mappingFieldService,
         DataModelFieldService $modelFieldService,
-        EndpointService $endpointService
+        EndpointService $endpointService,
+        StepService $stepService
     ) {
         $this->routeService = $routeService;
         $this->mappingService = $mappingService;
@@ -28,6 +29,7 @@ class HookService
         $this->mappingFieldService = $mappingFieldService;
         $this->modelFieldService = $modelFieldService;
         $this->endpointService = $endpointService;
+        $this->stepService = $stepService;
     }
 
     public function validateAuthentication($route, $data)
@@ -68,7 +70,11 @@ class HookService
         foreach($modelFields as $modelField) {
             if($modelField->node_type == 'attribute') {
                 
-                $model[$modelField->name] = $this->getMatchedValue($modelField, $mapping, $requestFields);
+                $value = $this->getMatchedValue($modelField, $mapping, $requestFields);
+                
+                if($value) {
+                    $model[$modelField->name] = $value;
+                }
 
             } else {
                 $children = $this->populateModelFields($modelField->children()->get(), $mapping, $requestFields);
@@ -82,16 +88,29 @@ class HookService
 
     private function getMatchedValue($field, $mapping, $requestFields)
     {
+        
         $fieldMapping = $this->mappingFieldService->findByMappingAndOutputFieldId($mapping->id, $field->id);
 
-        $inputField = $this->modelFieldService->findById($fieldMapping->input_field);
+        if($fieldMapping) {
+            if($fieldMapping->input_field_type == 'model') {
+                $inputField = $this->modelFieldService->findById($fieldMapping->input_field);
 
-        $reference = $this->array_access($requestFields, $this->getFullKeyPath($inputField));
+                $path = $this->getFullKeyPath($inputField);
+            } else {
+                $step = $this->stepService->findById($fieldMapping->input_field);
 
-        return $reference;
+                $path = [$step->name];
+            }
+
+            $reference = $this->array_access($requestFields, $path);
+
+            return $reference;
+        } else {
+            return '';
+        }
     }
 
-    private function getFullKeyPath($field)
+    private static function getFullKeyPath($field)
     {
         $key = [];
 
@@ -108,12 +127,12 @@ class HookService
         return array_reverse($key);
     }
 
-    private function array_access(&$array, $keys) {
+    private static function array_access(&$array, $keys) {
 
         if ($keys) {
             $key = array_shift($keys);
     
-            $sub = $this->array_access(
+            $sub = self::array_access(
                 $array[$key],
                 $keys
             );

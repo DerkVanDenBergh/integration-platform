@@ -113,7 +113,11 @@ Route::post('/routes/{route}/mappings/{mapping}/fields', [MappingFieldController
 
 // Mapping steps
 
-Route::resource('routes.steps', StepController::class)->middleware(['auth']);
+Route::get('/routes/{route}/steps', [StepController::class, 'edit'])->middleware(['auth']);
+
+Route::post('/routes/{route}/steps', [StepController::class, 'update'])->middleware(['auth']);
+
+Route::post('/routes/{route}/steps/component', [StepController::class, 'component'])->middleware(['auth']);
 
 
 // Tasks

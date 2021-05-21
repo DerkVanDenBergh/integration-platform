@@ -7,7 +7,7 @@
             </h2>
         @endif
 
-        <x-subpages.model-fields-repeater :fields="$fields" :showEdit="$showEdit" :showDelete="$showDelete" :resource="$resource ?? ''"></x-subpages.model-fields-repeater>        
+        <x-subpages.components.model-fields-repeater :fields="$fields" :showEdit="$showEdit" :showDelete="$showDelete" :resource="$resource ?? ''"></x-subpages.components.model-fields-repeater>        
 
         @if($showCreate ?? true)
             <a href="{{ $nestedResource ?? ''}}/{{ $resource }}/create" class="mt-5 bg-gray-100 hover:bg-green-400 hover:text-white transition text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">

@@ -32,8 +32,12 @@ class DatabaseSeeder extends Seeder
         $this->call(RouteSeeder::class);
         $this->call(MappingSeeder::class);
         $this->call(MappingFieldSeeder::class);
+        $this->call(StepFunctionSeeder::class);
+        $this->call(StepFunctionParameterSeeder::class);
+        $this->call(StepSeeder::class);
+        $this->call(StepArgumentSeeder::class);
         
-        foreach(['role','user','data_model','data_model_field','template','connection','authentication','endpoint','route','mapping','mapping_field'] as $model) {
+        foreach(['role','user','data_model','data_model_field','connection','authentication','endpoint','route','mapping','mapping_field','step'] as $model) {
             $this->increaseSequence($model);
         }
         

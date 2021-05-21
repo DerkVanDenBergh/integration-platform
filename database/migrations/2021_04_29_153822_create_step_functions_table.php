@@ -15,6 +15,10 @@ class CreateStepFunctionsTable extends Migration
     {
         Schema::create('step_functions', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->text('description');
+            $table->string('function_name');
+            $table->boolean('has_return_value');
             $table->timestamps();
         });
     }

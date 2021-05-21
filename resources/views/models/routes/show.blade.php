@@ -38,8 +38,8 @@
     </x-subpages.model-view>
 
     <x-subpages.mapping-io :header="__('Input/output')" :mapping="$mapping" :models="$models" :endpoints="$endpoints"></x-subpages.mapping-io>
-
-    <x-subpages.mapping-steps :header="__('Steps')" :route="$route" :steps="$steps"></x-subpages.mapping-steps>
+    
+    <x-subpages.route-steps :header="__('Steps')" :route="$route" :steps="$steps" :inputModelFields="($inputModelFields ?? '')"></x-subpages.route-steps>
 
     @if($outputModel ?? false)
         <x-subpages.mapping-fields 

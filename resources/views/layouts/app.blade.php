@@ -14,6 +14,8 @@
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
         <!-- Scripts -->
+        @stack('scripts')
+        
         <script src="{{ asset('js/app.js') }}" defer></script>
     </head>
     <body class="font-sans antialiased">
@@ -145,5 +147,6 @@
         <div id="notifications" class="fixed bottom-10 right-10">
             <x-session.session-checker></x-session.session-checker>
         </div>
+        @yield('page-scripts')
     </body>
 </html>

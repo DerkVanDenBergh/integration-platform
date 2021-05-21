@@ -11,14 +11,14 @@
 
             <div class="col-span-5">
                 <div class="text-m px-2 leading-tight">Input model</div>
-                <x-subpages.model-fields-repeater :fields="$inputFields" :showEdit="__(false)" :showDelete="__(false)" :resource="$resource ?? ''"></x-subpages.model-fields-repeater>
+                <x-subpages.components.model-fields-repeater :fields="$inputFields" :showEdit="__(false)" :showDelete="__(false)" :resource="$resource ?? ''"></x-subpages.components.model-fields-repeater>
             </div>
             <div class="col-span-1 text-center align-middle">
                 <x-icons.svg-chevron-right class="h-5 w-5 mr-2 inline align-middle h-full"></x-icons.svg-chevron-right>
             </div>
             <div class="col-span-5">
                 <div class="text-m px-2 leading-tight">Result output model</div>
-                <x-subpages.model-fields-repeater :mapping="$mapping" :mappingFields="$mappingFields" :fields="$outputFields" :showEdit="__(false)" :showDelete="__(false)" :resource="$resource ?? ''"></x-subpages.model-fields-repeater>
+                <x-subpages.components.model-fields-repeater :mapping="$mapping" :mappingFields="$mappingFields" :fields="$outputFields" :showEdit="__(false)" :showDelete="__(false)" :resource="$resource ?? ''"></x-subpages.components.model-fields-repeater>
             </div>
 
         </div>

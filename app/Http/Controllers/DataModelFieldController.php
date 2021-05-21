@@ -46,7 +46,7 @@ class DataModelFieldController extends Controller
     public function store($model, Request $request)
     {
         $validatedData = $request->validate([
-            'name' => ['required', Rule::unique('data_model_fields')->where('model_id', $model), 'max:255'],
+            'name' => ['required', Rule::unique('data_model_fields')->where('model_id', $model)->where('parent_id', $request->get('parent_id')), 'max:255'],
             'parent_id' => ['nullable'],
             'node_type' => ['required'],
             'data_type' => ['required_if:node_type,==,attribute']
@@ -96,7 +96,7 @@ class DataModelFieldController extends Controller
         Gate::authorize('mutate_or_view_data_model_field', $field);
 
         $validatedData = $request->validate([
-            'name' => ['required', Rule::unique('data_model_fields')->where('model_id', $field->model_id)->ignore($field->id), 'max:255'],
+            'name' => ['required', Rule::unique('data_model_fields')->where('model_id', $field->model_id)->where('parent_id', $request->get('parent_id'))->ignore($field->id), 'max:255'],
             'parent_id' => ['nullable'],
             'node_type' => ['required'],
             'data_type' => ['required_if:node_type,==,attribute']

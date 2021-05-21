@@ -21,6 +21,7 @@ class Endpoint extends Model
         'method',
         'port',
         'connection_id',
+        'authentication_id',
         'template'
     ];
 

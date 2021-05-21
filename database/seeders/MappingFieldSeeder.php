@@ -19,6 +19,7 @@ class MappingFieldSeeder extends Seeder
             1000, 
             1006,
             1002,
+            'model',
             1000
         ));
 
@@ -28,6 +29,7 @@ class MappingFieldSeeder extends Seeder
             1001, 
             1007,
             1003,
+            'model',
             1000
         ));
 
@@ -37,18 +39,20 @@ class MappingFieldSeeder extends Seeder
             1002, 
             1004,
             1000,
+            'model',
             1000
         ));
 
         $id_mapping->save();
     }
 
-    private function definition($id, $output_field, $input_field, $mapping_id)
+    private function definition($id, $output_field, $input_field, $input_field_type, $mapping_id)
     {
         $parameters = [
             'id' => $id,
             'output_field' => $output_field,
             'input_field' => $input_field,
+            'input_field_type' => $input_field_type,
             'mapping_id' => $mapping_id
         ];
 
