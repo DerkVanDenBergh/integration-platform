@@ -46,7 +46,7 @@ class TemplateSeeder extends Seeder
         // Github
         $this->createConnection(1003, 'Github API', 'A connection to the Github API. Here you can manage your github repo metadata.', 'api.github.com', 1);
         $this->createModel(1003, 'Github - Star', 'A model for a github star.', 1, 1003);
-        $this->createField(1009, 1003, 1009, 'action', 'attribute', 'string');
+        $this->createField(1009, 1003, null, 'action', 'attribute', 'string');
         $this->createField(1010, 1003, null, 'repository', 'set', null);
             $this->createField(1011, 1003, 1010, 'full_name', 'attribute', 'string');
             $this->createField(1012, 1003, 1010, 'owner', 'set', null);
