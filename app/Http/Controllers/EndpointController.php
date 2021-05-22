@@ -144,6 +144,7 @@ class EndpointController extends Controller
         $methods = $this->endpointService->getMethods($endpoint->protocol);
 
         $authentications = $this->authenticationService->findAllFromUser(auth()->user()->id);
+        $authentications->prepend((object) ['id' => '', 'title' => '']);
 
         return view('models.endpoints.forms.edit.' . strtolower($endpoint->protocol), compact('endpoint', 'methods', 'authentications'));
     }
