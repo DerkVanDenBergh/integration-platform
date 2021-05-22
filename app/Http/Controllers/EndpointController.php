@@ -93,7 +93,7 @@ class EndpointController extends Controller
                         'max:255'],
             'protocol' => ['required'],
             'method' => ['required'],
-            'authentication_id' => ['required'], // TODO add rule where it checks if user owns auth
+            'authentication_id' => ['nullable'], // TODO add rule where it checks if user owns auth
             'port' => ['required_if:protocol,==,tcp|nullable', 'integer']
         ]);
 
@@ -177,7 +177,7 @@ class EndpointController extends Controller
                         'max:255'],
             'protocol' => ['required'],
             'method' => ['required'],
-            'authentication_id' => ['required'], // TODO add rule where it checks if user owns auth
+            'authentication_id' => ['nullable'], // TODO add rule where it checks if user owns auth
             'port' => ['required_if:protocol,==,tcp|nullable' ,'integer']
         ]);
 
