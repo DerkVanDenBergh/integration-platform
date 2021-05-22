@@ -18,6 +18,7 @@ class CreateDataModelsTable extends Migration
             $table->string('title');
             $table->text('description');
             $table->integer('user_id');
+            $table->integer('template_id')->nullable();
             $table->timestamps();
         });
     }

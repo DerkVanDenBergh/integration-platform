@@ -17,12 +17,11 @@ class AuthenticationSeeder extends Seeder
     {
         $authentication_key = new Authentication($this->definition(
             1000, 
-            'API key', 
-            'Key', 
+            'API token', 
+            'Token', 
             '',
             '',
             'dfsgjijehhbfaijfjsaibhndkj#@42kjmn3iu2ghjbnaiudas==',
-            '', 
             1000
         ));
         
@@ -34,7 +33,6 @@ class AuthenticationSeeder extends Seeder
             'Basic', 
             'test_user_account',
             'VerySecurePassword123!',
-            '',
             '', 
             1001
         ));
@@ -42,15 +40,14 @@ class AuthenticationSeeder extends Seeder
         $authentication_basic->save();
     }
 
-    private function definition($id, $title, $type, $username, $password, $key, $token, $connection_id)
-    {
+    private function definition($id, $title, $type, $username, $password, $token, $connection_id)
+    { // TODO add oauth parameters
         $parameters = [
             'id' => $id,
             'title' => $title,
             'type' => $type,
             'username' => $username,
             'password' => $password,
-            'key' => $key,
             'token' => $token,
             'connection_id' => $connection_id
         ];

@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $admin = new User($this->definition(1002, 'Derk van den Bergh', 'derk@test.nl', '$2y$12$ohqbjLwZ5GOADWvAiyLt..xvMgEWkhCEZB9vBkKtaIBJVvHenr/l6', 1001));
+        $admin = new User($this->definition(1002, 'Mintegration Admin', 'admin@mintegration.com', '$2y$12$ohqbjLwZ5GOADWvAiyLt..xvMgEWkhCEZB9vBkKtaIBJVvHenr/l6', 1001));
     
         $admin->save();
     }

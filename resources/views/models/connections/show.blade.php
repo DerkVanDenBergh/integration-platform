@@ -30,7 +30,7 @@
     
     </x-subpages.model-view>
 
-    <x-subpages.model-table :header="__('Authentications')" :fields="array('title', 'type')" :list="$connection->authentications()" :nestedResource="__('connections/' . $connection->id . '/authentications')" :resource="__('authentications')" :showView="__(false)">
+    <x-subpages.model-table :header="__('Authentications')" :fields="array('title', 'type')" :list="$connection->authentications()->get()" :nestedResource="__('connections/' . $connection->id . '/authentications')" :resource="__('authentications')" :showView="__(false)">
         <x-slot name="headers">
             <th class="w-3/8 py-2">Title</th>
             <th class="w-3/8 py-2">Type</th>
@@ -38,7 +38,7 @@
         </x-slot>
     </x-subpages.model-table>
 
-    <x-subpages.model-table :header="__('Endpoints')" :fields="array('title', 'endpoint', 'protocol', 'method')" :list="$connection->endpoints()" :nestedResource="__('connections/' . $connection->id . '/endpoints')" :resource="__('endpoints')" :showEdit="__(false)">
+    <x-subpages.model-table :header="__('Endpoints')" :fields="array('title', 'endpoint', 'protocol', 'method')" :list="$connection->endpoints()->get()" :nestedResource="__('connections/' . $connection->id . '/endpoints')" :resource="__('endpoints')" :showEdit="__(false)">
         <x-slot name="headers">
             <th class="w-3/16 py-2">Title</th>
             <th class="w-3/16 py-2">Endpoint</th>

@@ -52,7 +52,6 @@
             </form>
         @endif
     </div>
-
     @if (count($field->children()->get()) > 0)
         <div class="gap-4 mt-3">
             @foreach($field->children()->get() as $child)

@@ -14,9 +14,12 @@ class Authentication extends Model
         'type',
         'username',
         'password',
-        'key',
         'token',
         'connection_id',
-        'template'
+        'template',
+        'oauth1_consumer_key',
+        'oauth1_consumer_secret',
+        'oauth1_token',
+        'oauth1_token_secret'
     ];
 }

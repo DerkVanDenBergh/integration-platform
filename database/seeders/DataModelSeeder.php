@@ -34,13 +34,14 @@ class DataModelSeeder extends Seeder
         $model_employee->save();
     }
 
-    private function definition($id, $title, $description, $user_id)
+    private function definition($id, $title, $description, $user_id, $template_id = null)
     {
         $parameters = [
             'id' => $id,
             'title' => $title,
             'description' => $description,
             'user_id' => $user_id,
+            'template_id' => $template_id
         ];
 
         return $parameters;
