@@ -17,7 +17,8 @@ class DataModel extends Model
     protected $fillable = [
         'title',
         'description',
-        'user_id'
+        'user_id',
+        'template_id'
     ];
 
     public function fields(){

@@ -94,8 +94,8 @@ class AuthenticationService
     {
         $options = collect([
             (object) [
-                'option' => 'Key',
-                'label' => 'Create an API key authentication.'
+                'option' => 'Oauth1',
+                'label' => 'Create an OAuth1 authentication.'
             ],
             (object) [
                 'option' => 'Token',

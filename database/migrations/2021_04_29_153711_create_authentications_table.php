@@ -19,8 +19,11 @@ class CreateAuthenticationsTable extends Migration
             $table->string('type');
             $table->string('username')->nullable();
             $table->string('password')->nullable();
-            $table->string('key')->nullable();
             $table->string('token')->nullable();
+            $table->string('oauth1_consumer_key')->nullable();
+            $table->string('oauth1_consumer_secret')->nullable();
+            $table->string('oauth1_token')->nullable();
+            $table->string('oauth1_token_secret')->nullable();
             $table->integer('connection_id');
             $table->boolean('template')->default(false);
             $table->timestamps();

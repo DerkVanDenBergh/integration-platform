@@ -50,21 +50,56 @@ class ConnectionService
 
         $connection->save();
         
-        foreach($template->endpoints as $templateEndpoint) {
-            $endpoint = $templateEndpoint->replicate();
-            $endpoint->connection_id = $connection->id;
-            $endpoint->save();
+        if($template->endpoints()->get()) {
+            foreach($template->endpoints()->get() as $templateEndpoint) {
+                $endpoint = $templateEndpoint->replicate();
+                $endpoint->connection_id = $connection->id;
+                $endpoint->save();
+            }
+        }
+        
+        if($template->authentications()->get()) {
+            foreach($template->authentications()->get() as $templateAuthentication) {
+                $authentication = $templateAuthentication->replicate();
+                $authentication->connection_id = $connection->id;
+                $authentication->save();
+            }
         }
 
-        foreach($template->authentications as $templateAuthentication) {
-            $authentication = $templateAuthentication->replicate();
-            $authentication->connection_id = $connection->id;
-            $authentication->save();
+        if($template->modelTemplates()->get()) {
+            foreach($template->modelTemplates()->get() as $modelTemplate) {
+                $model = $modelTemplate->replicate();
+                $model->user_id = auth()->user()->id;
+                $model->template_id = null;
+                $model->save();
+                if($modelTemplate->fields()->get()) {
+                    $this->replicateChildren($modelTemplate->fields()->where('parent_id', null)->get(), null, $model->id);
+                }
+            }
         }
 
         $this->logService->push('info','created connection with id ' . $connection->id . ' from a template with id ' . $data['template_id'] . '.', json_encode($connection));
 
         return $connection;
+    }
+
+    private function replicateChildren($fields, $parent_id, $model_id)
+    {
+        foreach($fields as $fieldTemplate) {
+            if($fieldTemplate->type == 'attribute') {
+                $field = $fieldTemplate->replicate();
+                $field->model_id = $model_id;
+                $field->parent_id = $parent_id;
+                $field->save();
+            } else {
+                $field = $fieldTemplate->replicate();
+                $field->parent_id = $parent_id;
+                $field->model_id = $model_id;
+                $field->save();
+
+                $this->replicateChildren($fieldTemplate->children()->get(), $field->id, $model_id);
+            }
+        }
     }
 
     public function update(array $data, Connection $connection)

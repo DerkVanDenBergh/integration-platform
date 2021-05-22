@@ -4,6 +4,10 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Subscriber\Oauth\Oauth1;
+
 class HookService
 {
     protected $routeService;
@@ -147,21 +151,41 @@ class HookService
     {
         $endpoint = $this->endpointService->findById($mapping->output_endpoint);
 
-        $url = $this->endpointService->getUrlById($endpoint->id);
+        $url = 'https://' . $this->endpointService->getUrlById($endpoint->id);
 
         $authentication = $endpoint->authentication()->first();
 
         if($authentication) {
-            switch ($authentication->type) {
-                case "Basic":
+
+            switch (strtoupper($authentication->type)) {
+                case "BASIC":
                     $response = Http::withBasicAuth($authentication->username, $authentication->password)
                         ->post($url, $model);
                     break;
-                case "Key":
-                    $response = Http::withToken($authentication->key)
-                        ->post($url, $model);
+                case "OAUTH1":
+
+                    $stack = HandlerStack::create();
+
+                    $middleware = new Oauth1([
+                        'consumer_key'    => $authentication->oauth1_consumer_key,
+                        'consumer_secret' => $authentication->oauth1_consumer_secret,
+                        'token'           => $authentication->oauth1_token,
+                        'token_secret'    => $authentication->oauth1_token_secret
+                    ]);
+
+                    $stack->push($middleware);
+
+                    $client = new Client([
+                        'base_uri' => $url,
+                        'handler' => $stack,
+                        'auth' => 'oauth'
+                    ]);
+
+                    // Now you don't need to add the auth parameter
+                    $response = $client->post('?' . http_build_query(self::rawurlencode_array($model)));
+
                     break;
-                case "Token":
+                case "TOKEN":
                     $response = Http::withToken($authentication->token)
                         ->post($url, $model);
                     break;
@@ -171,7 +195,67 @@ class HookService
             $response = Http::post($url, $model);
         }
         
-
         return $response;
     }
+
+    private static function rawurlencode_array($array) 
+    {
+        foreach($array as $key=>$value) {
+            if(is_array($value)) {
+                $key = rawurlencode($key);
+                $value = self::rawurlencode_array($value);
+                ksort($value);
+            } else {
+                $key = rawurlencode($key);
+                $value = rawurlencode($value);
+            }
+        }
+
+        ksort($array);
+
+        return $array;
+    }
 }
+
+// $nonce = md5(microtime() . mt_rand() . microtime());
+//                     $timestamp = time();
+
+//                     $request_method = rawurlencode('POST');
+//                     $request_url =  rawurlencode($url);
+                    
+//                     $parameters = $model;
+//                     $parameters['include_entities'] = 'true';
+//                     $parameters['oauth_consumer_key'] = $authentication->oauth1_consumer_key;
+//                     $parameters['oauth_nonce'] = $nonce;
+//                     $parameters['oauth_signature_method'] = 'HMAC-SHA1';
+//                     $parameters['oauth_timestamp'] = $timestamp;
+//                     $parameters['oauth_token'] = $authentication->oauth1_token;
+//                     $parameters['oauth_version'] = '1.0';
+
+//                     $parameters = http_build_query(self::rawurlencode_array($parameters));
+
+//                     $base = $request_method . '&' . $request_url . '&' . rawurlencode($parameters);
+
+//                     //dd($base);
+
+//                     $key = rawurlencode($authentication->oauth1_consumer_secret) . '&' . rawurlencode($authentication->oauth1_token_secret);
+
+//                     $signature = base64_encode(hash_hmac("sha1", $base, $key, true));
+
+//                     $auth_header = 'OAuth ' .   rawurlencode('oauth_consumer_key') . '="'      . rawurlencode($authentication->oauth1_consumer_key) . '", ' .
+//                                                 rawurlencode('oauth_nonce') . '="'             . rawurlencode($nonce) . '", ' .
+//                                                 rawurlencode('oauth_signature') . '="'         . rawurlencode($signature) . '", ' .
+//                                                 rawurlencode('oauth_signature_method') . '="'  . rawurlencode('HMAC-SHA1') . '", ' .
+//                                                 rawurlencode('oauth_timestamp') . '="'         . rawurlencode($timestamp) . '", ' .
+//                                                 rawurlencode('oauth_token') . '="'             . rawurlencode($authentication->oauth1_token) . '", ' .
+//                                                 rawurlencode('oauth_version') . '="'           . rawurlencode('1.0') . '"';
+
+                    
+//                     $response = Http::withHeaders([
+//                         'Authorization' => $auth_header,
+//                         'Accept' => '*/*',
+//                         'Connection' => 'close',
+//                         'Content-Type' => 'application/x-www-form-urlencoded'
+//                     ])->post($url . '?' . http_build_query(self::rawurlencode_array($model)));
+
+//                     //dd($response);

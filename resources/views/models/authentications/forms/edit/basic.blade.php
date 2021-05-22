@@ -4,7 +4,7 @@
         {{ __($authentication->title . ' - edit') }}
     </x-slot>
 
-    <x-subpages.model-form :action="__('/connections/' . $authentication->connection_id . '/authentications/' . $authentication->id)">
+    <x-subpages.model-form :action="__('/authentications/' . $authentication->id)">
 
         <x-slot name="method">
             <input name="_method" type="hidden" value="PUT">

@@ -24,7 +24,7 @@
             <div class="col-span-2">
                 <x-forms.label for="authentication_id" :value="__('Authentication')" />
 
-                <x-forms.select id="authentication_id" :value="__('id')" :label="__('title')" :options="$authentications" class="block mt-1 w-full" name="authentication_id" required autofocus />
+                <x-forms.select id="authentication_id" :value="__('id')" :label="__('title')" :options="$authentications" class="block mt-1 w-full" name="authentication_id" autofocus />
             </div>
 
             <div class="col-span-2">

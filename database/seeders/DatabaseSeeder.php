@@ -21,23 +21,23 @@ class DatabaseSeeder extends Seeder
         // Essential seeds
         $this->call(RoleSeeder::class);
         $this->call(UserSeeder::class);
-        $this->call(DataModelSeeder::class);
-        $this->call(DataModelFieldSeeder::class);
         $this->call(TemplateSeeder::class);
-        
-        // Dummy data
-        $this->call(ConnectionSeeder::class);
-        $this->call(AuthenticationSeeder::class);
-        $this->call(EndpointSeeder::class);
-        $this->call(RouteSeeder::class);
-        $this->call(MappingSeeder::class);
-        $this->call(MappingFieldSeeder::class);
         $this->call(StepFunctionSeeder::class);
         $this->call(StepFunctionParameterSeeder::class);
-        $this->call(StepSeeder::class);
-        $this->call(StepArgumentSeeder::class);
         
-        foreach(['role','user','data_model','data_model_field','connection','authentication','endpoint','route','mapping','mapping_field','step'] as $model) {
+        // Dummy data
+        // $this->call(DataModelSeeder::class);
+        // $this->call(DataModelFieldSeeder::class);
+        // $this->call(ConnectionSeeder::class);
+        // $this->call(AuthenticationSeeder::class);
+        // $this->call(EndpointSeeder::class);
+        // $this->call(RouteSeeder::class);
+        // $this->call(MappingSeeder::class);
+        // $this->call(MappingFieldSeeder::class);
+        // $this->call(StepSeeder::class);
+        // $this->call(StepArgumentSeeder::class);
+        
+        foreach(['role','user','data_model','data_model_field','connection','authentication','endpoint','route','mapping','mapping_field','step', 'step_argument', 'step_function', 'step_function_parameter'] as $model) {
             $this->increaseSequence($model);
         }
         

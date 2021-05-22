@@ -65,6 +65,7 @@ class EndpointController extends Controller
         $methods = $this->endpointService->getMethods($type);
 
         $authentications = $this->authenticationService->findAllFromUser(auth()->user()->id);
+        $authentications->prepend((object) ['id' => '', 'title' => '']);
 
         return view('models.endpoints.forms.create.' . strtolower($type), compact('connection', 'type', 'methods', 'authentications'));
     }
@@ -123,6 +124,7 @@ class EndpointController extends Controller
         $fields = $this->fieldService->findAllFromModel($endpoint->model_id);
 
         $authentications = $this->authenticationService->findAllFromUser(auth()->user()->id);
+        $authentications->prepend((object) ['id' => '', 'title' => '']);
 
         return view('models.endpoints.show', compact('endpoint', 'connection', 'fields', 'authentications'));
     }

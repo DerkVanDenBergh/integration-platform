@@ -70,8 +70,12 @@ class AuthenticationController extends Controller
             'type' => ['required', 'string', 'max:50'],
             'username' => ['required_if:type,==,basic|nullable'],
             'password' => ['required_if:type,==,basic|nullable'],
-            'key' => ['required_if:type,==,key|nullable'],
-            'token' => ['required_if:type,==,token|nullable']
+            'token' => ['required_if:type,==,token|nullable'],
+            'oauth1_consumer_key' => ['required_if:type,==,oauth1|nullable'],
+            'oauth1_consumer_secret' => ['required_if:type,==,oauth1|nullable'],
+            'oauth1_token' => ['required_if:type,==,oauth1|nullable'],
+            'oauth1_token_secret' => ['required_if:type,==,oauth1|nullable']
+
         ]);
 
         $validatedData['connection_id'] = $connection;
@@ -110,8 +114,11 @@ class AuthenticationController extends Controller
             'type' => ['required', 'string', 'max:50'],
             'username' => ['required_if:type,==,basic|nullable'],
             'password' => ['required_if:type,==,basic|nullable'],
-            'key' => ['required_if:type,==,key|nullable'],
-            'token' => ['required_if:type,==,token|nullable']
+            'token' => ['required_if:type,==,token|nullable'],
+            'oauth1_consumer_key' => ['required_if:type,==,oauth1|nullable'],
+            'oauth1_consumer_secret' => ['required_if:type,==,oauth1|nullable'],
+            'oauth1_token' => ['required_if:type,==,oauth1|nullable'],
+            'oauth1_token_secret' => ['required_if:type,==,oauth1|nullable']
         ]);
 
         $authentication = $this->authService->update($validatedData, $authentication);
