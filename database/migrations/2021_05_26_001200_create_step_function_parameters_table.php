@@ -18,9 +18,19 @@ class CreateStepFunctionParametersTable extends Migration
             $table->string('name');
             $table->string('parameter_name');
             $table->string('data_type');
-            $table->integer('step_function_id');
             $table->boolean('is_nullable')->default(false);
             $table->timestamps();
+
+            // Foreign keys
+            $table->unsignedBigInteger('step_function_id');
+        });
+
+        Schema::table('step_function_parameters', function (Blueprint $table) { 
+            $table->foreign('step_function_id')
+                  ->references('id')
+                  ->on('step_functions')
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
         });
     }
 

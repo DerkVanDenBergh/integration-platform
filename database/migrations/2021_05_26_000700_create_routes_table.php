@@ -19,8 +19,18 @@ class CreateRoutesTable extends Migration
             $table->text('description')->nullable();
             $table->string('slug');
             $table->boolean('active')->default(false);
-            $table->integer('user_id');
             $table->timestamps();
+
+            // Foreign keys
+            $table->unsignedBigInteger('user_id');
+        });
+
+        Schema::table('routes', function (Blueprint $table) {
+            $table->foreign('user_id')
+                  ->references('id')
+                  ->on('users')
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
         });
     }
 

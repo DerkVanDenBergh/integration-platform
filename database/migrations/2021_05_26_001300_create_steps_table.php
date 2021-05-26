@@ -15,11 +15,27 @@ class CreateStepsTable extends Migration
     {
         Schema::create('steps', function (Blueprint $table) {
             $table->id();
-            $table->integer('route_id');
             $table->string('name');
-            $table->integer('step_function_id');
             $table->integer('order');
             $table->timestamps();
+
+            // Foreign keys
+            $table->unsignedBigInteger('route_id');
+            $table->unsignedBigInteger('step_function_id');
+        });
+
+        Schema::table('steps', function (Blueprint $table) { 
+            $table->foreign('route_id')
+                  ->references('id')
+                  ->on('routes')
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
+
+            $table->foreign('step_function_id')
+                  ->references('id')
+                  ->on('step_functions')
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
         });
     }
 
