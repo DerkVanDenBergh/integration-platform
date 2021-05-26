@@ -19,9 +19,19 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->integer('role_id')->default(0);
             $table->rememberToken();
             $table->timestamps();
+
+            // Foreign keys
+            $table->unsignedBigInteger('role_id')->nullable();
+        });
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreign('role_id')
+                  ->references('id')
+                  ->on('roles')
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
         });
     }
 

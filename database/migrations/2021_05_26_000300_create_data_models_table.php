@@ -17,9 +17,25 @@ class CreateDataModelsTable extends Migration
             $table->id();
             $table->string('title');
             $table->text('description');
-            $table->integer('user_id');
-            $table->integer('template_id')->nullable();
             $table->timestamps();
+
+            // Foreign keys
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('template_id')->nullable();
+        });
+
+        Schema::table('data_models', function (Blueprint $table) {
+            $table->foreign('user_id')
+                  ->references('id')
+                  ->on('users')
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
+            
+            $table->foreign('template_id')
+                  ->references('id')
+                  ->on('connections')
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
         });
     }
 

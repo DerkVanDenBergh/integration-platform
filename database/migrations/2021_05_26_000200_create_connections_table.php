@@ -18,9 +18,19 @@ class CreateConnectionsTable extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->string('base_url');
-            $table->integer('user_id');
             $table->boolean('template')->default(false);
             $table->timestamps();
+
+            // Foreign keys
+            $table->unsignedBigInteger('user_id');
+        });
+
+        Schema::table('connections', function (Blueprint $table) {
+            $table->foreign('user_id')
+                  ->references('id')
+                  ->on('users')
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
         });
     }
 

@@ -16,9 +16,25 @@ class CreateStepArgumentsTable extends Migration
         Schema::create('step_arguments', function (Blueprint $table) {
             $table->id();
             $table->string('value');
-            $table->integer('step_id');
-            $table->integer('parameter_id');
             $table->timestamps();
+
+            // Foreign keys
+            $table->unsignedBigInteger('parameter_id');
+            $table->unsignedBigInteger('step_id');
+        });
+
+        Schema::table('step_arguments', function (Blueprint $table) { 
+            $table->foreign('parameter_id')
+                  ->references('id')
+                  ->on('step_function_parameters')
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
+
+            $table->foreign('step_id')
+                  ->references('id')
+                  ->on('steps')
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
         });
     }
 

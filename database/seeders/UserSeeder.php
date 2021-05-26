@@ -15,6 +15,10 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
+        $system = new User($this->definition(1, 'System', 'system', 'disabled', 1001));
+    
+        $system->save();
+
         $admin = new User($this->definition(1002, 'Mintegration Admin', 'admin@mintegration.com', '$2y$12$ohqbjLwZ5GOADWvAiyLt..xvMgEWkhCEZB9vBkKtaIBJVvHenr/l6', 1001));
     
         $admin->save();

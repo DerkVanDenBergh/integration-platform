@@ -24,9 +24,19 @@ class CreateAuthenticationsTable extends Migration
             $table->string('oauth1_consumer_secret')->nullable();
             $table->string('oauth1_token')->nullable();
             $table->string('oauth1_token_secret')->nullable();
-            $table->integer('connection_id');
-            $table->boolean('template')->default(false);
+            $table->boolean('template')->default(false); // TODO check if this is used
             $table->timestamps();
+
+            // Foreign keys
+            $table->unsignedBigInteger('connection_id');   
+        });
+
+        Schema::table('authentications', function (Blueprint $table) {
+            $table->foreign('connection_id')
+                  ->references('id')
+                  ->on('connections')
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
         });
     }
 
