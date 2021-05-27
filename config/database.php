@@ -92,10 +92,10 @@ return [
         ],
 
         'testing' => [  
-            'driver' => 'mysql',  
+            'driver' => 'pgsql',  
             'host' => env('DB_TEST_HOST', 'localhost'),  
-            'database' => env('DB_TEST_DATABASE', 'homestead'),  
-            'username' => env('DB_TEST_USERNAME', 'homestead'),  
+            'database' => env('DB_TEST_DATABASE', 'mintegration'),  
+            'username' => env('DB_TEST_USERNAME', 'mintegration'),  
             'password' => env('DB_TEST_PASSWORD', 'secret'),  
             'charset' => 'utf8',  
             'collation' => 'utf8_unicode_ci',  
