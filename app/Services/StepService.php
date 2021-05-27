@@ -65,7 +65,11 @@ class StepService
     {
         $step = Step::find($id);
 
-        $this->logService->push('info','requested step with id ' . $id . '.', json_encode($step));
+        if($step) {
+            $this->logService->push('info','requested step with id ' . $step->id . '.', json_encode($step));
+        } else {
+            $this->logService->push('warning','requested step with id ' . $id . ' but was not found.');
+        }
 
         return $step;
     }
@@ -110,10 +114,8 @@ class StepService
             $function = $this->stepFunctionService->findById($step->step_function_id);
 
             $arguments = $this->stepArgumentService->findAllFromStep($step->id);
-            if($step->id != 1000) {
-                $data[$step->name] = $this->stepFunctionService->executeFunction($function, $arguments, $data);
-        
-            }
+                
+            $data[$step->name] = $this->stepFunctionService->executeFunction($function, $arguments, $data);
         }
         
         return $data;

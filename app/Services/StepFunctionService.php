@@ -7,7 +7,7 @@ use App\Models\StepFunction;
 
 use App\Services\LogService;
 
-use App\Logic\Routes\StepFunctions;
+use App\Logic\StepFunctions\Factory\StepFunctionFactory;
 
 class StepFunctionService
 {
@@ -50,11 +50,15 @@ class StepFunctionService
 
     public function findById($id)
     {
-       $stepFunction = StepFunction::find($id);
+        $stepFunction = StepFunction::find($id);
 
-       $this->logService->push('info','requested step function with id ' . $stepFunction->id . '.', json_encode($stepFunction));
+        if($stepFunction) {
+            $this->logService->push('info','requested step function with id ' . $stepFunction->id . '.', json_encode($stepFunction));
+        } else {
+            $this->logService->push('warning','requested step function with id ' . $id . ' but was not found.');
+        }
 
-       return $stepFunction;
+        return $stepFunction;
     }
 
     public function findAll()
@@ -75,8 +79,53 @@ class StepFunctionService
        return $stepFunctions;
     }
 
-    public function executeFunction($function, $arguments, $data)
+    // TODO get rid of $originalData
+    public function parseArguments($arguments, $data, $originalData, $keys = [])
     {
-        return StepFunctions::execute($function, $arguments, $data);
+        foreach($data as $key=>$value) {
+
+            $currentKeys = $keys;
+
+            if(is_array($value)) {
+                array_push($currentKeys, $key);
+
+                $this->parseArguments($arguments, $data[$key], $originalData, $currentKeys);
+            } else {
+                array_push($currentKeys, $key);
+
+                foreach($arguments as $argument) {
+                    if(strpos($argument->value, '![' . implode('.', $currentKeys) . ']') !== false) {
+                        $argument->value = str_replace('![' . implode('.', $currentKeys) . ']', $this->array_access($originalData, $currentKeys), $argument->value);
+                    }
+                }
+            }
+        }
+
+        return $arguments;
+    }
+
+    private function array_access(&$array, $keys) {
+
+        if ($keys) {
+            $key = array_shift($keys);
+    
+            $sub = self::array_access(
+                $array[$key],
+                $keys
+            );
+    
+            return $sub;
+        } else {
+            return $array;
+        }
+    }
+
+    public function executeFunction($stepFunction, $arguments, $data)
+    {
+        $function = StepFunctionFactory::create($stepFunction->function_name);
+
+        $arguments = $this->parseArguments($arguments, $data, $data);
+
+        return $function->execute($arguments, $data);
     }
 }
