@@ -6,7 +6,7 @@ env:
 php:
 - '8.0'
 services:
-- mysql
+- postgresql
 cache:
   directories:
   - node_modules
@@ -15,7 +15,7 @@ before_install:
   - sudo apt-get -y install php-xdebug
 before_script:
 - cp .env.travis .env
-- sudo mysql -e 'create database homestead;'
+- sudo psql -c 'create database mintegration;' -U postgres
 - composer self-update
 - composer install --no-interaction
 - php artisan key:generate
