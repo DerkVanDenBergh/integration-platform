@@ -45,11 +45,15 @@ class UserService
 
     public function findById($id)
     {
-       $user = User::find($id);
-
-       $this->logService->push('info','requested user with id ' . $user->id . '.', json_encode($user));
-
-       return $user;
+        $user = User::find($id);
+        
+        if($user) {
+            $this->logService->push('info','requested user with id ' . $user->id . '.', json_encode($user));
+        } else {
+            $this->logService->push('warning','requested user with id ' . $id . ' but was not found.');
+        }
+        
+        return $user;
     }
 
     public function findAll()
