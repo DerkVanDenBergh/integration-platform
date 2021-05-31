@@ -46,22 +46,17 @@ class StepArgumentService
        return $stepArgument;
     }
 
-    public function deleteAllFromRoute($id)
-    {
-        $stepArguments = StepArgument::where('route_id', $id)->get();
-        
-        foreach($stepArguments as $stepArgument) {
-            $this->delete($stepArgument);
-        }
-    }
-
     public function findById($id)
     {
-       $stepArgument = StepArgument::find($id);
+        $stepArgument = StepArgument::find($id);
 
-       $this->logService->push('info','requested stepArgument with id ' . $stepArgument->id . '.', json_encode($stepArgument));
+        if($stepArgument) {
+            $this->logService->push('info','requested stepArgument with id ' . $stepArgument->id . '.', json_encode($stepArgument));
+        } else {
+            $this->logService->push('warning','requested stepArgument with id ' . $id . ' but was not found.');
+        }
 
-       return $stepArgument;
+        return $stepArgument;
     }
 
     public function findAll()

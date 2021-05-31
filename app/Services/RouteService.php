@@ -57,18 +57,26 @@ class RouteService
 
     public function findById($id)
     {
-       $route = Route::find($id);
+        $route = Route::find($id);
 
-       $this->logService->push('info','requested route with id ' . $route->id . '.', json_encode($route));
+        if($route) {
+            $this->logService->push('info','requested route with id ' . $route->id . '.', json_encode($route));
+        } else {
+            $this->logService->push('warning','requested route with id ' . $id . ' but was not found.');
+        }
 
-       return $route;
+        return $route;
     }
 
     public function findBySlug($slug)
     {
         $route = Route::where('slug', $slug)->first();
 
-        $this->logService->push('info','requested route with id ' . $route->id . '.', json_encode($route));
+        if($route) {
+            $this->logService->push('info','requested route with slug ' . $slug . '.', json_encode($route));
+        } else {
+            $this->logService->push('warning','requested route with slug ' . $slug . ' but was not found.');
+        }
 
         return $route;
     }
@@ -77,7 +85,7 @@ class RouteService
     {
        $routes = Route::all();
 
-       $this->logService->push('info','requested all routes.', json_encode($route));
+       $this->logService->push('info','requested all routes.', json_encode($routes));
 
        return $routes;
     }

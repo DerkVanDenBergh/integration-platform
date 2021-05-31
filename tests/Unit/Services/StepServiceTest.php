@@ -179,6 +179,22 @@ class StepServiceTest extends TestCase
         }
     }
 
+    public function test_callToFindAllStepsWithReturnValueFromRouteShouldResultInMultipleSteps()
+    {
+        $this->stepFunction->has_return_value = true;
+        $this->stepFunction->save();
+        
+        $this->assertTrue($this->stepService->findAllStepsWithReturnValueFromRoute($this->route->id)->count() == 0);
+
+        $this->stepFunction->has_return_value = false;
+        $this->stepFunction->save();
+
+        $this->assertTrue($this->stepService->findAllStepsWithReturnValueFromRoute($this->route->id)->count() == 0);
+
+        $this->stepFunction->has_return_value = true;
+        $this->stepFunction->save();
+    }
+
     public function test_callToFindAllFromRouteShouldResultInMultipleSteps()
     {
         $steps = [

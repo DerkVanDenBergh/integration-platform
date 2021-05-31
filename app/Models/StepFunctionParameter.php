@@ -11,6 +11,14 @@ class StepFunctionParameter extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'parameter_name',
+        'data_type',
+        'step_function_id',
+        'is_nullable'
+    ];
+
     public function getArgumentValueByStepAndParameterId($step_id, $parameter_id)
     {
         // TODO is a function call, make it a function call

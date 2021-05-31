@@ -13,6 +13,7 @@ class Mapping extends Model
         'input_model',
         'input_endpoint',
         'output_endpoint',
+        'type',
         'route_id'
     ];
 

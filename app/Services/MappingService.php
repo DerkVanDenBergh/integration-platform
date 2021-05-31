@@ -16,7 +16,7 @@ class MappingService
         $this->logService = $logService;
     }
     
-    public function store(array $data, $type)
+    public function store(array $data)
     {
         $mapping = Mapping::create($data);
 
@@ -47,11 +47,15 @@ class MappingService
 
     public function findById($id)
     {
-       $mapping = Mapping::find($id);
+        $mapping = Mapping::find($id);
 
-       $this->logService->push('info','requested mapping with id ' . $mapping->id . '.', json_encode($mapping));
+        if($mapping) {
+            $this->logService->push('info','requested mapping with id ' . $mapping->id . '.', json_encode($mapping));
+        } else {
+            $this->logService->push('warning','requested mapping with id ' . $id . ' but was not found.');
+        }
 
-       return $mapping;
+        return $mapping;
     }
 
     public function findAll()
@@ -63,18 +67,16 @@ class MappingService
        return $mappings;
     }
 
-    public function findAllFromUser($id)
-    {
-        $mappings = Mapping::where('user_id', $id)->get();
-
-        $this->logService->push('info','requested all mappings associated with user with id ' . $id . '.');
-
-        return $mappings;
-    }
-
     public function findByRouteId($id)
     {
        $mapping = Mapping::where('route_id', $id)->first();
+
+        if($mapping) {
+            $this->logService->push('info','requested mapping from route with id ' . $mapping->route_id . '.', json_encode($mapping));
+        } else {
+            $this->logService->push('warning','requested mapping from route with id ' . $id . ' but was not found.');
+        }
+
 
        return $mapping;
     }

@@ -34,25 +34,25 @@ class LogService
         return $log;
     }
 
-    public function delete(Role $role)
+    public function delete(Log $log)
     {
-       $role->delete();
+       $log->delete();
 
-       return $role;
+       return $log;
     }
 
     public function findById($id)
     {
-       $role = Log::find($id);
+       $log = Log::find($id);
 
-       return $role;
+       return $log;
     }
 
     public function findAll()
     {
-       $roles = Log::orderBy('created_at', 'desc')->get();
+       $logs = Log::orderBy('created_at', 'desc')->get();
 
-       return $roles;
+       return $logs;
     }
 
     public function getLogLevel($level)
@@ -96,11 +96,13 @@ class LogService
         }
     }
 
-    public function loggable($level)
+    public function loggable($level, $threshold = 'env')
     {
-        $env = config('logging.level');
+        if($threshold == 'env') {
+            $threshold = config('logging.level');
+        }
 
-        if(self::getLogLevel($env) >= self::getLogLevel($level)) {
+        if(self::getLogLevel($threshold) >= self::getLogLevel($level)) {
             return true;
         } else {
             return false;
@@ -111,21 +113,24 @@ class LogService
     {
         if(self::loggable($level)) {
             if($this->origin) {
-                Log::create([
+                $log = Log::create([
                     'level' => $level,
                     'title' => $this->origin['type']  . ' ['. $this->origin['id'] . '] ' . $title,
                     'message' => $message,
                     'stacktrace' => $stacktrace
                 ]);
             } else {
-                Log::create([
+                $log = Log::create([
                     'level' => $level,
                     'title' => (auth()->user()->name ?? 'A task')  . ' ['. (auth()->user()->id ?? '-') . '] ' . $title,
                     'message' => $message,
                     'stacktrace' => $stacktrace
                 ]);
             }
+
+            return $log;
         }
 
+        return null;
     }
 }
