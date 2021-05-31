@@ -23,6 +23,8 @@ class StepServiceTest extends TestCase
 
     protected $route;
     protected $stepFunction;
+    protected $role;
+    protected $user;
 
     protected $faker;
     
@@ -45,7 +47,7 @@ class StepServiceTest extends TestCase
         $this->faker = \Faker\Factory::create();
 
         // Manually create related objects if needed
-        $role = new Role([
+        $this->role = new Role([
             'title' => 'User', 
             'can_manage_users' => true,
             'can_manage_functions' => true,
@@ -53,23 +55,23 @@ class StepServiceTest extends TestCase
             'can_manage_templates' => true
         ]);
 
-        $role->save();
+        $this->role->save();
 
-        $user = new User([
+        $this->user = new User([
             'name' => $this->faker->name, 
             'email' => $this->faker->email,
             'password' => $this->faker->text,
-            'role_id' => $role->id
+            'role_id' => $this->role->id
         ]);
 
-        $user->save();
+        $this->user->save();
 
         $this->route = new Route([
             'title' => $this->faker->text,
             'description' => $this->faker->text,
             'active' => true,
             'slug' => $this->faker->text,
-            'user_id' => $user->id
+            'user_id' => $this->user->id
         ]);
         
         $this->route->save();
@@ -81,6 +83,14 @@ class StepServiceTest extends TestCase
             'has_return_value' => true
         ]);
         $this->stepFunction->save();
+    }
+
+    protected function tearDown(): void
+    {
+        $this->route->delete();
+        $this->stepFunction->delete();
+        $this->role->delete();
+        $this->user->delete;
     }
 
     public function test_validStepDataShouldResultInStoredStep()

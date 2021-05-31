@@ -56,6 +56,12 @@ class RouteServiceTest extends TestCase
         $this->user->save();
     }
 
+    protected function tearDown(): void
+    {
+        $this->role->delete();
+        $this->user->delete();
+    }
+
     public function test_validRouteDataShouldResultInStoredRoute()
     {
         $route = $this->createTestEntity();

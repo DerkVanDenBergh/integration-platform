@@ -23,6 +23,13 @@ class MappingFieldServiceTest extends TestCase
 {
     protected $mappingFieldService;
 
+    protected $role;
+    protected $user;
+    protected $route;
+    protected $inputModel;
+    protected $outputModel;
+    protected $connection;
+    protected $outputEndpoint;
     protected $mapping;
     protected $inputField;
     protected $outputField;
@@ -41,7 +48,7 @@ class MappingFieldServiceTest extends TestCase
         $this->faker = \Faker\Factory::create();
 
         // Manually create related objects if needed
-        $role = new Role([
+        $this->role = new Role([
             'title' => 'User', 
             'can_manage_users' => true,
             'can_manage_functions' => true,
@@ -49,77 +56,77 @@ class MappingFieldServiceTest extends TestCase
             'can_manage_templates' => true
         ]);
 
-        $role->save();
+        $this->role->save();
 
-        $user = new User([
+        $this->user = new User([
             'name' => $this->faker->name, 
             'email' => $this->faker->email,
             'password' => $this->faker->text,
-            'role_id' => $role->id
+            'role_id' => $this->role->id
         ]);
 
-        $user->save();
+        $this->user->save();
 
-        $route = new Route([
+        $this->route = new Route([
             'title' => $this->faker->text,
             'description' => $this->faker->text,
             'active' => true,
             'slug' => $this->faker->text,
-            'user_id' => $user->id
+            'user_id' => $this->user->id
         ]);
         
-        $route->save(); 
+        $this->route->save(); 
 
-        $inputModel = new DataModel([
+        $this->inputModel = new DataModel([
             'title' => $this->faker->text,
             'description' => $this->faker->text,
-            'user_id' => $user->id,
+            'user_id' => $this->user->id,
             'template_id' => null
         ]);
 
-        $inputModel->save();
+        $this->inputModel->save();
 
-        $outputModel = new DataModel([
+        $this->outputModel = new DataModel([
             'title' => $this->faker->text,
             'description' => $this->faker->text,
-            'user_id' => $user->id,
+            'user_id' => $this->user->id,
             'template_id' => null
         ]);
 
-        $outputModel->save();
+        $this->outputModel->save();
 
-        $connection = new Connection([
+        $this->connection = new Connection([
             'title' => $this->faker->text,
             'description' => $this->faker->text,
             'base_url' => 'example.com/api',
-            'user_id' => $user->id,
+            'user_id' => $this->user->id,
             'template' => false
         ]);
 
-        $connection->save();
+        $this->connection->save();
 
-        $outputEndpoint = new Endpoint([
+        $this->outputEndpoint = new Endpoint([
             'title' => $this->faker->text,
             'endpoint' => $this->faker->text,
             'protocol' => 'HTTP',
             'method' => 'POST',
-            'connection_id' => $connection->id,
-            'model_id' => $outputModel->id
+            'connection_id' => $this->connection->id,
+            'model_id' => $this->outputModel->id
         ]);
 
-        $outputEndpoint->save();
+        $this->outputEndpoint->save();
         
         $this->mapping = new Mapping([
-            'input_model' => $inputModel->id,
-            'output_endpoint' => $outputEndpoint->id,
+            'input_model' => $this->inputModel->id,
+            'output_endpoint' => $this->outputEndpoint->id,
             'type' => 'route',
-            'route_id' => $route->id
+            'route_id' => $this->route->id
         ]);
 
         $this->mapping->save();
 
         $this->inputField = new DataModelField([
-            'model_id' => $inputModel->id,
+            'model_id' => $this->inputModel->id,
             'name' => $this->faker->text,
             'node_type' => 'attribute',
             'data_type' => 'string'
@@ -128,14 +135,27 @@ class MappingFieldServiceTest extends TestCase
         $this->inputField->save();
 
         $this->outputField = new DataModelField([
-            'model_id' => $inputModel->id,
+            'model_id' => $this->inputModel->id,
             'name' => $this->faker->text,
             'node_type' => 'attribute',
             'data_type' => 'string'
         ]);
 
         $this->outputField->save();
-        
+    }
+
+    protected function tearDown(): void
+    {
+        $this->mapping->delete();
+        $this->inputField->delete();
+        $this->outputField->delete();
+        $this->outputEndpoint->delete();
+        $this->connection->delete();
+        $this->outputModel->delete();
+        $this->inputModel->delete();
+        $this->route->delete();
+        $this->user->delete();
+        $this->role->delete();
     }
 
     public function test_validMappingFieldDataShouldResultInStoredMappingField()

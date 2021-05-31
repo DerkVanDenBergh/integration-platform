@@ -43,6 +43,11 @@ class UserServiceTest extends TestCase
         $this->role->save();   
     }
 
+    protected function tearDown(): void
+    {
+        $this->role->delete();
+    }
+
     public function test_validUserDataShouldResultInStoredUser()
     {
         $user = $this->createTestEntity();

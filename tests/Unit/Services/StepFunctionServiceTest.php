@@ -16,8 +16,6 @@ class StepFunctionServiceTest extends TestCase
 {
     protected $stepFunctionService;
 
-    protected $role;
-
     protected $faker;
     
     protected function setUp(): void
