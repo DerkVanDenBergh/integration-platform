@@ -22,7 +22,8 @@ class Endpoint extends Model
         'port',
         'connection_id',
         'authentication_id',
-        'template'
+        'template',
+        'model_id'
     ];
 
     public function connection() {

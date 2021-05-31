@@ -62,11 +62,15 @@ class RoleService
 
     public function findById($id)
     {
-       $role = Role::find($id);
+        $role = Role::find($id);
 
-       $this->logService->push('info','requested role with id ' . $role->id . '.', json_encode($role));
-
-       return $role;
+        if($role) {
+            $this->logService->push('info','requested role with id ' . $role->id . '.', json_encode($role));
+        } else {
+            $this->logService->push('warning','requested role with id ' . $id . ' but was not found.');
+        }
+        
+        return $role;
     }
 
     public function findAll()

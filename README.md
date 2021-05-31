@@ -14,6 +14,3 @@ A lightweight open source integration platform.
 ## Development environment
 
 To build this app you need to have `composer` and `npm` installed on your system.
-
-
-
