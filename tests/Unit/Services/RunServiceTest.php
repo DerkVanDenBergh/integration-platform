@@ -71,6 +71,8 @@ class RunServiceTest extends TestCase
         $this->route->delete();
         $this->user->delete();
         $this->role->delete();
+
+        parent::tearDown();
     }
 
     public function test_validRunDataShouldResultInStoredRun()

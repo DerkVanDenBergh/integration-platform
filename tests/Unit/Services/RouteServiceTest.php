@@ -60,6 +60,8 @@ class RouteServiceTest extends TestCase
     {
         $this->role->delete();
         $this->user->delete();
+
+        parent::tearDown();
     }
 
     public function test_validRouteDataShouldResultInStoredRoute()

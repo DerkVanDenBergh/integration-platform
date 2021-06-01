@@ -59,11 +59,15 @@ class EndpointService
 
     public function findById($id)
     {
-       $endpoint = Endpoint::find($id);
+        $endpoint = Endpoint::find($id);
 
-       $this->logService->push('info','requested endpoint with id ' . $id . '.');
+        if($endpoint) {
+            $this->logService->push('info','requested endpoint with id ' . $endpoint->id . '.', json_encode($endpoint));
+        } else {
+            $this->logService->push('warning','requested endpoint with id ' . $id . ' but was not found.');
+        }
 
-       return $endpoint;
+        return $endpoint;
     }
 
     public function findAll()
@@ -104,9 +108,15 @@ class EndpointService
     {
         $endpoint = Endpoint::find($id);
 
-        $connection = $endpoint->connection()->first();
+        if($endpoint) {
+            $connection = $endpoint->connection()->first();
 
-        return $connection->base_url . $endpoint->endpoint;
+            return $connection->base_url . $endpoint->endpoint;
+        } else {
+            return null;
+        }
+
+        
     }
 
     public function getProtocols()
@@ -166,7 +176,7 @@ class EndpointService
     public function formatEndpointUrl($endpoint)
     {
         if($endpoint[0] != '/') {
-            return null;
+            $endpoint = '/' . $endpoint;
         }
 
         $endpoint = rtrim($endpoint, '/');

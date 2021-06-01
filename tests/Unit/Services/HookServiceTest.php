@@ -193,6 +193,8 @@ class HookServiceTest extends TestCase
         $this->role->delete();
         $this->mappingField->delete();
 
+        parent::tearDown();
+
     }
 
     public function test_validateAuthenticationShouldReturnTrueWithValidAuthData()

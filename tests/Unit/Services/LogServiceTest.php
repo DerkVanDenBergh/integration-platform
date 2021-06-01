@@ -31,6 +31,11 @@ class LogServiceTest extends TestCase
         // Manually create related objects if needed
     }
 
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+    }
+
     public function test_validLogDataShouldResultInStoredLog()
     {
         $log = $this->createTestEntity();

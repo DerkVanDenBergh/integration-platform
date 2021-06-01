@@ -91,6 +91,8 @@ class StepServiceTest extends TestCase
         $this->stepFunction->delete();
         $this->role->delete();
         $this->user->delete;
+
+        parent::tearDown();
     }
 
     public function test_validStepDataShouldResultInStoredStep()

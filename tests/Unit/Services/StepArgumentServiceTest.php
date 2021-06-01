@@ -107,6 +107,8 @@ class StepArgumentServiceTest extends TestCase
         $this->parameter->delete();
         $this->role->delete();
         $this->user->delete();
+
+        parent::tearDown();
     }
 
     public function test_validStepArgumentDataShouldResultInStoredStepArgument()

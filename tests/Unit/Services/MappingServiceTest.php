@@ -109,6 +109,8 @@ class MappingServiceTest extends TestCase
         $this->connection->delete();
         $this->role->delete();
         $this->user->delete();
+
+        parent::tearDown();
     }
 
     public function test_validMappingDataShouldResultInStoredMapping()

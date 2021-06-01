@@ -46,6 +46,8 @@ class UserServiceTest extends TestCase
     protected function tearDown(): void
     {
         $this->role->delete();
+
+        parent::tearDown();
     }
 
     public function test_validUserDataShouldResultInStoredUser()
