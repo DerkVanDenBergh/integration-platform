@@ -58,7 +58,8 @@ class ConnectionServiceTest extends TestCase
     protected function tearDown(): void
     {
         $this->role->delete();
-
+        $this->user->delete();
+        
         parent::tearDown();
     }
 

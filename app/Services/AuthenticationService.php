@@ -49,11 +49,15 @@ class AuthenticationService
 
     public function findById($id)
     {
-       $authentication = Authentication::find($id);
-
-       $this->logService->push('info','requested authentication with id ' . $authentication->id . '.', json_encode($authentication));
-
-       return $authentication;
+        $authentication = Authentication::find($id);
+        
+        if($authentication) {
+            $this->logService->push('info','requested authentication with id ' . $authentication->id . '.', json_encode($authentication));
+        } else {
+            $this->logService->push('warning','requested authentication with id ' . $id . ' but was not found.');
+        }
+        
+        return $authentication;
     }
 
     public function findAll()
