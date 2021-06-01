@@ -24,6 +24,9 @@ class MappingServiceTest extends TestCase
     protected $route;
     protected $inputModel;
     protected $outputEndpoint;
+    protected $role;
+    protected $connection;
+    protected $user;
 
     protected $faker;
     
@@ -39,7 +42,7 @@ class MappingServiceTest extends TestCase
         $this->faker = \Faker\Factory::create();
 
         // Manually create related objects if needed
-        $role = new Role([
+        $this->role = new Role([
             'title' => 'User', 
             'can_manage_users' => true,
             'can_manage_functions' => true,
@@ -47,23 +50,23 @@ class MappingServiceTest extends TestCase
             'can_manage_templates' => true
         ]);
 
-        $role->save();
+        $this->role->save();
 
-        $user = new User([
+        $this->user = new User([
             'name' => $this->faker->name, 
             'email' => $this->faker->email,
             'password' => $this->faker->text,
-            'role_id' => $role->id
+            'role_id' => $this->role->id
         ]);
 
-        $user->save();
+        $this->user->save();
 
         $this->route = new Route([
             'title' => $this->faker->text,
             'description' => $this->faker->text,
             'active' => true,
             'slug' => $this->faker->text,
-            'user_id' => $user->id
+            'user_id' => $this->user->id
         ]);
         
         $this->route->save(); 
@@ -71,33 +74,43 @@ class MappingServiceTest extends TestCase
         $this->inputModel = new DataModel([
             'title' => $this->faker->text,
             'description' => $this->faker->text,
-            'user_id' => $user->id,
+            'user_id' => $this->user->id,
             'template_id' => null
         ]);
 
         $this->inputModel->save();
 
-        $connection = new Connection([
+        $this->connection = new Connection([
             'title' => $this->faker->text,
             'description' => $this->faker->text,
             'base_url' => 'example.com/api',
-            'user_id' => $user->id,
+            'user_id' => $this->user->id,
             'template' => false
         ]);
 
-        $connection->save();
+        $this->connection->save();
 
         $this->outputEndpoint = new Endpoint([
             'title' => $this->faker->text,
             'endpoint' => $this->faker->text,
             'protocol' => 'HTTP',
             'method' => 'POST',
-            'connection_id' => $connection->id
+            'connection_id' => $this->connection->id
         ]);
 
         $this->outputEndpoint->save();
+    }
 
+    protected function tearDown(): void
+    {
+        $this->role->delete();
+        $this->inputModel->delete();
+        $this->outputEndpoint->delete();
+        $this->connection->delete();
+        $this->role->delete();
+        $this->user->delete();
 
+        parent::tearDown();
     }
 
     public function test_validMappingDataShouldResultInStoredMapping()

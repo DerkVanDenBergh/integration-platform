@@ -51,7 +51,11 @@ class DataModelService
     {
        $dataModel = DataModel::find($id);
 
-       $this->logService->push('info','requested datamodel with id ' . $dataModel->id . '.', json_encode($dataModel));
+        if($dataModel) {
+            $this->logService->push('info','requested dataModel with id ' . $dataModel->id . '.', json_encode($dataModel));
+        } else {
+            $this->logService->push('warning','requested dataModel with id ' . $id . ' but was not found.');
+        }
 
        return $dataModel;
     }

@@ -25,7 +25,7 @@ class ConnectionService
         if(array_key_exists('template', $data)) {
             Gate::authorize('manage_templates');
 
-            $connection->template = true;
+            $connection->template = $data['template'];
         }
 
         $connection->save();
@@ -109,7 +109,7 @@ class ConnectionService
         if(array_key_exists('template', $data)) {
             Gate::authorize('manage_templates');
 
-            $connection->template = true;
+            $connection->template = $data['template'];
 
             $connection->save();
         }
@@ -130,11 +130,15 @@ class ConnectionService
 
     public function findById($id)
     {
-       $connection = Connection::find($id);
+        $connection = Connection::find($id);
 
-       $this->logService->push('info','requested connection with id ' . $connection->id . '.', json_encode($connection));
+        if($connection) {
+            $this->logService->push('info','requested connection with id ' . $connection->id . '.', json_encode($connection));
+        } else {
+            $this->logService->push('warning','requested connection with id ' . $id . ' but was not found.');
+        }
 
-       return $connection;
+        return $connection;
     }
 
     public function findAll()

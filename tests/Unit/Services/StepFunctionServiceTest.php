@@ -16,8 +16,6 @@ class StepFunctionServiceTest extends TestCase
 {
     protected $stepFunctionService;
 
-    protected $role;
-
     protected $faker;
     
     protected function setUp(): void
@@ -32,6 +30,11 @@ class StepFunctionServiceTest extends TestCase
         $this->faker = \Faker\Factory::create();
 
         // Manually create related objects if needed
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
     }
 
     public function test_validStepFunctionDataShouldResultInStoredStepFunction()
