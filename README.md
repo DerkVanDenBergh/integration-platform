@@ -1,6 +1,8 @@
 # MIntegration
 
-[![Build Status](https://www.travis-ci.com/DerkVanDenBergh/mintegration.svg?branch=main)](https://www.travis-ci.com/DerkVanDenBergh/mintegration) [![codecov](https://codecov.io/gh/DerkVanDenBergh/mintegration/branch/main/graph/badge.svg?token=93OG3XAC2H)](https://codecov.io/gh/DerkVanDenBergh/mintegration)
+[![Build Status](https://www.travis-ci.com/DerkVanDenBergh/mintegration.svg?branch=main)](https://www.travis-ci.com/DerkVanDenBergh/mintegration) [![codecov](https://codecov.io/gh/DerkVanDenBergh/mintegration/branch/main/graph/badge.svg?token=93OG3XAC2H)](https://codecov.io/gh/DerkVanDenBergh/mintegration) 
+
+[Server Status](https://statuspage.freshping.io/53218-Mintegration)
 
 A lightweight open source integration platform.
 

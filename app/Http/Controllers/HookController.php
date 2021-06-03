@@ -75,9 +75,21 @@ class HookController extends Controller
 
         $output_model = $this->hookService->fillOutputModel($mapping, $data);
 
-        $response = $this->hookService->sendModelToEndpoint($output_model, $mapping);
+        try {
+            $response = $this->hookService->sendModelToEndpoint($output_model, $mapping);
 
-        LogRoute::dispatchAfterResponse($route, 'route', 'success', json_encode($data), json_encode($output_model), $this->logService, $this->runService);
+            LogRoute::dispatchAfterResponse($route, 'route', 'success', json_encode($data), json_encode($output_model), $this->logService, $this->runService);
+        } catch (exception $e) {
+            $response =  response()->json([
+                'error' => $e->getMessage();
+            ], 400);
+
+            LogRoute::dispatchAfterResponse($route, 'route', 'failure', json_encode($data), 'error:' + $e->getMessage(), $this->logService, $this->runService);
+        } finally {
+            return $response;
+        }
+
+        
 
         return $response;
 

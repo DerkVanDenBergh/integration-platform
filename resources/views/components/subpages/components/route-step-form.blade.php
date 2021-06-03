@@ -32,9 +32,9 @@
                     <div class="col-span-2 py-4">
                         <x-forms.label for="steps[{{ $number }}][arguments][{{ $parameter->id }}]" :value="__('Parameter ' . $loop->index + 1 . ': '. $parameter->name)" />
                         @if($parameter->is_nullable)
-                            <x-forms.input id="steps[{{ $number }}][arguments][{{ $parameter->id }}]" class="block mt-1 w-full" type="text" name="steps[{{ $number }}][arguments][{{ $parameter->id }}]" value="{{ $parameter->getArgumentValueByStepAndParameterId($step->id, $parameter->id) }}" autofocus />
+                            <x-forms.input id="steps[{{ $number }}][arguments][{{ $parameter->id }}]" class="block mt-1 w-full" type="text" name="steps[{{ $number }}][arguments][{{ $parameter->id }}]" value="{{ $parameter->getArgumentValueByStepId($step->id) }}" autofocus />
                         @else
-                            <x-forms.input id="steps[{{ $number }}][arguments][{{ $parameter->id }}]" class="block mt-1 w-full" type="text" name="steps[{{ $number }}][arguments][{{ $parameter->id }}]" value="{{ $parameter->getArgumentValueByStepAndParameterId($step->id, $parameter->id) }}" required autofocus />
+                            <x-forms.input id="steps[{{ $number }}][arguments][{{ $parameter->id }}]" class="block mt-1 w-full" type="text" name="steps[{{ $number }}][arguments][{{ $parameter->id }}]" value="{{ $parameter->getArgumentValueByStepId($step->id) }}" required autofocus />
                         @endif
                     </div>
                     

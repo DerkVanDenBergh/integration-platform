@@ -19,10 +19,9 @@ class StepFunctionParameter extends Model
         'is_nullable'
     ];
 
-    public function getArgumentValueByStepAndParameterId($step_id, $parameter_id)
+    public function getArgumentValueByStepId($step_id)
     {
-        // TODO is a function call, make it a function call
-        $argument = StepArgument::where('step_id', $step_id)->where('parameter_id', $parameter_id)->first();
+        $argument = StepArgument::where('step_id', $step_id)->where('parameter_id', $this->id)->first();
         
         if($argument) {
             return $argument->value;

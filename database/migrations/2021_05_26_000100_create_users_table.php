@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration
             $table->timestamps();
 
             // Foreign keys
-            $table->unsignedBigInteger('role_id')->nullable();
+            $table->unsignedBigInteger('role_id');
         });
 
         Schema::table('users', function (Blueprint $table) {
