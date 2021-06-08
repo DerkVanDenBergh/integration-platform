@@ -52,9 +52,9 @@ class StepService
        return $step;
     }
 
-    public function deleteAllFromRoute($id)
+    public function deleteAllFromProcessable($id)
     {
-        $steps = Step::where('route_id', $id)->get();
+        $steps = Step::where('processable_id', $id)->get();
         
         foreach($steps as $step) {
             $this->delete($step);
@@ -83,10 +83,10 @@ class StepService
         return $steps;
     }
 
-    public function findAllStepsWithReturnValueFromRoute($id)
+    public function findAllStepsWithReturnValueFromProcessable($id)
     {
         $steps = Step::with('step_function')
-                        ->where('route_id', $id)
+                        ->where('processable_id', $id)
                         ->whereHas('step_function', function($query) {
                             $query->where('has_return_value', '=', true);
                         })
@@ -96,19 +96,19 @@ class StepService
         return $steps;
     }   
 
-    public function findAllFromRoute($id)
+    public function findAllFromProcessable($id)
     {
 
-        $steps = Step::where('route_id', $id)->get();
+        $steps = Step::where('processable_id', $id)->get();
 
-        $this->logService->push('info','requested all steps associated with route with id ' . $id . '.');
+        $this->logService->push('info','requested all steps associated with processable with id ' . $id . '.');
 
         return $steps;
     }
 
-    public function processSteps($route, $data)
+    public function processSteps($processable, $data)
     {
-        $steps = $this->findAllFromRoute($route->id);
+        $steps = $this->findAllFromProcessable($processable->id);
 
         foreach($steps as $step) {
             $function = $this->stepFunctionService->findById($step->step_function_id);

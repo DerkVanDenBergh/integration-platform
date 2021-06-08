@@ -16,53 +16,53 @@ class EndpointSeeder extends Seeder
     public function run()
     {
         $user_post = new Endpoint($this->definition(
-            1000, 
+            2000, 
             'Add new user', 
             '/user', 
             'HTTP',
             'POST',
-            1000,
-            1000,
-            1000
+            2000,
+            2000,
+            2000
         ));
 
         $user_post->save();
 
         $users_get = new Endpoint($this->definition(
-            1001, 
+            2001, 
             'Get all users', 
             '/users', 
             'HTTP',
             'GET',
-            1000,
-            1000,
-            1000
+            2000,
+            2000,
+            2000
         ));
         
         $users_get->save();
         
         $employee_post = new Endpoint($this->definition(
-            1002, 
+            2002, 
             'Add new employee', 
             '/employee', 
             'HTTP',
             'POST',
-            1001,
-            1001,
-            1001
+            2001,
+            2001,
+            2001
         ));
 
         $employee_post->save();
 
         $employee_get = new Endpoint($this->definition(
-            1003, 
+            2003, 
             'Get all employees', 
             '/employees', 
             'HTTP',
             'GET',
-            1001,
-            1001,
-            1001
+            2001,
+            2001,
+            2001
         ));
         
         $employee_get->save();

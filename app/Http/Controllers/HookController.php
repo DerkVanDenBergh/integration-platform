@@ -5,19 +5,19 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Services\HookService;
-use App\Services\RouteService;
+use App\Services\ProcessableService;
 use App\Services\MappingService;
 use App\Services\DataModelService;
 use App\Services\LogService;
 use App\Services\RunService;
 use App\Services\StepService;
 
-use App\Jobs\LogRoute;
+use App\Jobs\LogProcessable;
 
 class HookController extends Controller
 {
     protected $hookService;
-    protected $routeService;
+    protected $processableService;
     protected $mappingService;
     protected $modelService;
     protected $logService;
@@ -26,7 +26,7 @@ class HookController extends Controller
 
     public function __construct(
         HookService $hookService, 
-        RouteService $routeService,
+        ProcessableService $processableService,
         MappingService $mappingService,
         DataModelService $modelService,
         LogService $logService,
@@ -34,7 +34,7 @@ class HookController extends Controller
         StepService $stepService
     ) {
         $this->hookService = $hookService;
-        $this->routeService = $routeService;
+        $this->processableService = $processableService;
         $this->mappingService = $mappingService;
         $this->modelService = $modelService;
         $this->logService = $logService;
@@ -49,42 +49,42 @@ class HookController extends Controller
 
     public function post(Request $request, $slug)
     {
-        $route = $this->routeService->findBySlug($slug); 
+        $processable = $this->processableService->findBySlug($slug); 
 
-        if(!$route->active) {
+        if(!$processable->active) {
             return response()->json([
-                'error' => 'route is not active.'
+                'error' => 'processable is not active.'
             ], 400);
         }
 
-        $this->hookService->validateAuthentication($route, $request); 
+        $this->hookService->validateAuthentication($processable, $request); 
 
-        $mapping = $this->mappingService->findByRouteId($route->id);
+        $mapping = $this->mappingService->findByProcessableId($processable->id);
 
         $data = $this->hookService->validateInputModel($mapping, $request->toArray());
 
         if($data == []) {
-            LogRoute::dispatchAfterResponse($route, 'route', 'failure', json_encode($data), '', $this->logService, $this->runService);
+            LogProcessable::dispatchAfterResponse($processable, 'processable', 'failure', json_encode($data), '', $this->logService, $this->runService);
 
             return response()->json([
-                'error' => 'input data not compatible with route.'
+                'error' => 'input data not compatible with processable.'
             ], 400);
         }
 
-        $data = $this->stepService->processSteps($route, $data);
+        $data = $this->stepService->processSteps($processable, $data);
 
         $output_model = $this->hookService->fillOutputModel($mapping, $data);
 
         try {
             $response = $this->hookService->sendModelToEndpoint($output_model, $mapping);
 
-            LogRoute::dispatchAfterResponse($route, 'route', 'success', json_encode($data), json_encode($output_model), $this->logService, $this->runService);
+            LogProcessable::dispatchAfterResponse($processable, 'processable', 'success', json_encode($data), json_encode($output_model), $this->logService, $this->runService);
         } catch (exception $e) {
             $response =  response()->json([
                 'error' => $e->getMessage();
             ], 400);
 
-            LogRoute::dispatchAfterResponse($route, 'route', 'failure', json_encode($data), 'error:' + $e->getMessage(), $this->logService, $this->runService);
+            LogProcessable::dispatchAfterResponse($processable, 'processable', 'failure', json_encode($data), 'error:' + $e->getMessage(), $this->logService, $this->runService);
         } finally {
             return $response;
         }

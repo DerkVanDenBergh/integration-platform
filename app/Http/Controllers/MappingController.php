@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Mapping;
 use Illuminate\Http\Request;
 
-use App\Models\Route;
+use App\Models\Processable;
 
 use App\Services\MappingService;
 use App\Services\EndpointService;
@@ -34,13 +34,13 @@ class MappingController extends Controller
      * @param  \App\Models\Mapping  $mapping
      * @return \Illuminate\Http\Response
      */
-    public function edit(Route $route, Mapping $mapping)
+    public function edit(Processable $processable, Mapping $mapping)
     {
         $endpoints = $this->endpointService->findAllFromUser(auth()->user()->id);
 
         $models = $this->modelService->findAllFromUser(auth()->user()->id);
 
-        return view('models.mappings.edit', compact('route', 'mapping', 'endpoints', 'models'));
+        return view('models.mappings.edit', compact('processable', 'mapping', 'endpoints', 'models'));
     }
 
     /**
@@ -50,7 +50,7 @@ class MappingController extends Controller
      * @param  \App\Models\Mapping  $mapping
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Route $route, Mapping $mapping)
+    public function update(Request $request, Processable $processable, Mapping $mapping)
     {
         $validatedData = $request->validate([
             'input_model' => ['nullable'],
@@ -60,7 +60,7 @@ class MappingController extends Controller
 
         $this->mappingService->update($validatedData, $mapping);
 
-        return redirect('/routes/' . $route->id)->with('success', 'Mapping of route with name "' . $route->title . '" has succesfully been updated!');
+        return redirect('/processables/' . $processable->id)->with('success', 'Mapping of processable with name "' . $processable->title . '" has succesfully been updated!');
 
     }
 }

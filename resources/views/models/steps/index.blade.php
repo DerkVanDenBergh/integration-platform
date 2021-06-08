@@ -6,8 +6,17 @@
 <x-app-layout>
     
     <x-slot name="header">
-        {{ __($route->title . ' - view') }}
+        {{ __($processable->title . ' - view') }}
     </x-slot>
 
-    <x-subpages.route-steps :form="__(true)" :action="__('/routes/' . $route->id . '/steps')" :steps="$steps" :route="$route" :functions="$functions"></x-subpages.route-steps>
+    <x-subpages.card>
+    
+        <x-slot name="content">
+            
+            <x-forms.steps-form :action="__('/processables/' . $processable->id . '/steps')" :steps="$steps" :processable="$processable" :functions="$functions"/>
+
+         </x-slot>
+
+    </x-subpages.card>
+    
 </x-app-layout>

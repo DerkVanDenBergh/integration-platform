@@ -10,7 +10,7 @@ use GuzzleHttp\Subscriber\Oauth\Oauth1;
 
 class HookService
 {
-    protected $routeService;
+    protected $processableService;
     protected $mappingService;
     protected $modelService;
     protected $mappingFieldService;
@@ -19,7 +19,7 @@ class HookService
     protected $stepService;
 
     public function __construct(
-        RouteService $routeService,
+        ProcessableService $processableService,
         MappingService $mappingService,
         DataModelService $modelService,
         MappingFieldService $mappingFieldService,
@@ -27,7 +27,7 @@ class HookService
         EndpointService $endpointService,
         StepService $stepService
     ) {
-        $this->routeService = $routeService;
+        $this->processableService = $processableService;
         $this->mappingService = $mappingService;
         $this->modelService = $modelService;
         $this->mappingFieldService = $mappingFieldService;
@@ -36,7 +36,7 @@ class HookService
         $this->stepService = $stepService;
     }
 
-    public function validateAuthentication($route, $data)
+    public function validateAuthentication($processable, $data)
     {
         // TODO check for authentication on requests
     }

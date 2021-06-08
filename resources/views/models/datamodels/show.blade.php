@@ -4,26 +4,34 @@
         {{ __($model->title . ' - view') }}
     </x-slot>
 
-    <x-subpages.model-view :header="__('Details')" :model="$model" :resource="__('models')">
+    <x-subpages.card :header="__('Details')">
+    
+        <x-slot name="content">
 
-        <x-slot name="fields">
+            <x-details.model-details :model="$model" :resource="__('models')">
 
-            <div class="col-span-4">
-                <x-forms.label for="title" :value="__('Name')" />
+                <x-slot name="fields">
 
-                <x-forms.input id="title" class="block mt-1 w-full" type="text" name="title" value="{{ $model->title }}" required disabled autofocus />
-            </div>
+                    <x-details.components.attribute :span="__(4)" :type="__('text')" :label="__('Name')" :name="__('title')" :value="$model->title"/>
+
+                    <x-details.components.attribute :span="__(4)" :type="__('text')" :label="__('Description')" :name="__('description')" :value="$model->description"/>
+
+                </x-slot>
             
-            <div class="col-span-4">
-                <x-forms.label for="description" :value="__('Description')" />
-
-                <x-forms.input id="description" class="block mt-1 w-full" type="text" name="description" value="{{ $model->description }}" disabled autofocus />
-            </div>
+            </x-details.model-details>
 
         </x-slot>
-    
-    </x-subpages.model-view>
 
-    <x-subpages.model-fields :header="__('Model')" :fields="$fields" :showEdit="__(true)" :showDelete="__(true)" :nestedResource="__('/models/' . $model->id)" :resource="__('fields')"></x-subpages.model-fields>
+    </x-subpages.card>
+
+    <x-subpages.card :header="__('Model')">
+    
+        <x-slot name="content">
+
+            <x-views.data-model-view  :fields="$fields" :showEdit="__(true)" :showEndpointActions="__(false)" :showDelete="__(true)" :nestedResource="__('/models/' . $model->id)" :resource="__('fields')"/>
+
+        </x-slot>
+
+    </x-subpages.card>
 
 </x-app-layout>

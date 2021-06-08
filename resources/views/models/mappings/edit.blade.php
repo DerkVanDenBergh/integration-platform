@@ -1,9 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
-        {{ __($route->title . ' - edit') }}
+        {{ __($processable->title . ' - edit') }}
     </x-slot>
 
-    <x-subpages.model-form :action="__('/routes/' . $route->id . '/mappings/' . $mapping->id)">
+    <x-forms.model-form :action="__('/mappings/' . $mapping->id)">
 
         <x-slot name="method">
             <input name="_method" type="hidden" value="PUT">
@@ -11,7 +11,7 @@
 
         <x-slot name="fields">
 
-            @if($mapping->type == 'route')
+            @if($processable->type_id == $processable::ROUTE)
                 <div class="col-span-2">
                     <x-forms.label for="input_model" :value="__('Input model')" />
 
@@ -33,6 +33,6 @@
 
         </x-slot>
     
-    </x-subpages.model-form>
+    </x-forms.model-form>
 
 </x-app-layout>

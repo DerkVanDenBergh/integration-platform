@@ -16,8 +16,8 @@ class DataModelFieldSeeder extends Seeder
     public function run()
     {
         $user_field_id = new DataModelField($this->definition(
-            1000,
-            1000,
+            2000,
+            2000,
             null,
             'id',
             'attribute',
@@ -27,8 +27,8 @@ class DataModelFieldSeeder extends Seeder
         $user_field_id->save();
 
         $user_field_name = new DataModelField($this->definition(
-            1001,
-            1000,
+            2001,
+            2000,
             null,
             'name',
             'set',
@@ -38,9 +38,9 @@ class DataModelFieldSeeder extends Seeder
         $user_field_name->save();
 
         $user_field_name_first = new DataModelField($this->definition(
-            1002,
-            1000,
-            1001,
+            2002,
+            2000,
+            2001,
             'first_name',
             'attribute',
             'string'
@@ -49,9 +49,9 @@ class DataModelFieldSeeder extends Seeder
         $user_field_name_first->save();
 
         $user_field_name_last = new DataModelField($this->definition(
-            1003,
-            1000,
-            1001,
+            2003,
+            2000,
+            2001,
             'last_name',
             'attribute',
             'string'
@@ -60,8 +60,8 @@ class DataModelFieldSeeder extends Seeder
         $user_field_name_last->save();
 
         $employee_field_id = new DataModelField($this->definition(
-            1004,
-            1001,
+            2004,
+            2001,
             null,
             'employee_id',
             'attribute',
@@ -71,8 +71,8 @@ class DataModelFieldSeeder extends Seeder
         $employee_field_id->save();
 
         $employee_field_name = new DataModelField($this->definition(
-            1005,
-            1001,
+            2005,
+            2001,
             null,
             'employee_name',
             'set',
@@ -82,9 +82,9 @@ class DataModelFieldSeeder extends Seeder
         $employee_field_name->save();
 
         $employee_field_name_first = new DataModelField($this->definition(
-            1006,
-            1001,
-            1005,
+            2006,
+            2001,
+            2005,
             'first',
             'attribute',
             'string'
@@ -93,9 +93,9 @@ class DataModelFieldSeeder extends Seeder
         $employee_field_name_first->save();
 
         $employee_field_name_last = new DataModelField($this->definition(
-            1007,
-            1001,
-            1005,
+            2007,
+            2001,
+            2005,
             'last',
             'attribute',
             'string'

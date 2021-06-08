@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Gate;
 
-use App\Models\Route;
-use App\Services\RouteService;
+use App\Models\Processable;
+use App\Services\ProcessableService;
 use App\Services\MappingService;
 use App\Services\MappingFieldService;
 use App\Services\DataModelService;
@@ -19,7 +19,7 @@ use App\Services\RunService;
 class RouteController extends Controller
 {
 
-    protected $routeService;
+    protected $processableService;
     protected $mappingService;
     protected $modelFieldService;
     protected $mappingFieldService;
@@ -29,7 +29,7 @@ class RouteController extends Controller
     protected $runService;
 
     public function __construct(
-        RouteService $routeService,
+        ProcessableService $processableService,
         MappingService $mappingService,
         MappingFieldService $mappingFieldService,
         DataModelFieldService $modelFieldService,
@@ -38,7 +38,7 @@ class RouteController extends Controller
         StepService $stepService,
         RunService $runService
     ) {
-        $this->routeService = $routeService;
+        $this->processableService = $processableService;
         $this->mappingService = $mappingService;
         $this->modelFieldService = $modelFieldService;
         $this->mappingFieldService = $mappingFieldService;
@@ -55,7 +55,7 @@ class RouteController extends Controller
      */
     public function index()
     {
-        $routes = $this->routeService->findAllFromUser(auth()->user()->id);
+        $routes = $this->processableService->findAllRoutesFromUser(auth()->user()->id);
 
         return view('models.routes.index', compact('routes'));
     }
@@ -84,8 +84,9 @@ class RouteController extends Controller
         ]);
 
         $validatedData['user_id'] = auth()->user()->id;
+        $validatedData['type_id'] = 1;
 
-        $route = $this->routeService->store($validatedData);
+        $route = $this->processableService->store($validatedData);
 
         return redirect('/routes')->with('success', 'Route with name "' . $route->title . '" has succesfully been created!');
     }
@@ -93,14 +94,14 @@ class RouteController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Route  $route
+     * @param  \App\Models\Processable  $route
      * @return \Illuminate\Http\Response
      */
-    public function show(Route $route)
+    public function show(Processable $route)
     {
-        Gate::authorize('mutate_or_view_route', $route);
+        Gate::authorize('mutate_or_view_processable', $route);
 
-        $mapping = $this->mappingService->findByRouteId($route->id);
+        $mapping = $this->mappingService->findByProcessableId($route->id);
 
         $mappingFields = $this->mappingFieldService->findAllFromMapping($mapping->id);
 
@@ -108,9 +109,9 @@ class RouteController extends Controller
 
         $endpoints = $this->endpointService->findAllFromUser(auth()->user()->id);
 
-        $steps = $this->stepService->findAllFromRoute($route->id);
+        $steps = $this->stepService->findAllFromProcessable($route->id);
 
-        $runs = $this->runService->findAllFromRoute($route->id);
+        $runs = $this->runService->findAllFromProcessable($route->id);
 
         if($mapping->output_endpoint != null) {
             $outputEndpoint = $this->endpointService->findById($mapping->output_endpoint);
@@ -158,12 +159,12 @@ class RouteController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Route  $route
+     * @param  \App\Models\Processable  $route
      * @return \Illuminate\Http\Response
      */
-    public function edit(Route $route)
+    public function edit(Processable $route)
     {
-        Gate::authorize('mutate_or_view_route', $route);
+        Gate::authorize('mutate_or_view_processable', $route);
 
         return view('models.routes.edit', compact('route'));
     }
@@ -172,12 +173,12 @@ class RouteController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Route  $route
+     * @param  \App\Models\Processable  $route
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Route $route)
+    public function update(Request $request, Processable $route)
     {
-        Gate::authorize('mutate_or_view_route', $route);
+        Gate::authorize('mutate_or_view_processable', $route);
 
         $validatedData = $request->validate([
             'title' => ['required', Rule::unique('routes')->where('user_id', auth()->user()->id)->ignore($route->id), 'max:255'],
@@ -187,7 +188,7 @@ class RouteController extends Controller
 
         // TODO: make sure the route cant be set to active if one of the endpoints in the mapping is not filled
 
-        $route = $this->routeService->update($validatedData, $route);
+        $route = $this->processableService->update($validatedData, $route);
 
         return redirect('/routes/' . $route->id)->with('success', 'Route with name ' . $route->title . ' has successfully been updated!');
     }
@@ -195,14 +196,14 @@ class RouteController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Route  $route
+     * @param  \App\Models\Processable  $route
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Route $route)
+    public function destroy(Processable $route)
     {
-        Gate::authorize('mutate_or_view_route', $route);
+        Gate::authorize('mutate_or_view_processable', $route);
 
-        $this->routeService->delete($route);
+        $this->processableService->delete($route);
 
         return redirect('/routes')->with('success', 'Route with name "' . $route->title . '" has succesfully been deleted!');
     }

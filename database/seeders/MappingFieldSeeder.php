@@ -16,31 +16,31 @@ class MappingFieldSeeder extends Seeder
     public function run()
     {
         $name_mapping_1 = new MappingField($this->definition(
-            1000, 
-            1006,
-            1002,
+            2000, 
+            2006,
+            2002,
             'model',
-            1000
+            2000
         ));
 
         $name_mapping_1->save();
 
         $name_mapping_2 = new MappingField($this->definition(
-            1001, 
-            1007,
-            1003,
+            2001, 
+            2007,
+            2003,
             'model',
-            1000
+            2000
         ));
 
         $name_mapping_2->save();
 
         $id_mapping = new MappingField($this->definition(
-            1002, 
-            1004,
-            1000,
+            2002, 
+            2004,
+            2000,
             'model',
-            1000
+            2000
         ));
 
         $id_mapping->save();

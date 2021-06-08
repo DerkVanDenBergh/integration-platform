@@ -16,26 +16,24 @@ class MappingSeeder extends Seeder
     public function run()
     {
         $beeceptor_user_to_beeceptor_employee_mapping = new Mapping($this->definition(
-            1000, 
-            'route',
-            1000,
+            2000, 
+            2000,
             null,
-            1002,
-            1000
+            2002,
+            2000
         ));
 
         $beeceptor_user_to_beeceptor_employee_mapping->save();
     }
 
-    private function definition($id, $type, $input_model, $input_endpoint, $output_endpoint, $route_id)
+    private function definition($id, $input_model, $input_endpoint, $output_endpoint, $processable_id)
     {
         $parameters = [
             'id' => $id,
-            'type' => $type,
             'input_model' => $input_model,
             'input_endpoint' => $input_endpoint,
             'output_endpoint' => $output_endpoint,
-            'route_id' => $route_id
+            'processable_id' => $processable_id
         ];
 
         return $parameters;

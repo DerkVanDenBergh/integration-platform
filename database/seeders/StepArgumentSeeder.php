@@ -16,27 +16,27 @@ class StepArgumentSeeder extends Seeder
     public function run()
     {
         $break_if_id_is_empty_value_1 = new StepArgument($this->definition(
-            1000, 
+            2000, 
             '![id]', 
-            1000, 
+            2000, 
             1000
         ));
 
         $break_if_id_is_empty_value_1->save();
 
         $break_if_id_is_empty_value_2 = new StepArgument($this->definition(
-            1001, 
+            2001, 
             '', 
-            1000, 
+            2000, 
             1001
         ));
 
         $break_if_id_is_empty_value_2->save();
 
         $append_initials_value_1 = new StepArgument($this->definition(
-            1002, 
+            2002, 
             '![name.first_name] (D.P.)', 
-            1001, 
+            2001, 
             1002
         ));
 

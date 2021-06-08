@@ -15,14 +15,13 @@ class CreateMappingsTable extends Migration
     {
         Schema::create('mappings', function (Blueprint $table) {
             $table->id();
-            $table->string('type');
             $table->timestamps();
 
             // Foreign keys
             $table->unsignedBigInteger('input_model')->nullable();
             $table->unsignedBigInteger('input_endpoint')->nullable();
             $table->unsignedBigInteger('output_endpoint')->nullable();
-            $table->unsignedBigInteger('route_id');
+            $table->unsignedBigInteger('processable_id');
         });
 
         Schema::table('mappings', function (Blueprint $table) {
@@ -44,9 +43,9 @@ class CreateMappingsTable extends Migration
                   ->onUpdate('cascade')
                   ->onDelete('set null');
 
-            $table->foreign('route_id')
+            $table->foreign('processable_id')
                   ->references('id')
-                  ->on('routes')
+                  ->on('processables')
                   ->onUpdate('cascade')
                   ->onDelete('cascade');
         });

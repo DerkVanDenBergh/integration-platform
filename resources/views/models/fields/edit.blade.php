@@ -4,7 +4,7 @@
         {{ __($field->name . ' - edit') }}
     </x-slot>
 
-    <x-subpages.model-form :action="__('/models/' . $field->model_id . '/fields/' . $field->id)">
+    <x-forms.model-form :action="__('/models/' . $field->model_id . '/fields/' . $field->id)">
 
         <x-slot name="method">
             <input name="_method" type="hidden" value="PUT">
@@ -38,6 +38,6 @@
             
         </x-slot>
     
-    </x-subpages.model-form>
+    </x-forms.model-form>
 
 </x-app-layout>

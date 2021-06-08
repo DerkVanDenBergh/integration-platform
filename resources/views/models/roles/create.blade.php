@@ -4,7 +4,7 @@
         {{ __('User roles - create') }}
     </x-slot>
 
-    <x-subpages.model-form :action="__('/roles')">
+    <x-forms.model-form :action="__('/roles')">
 
         <x-slot name="method">
             <input name="_method" type="hidden" value="POST">
@@ -48,6 +48,6 @@
 
         </x-slot>
     
-    </x-subpages.model-form>
+    </x-forms.model-form>
 
 </x-app-layout>

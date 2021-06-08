@@ -4,7 +4,7 @@
         {{ __($role->title . ' - edit') }}
     </x-slot>
 
-    <x-subpages.model-form :action="__('/roles/') . $role->id">
+    <x-forms.model-form :action="__('/roles/') . $role->id">
 
         <x-slot name="method">
             <input name="_method" type="hidden" value="PUT">
@@ -48,6 +48,6 @@
 
         </x-slot>
     
-    </x-subpages.model-form>
+    </x-forms.model-form>
 
 </x-app-layout>

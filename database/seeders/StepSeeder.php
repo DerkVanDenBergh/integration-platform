@@ -16,8 +16,8 @@ class StepSeeder extends Seeder
     public function run()
     {
         $break_if_id_is_empty = new Step($this->definition(
-            1000, 
-            1000, 
+            2000, 
+            2000, 
             'Cancel if id is empty', 
             1000, 
             1
@@ -26,8 +26,8 @@ class StepSeeder extends Seeder
         $break_if_id_is_empty->save();
 
         $append_initials = new Step($this->definition(
-            1001, 
-            1000, 
+            2001, 
+            2000, 
             'name including intitials', 
             1001, 
             2
@@ -36,11 +36,11 @@ class StepSeeder extends Seeder
         $append_initials->save();
     }
 
-    private function definition($id, $route_id, $name, $step_function_id, $order)
+    private function definition($id, $processable_id, $name, $step_function_id, $order)
     {
         $parameters = [
             'id' => $id,
-            'route_id' => $route_id,
+            'processable_id' => $processable_id,
             'name' => $name,
             'step_function_id' => $step_function_id,
             'order' => $order

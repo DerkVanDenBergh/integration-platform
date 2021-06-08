@@ -80,7 +80,7 @@ class StepFunctionParameterTest extends TestCase
         $this->stepFunction->save(); 
 
         $this->step = new Step([
-            'route_id' => $this->route->id,
+            'processable_id' => $this->route->id,
             'name' => $this->faker->text,
             'step_function_id' => $this->stepFunction->id,
             'order' => 1

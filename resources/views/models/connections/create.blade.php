@@ -4,44 +4,36 @@
         {{ __('Connection - create') }}
     </x-slot>
 
-    <x-subpages.model-form :action="__('/connections')">
-
-        <x-slot name="method">
-            <input name="_method" type="hidden" value="POST">
-        </x-slot>
-
-        <x-slot name="fields">
-
-            <div class="col-span-2">
-                <x-forms.label for="title" :value="__('Name')" />
-
-                <x-forms.input id="title" class="block mt-1 w-full" type="text" name="title" :value="old('title')" required autofocus />
-            </div>
-
-            <div class="col-span-2">
-                <x-forms.label for="base_url" :value="__('Base URL')" />
-
-                <x-forms.input id="base_url" class="block mt-1 w-full" type="text" name="base_url" :value="old('base_url')" required autofocus />
-            </div>
-            
-            <div class="col-span-4">
-                <x-forms.label for="description" :value="__('Description')" />
-
-                <x-forms.input id="description" class="block mt-1 w-full" type="text" name="description" :value="old('description')" autofocus />
-            </div>
-
-            @can('manage_templates') 
-                <!-- TODO redirect to /templates after activating this -->
-                <div class="col-span-2">
-                    <label for="template" class="inline-flex items-center">
-                        <input id="template" type="checkbox" class="rounded border-gray-300 text-green-400 shadow-sm focus:border-green-400 focus:ring focus:ring-green-200 focus:ring-opacity-50" name="template">
-                        <span class="ml-2 text-sm text-gray-600">{{ __('Connection template') }}</span>
-                    </label>
-                </div>
-            @endcan
-            
-        </x-slot>
+    <x-subpages.card>
     
-    </x-subpages.model-form>
+        <x-slot name="content">
+
+            <x-forms.model-form :action="__('/connections')">
+
+                <x-slot name="method">
+                    <input name="_method" type="hidden" value="POST">
+                </x-slot>
+
+                <x-slot name="fields">
+
+                    <x-forms.components.attribute :span="__(2)" :type="__('text')" :label="__('Name')" :name="__('title')" :value="old('title')" :required="__(true)"/>
+
+                    <x-forms.components.attribute :span="__(2)" :type="__('text')" :label="__('Base URL')" :name="__('base_url')" :value="old('base_url')" :required="__(true)"/>
+
+                    <x-forms.components.attribute :span="__(4)" :type="__('text')" :label="__('Description')" :name="__('description')" :value="old('description')"/>
+
+                    @can('manage_templates') 
+                        <!-- TODO redirect to /templates after activating this -->
+
+                        <x-forms.components.attribute :span="__(2)" :type="__('checkbox')" :label="__('Connection template')" :name="__('template')"/>
+                    @endcan
+                    
+                </x-slot>
+            
+            </x-forms.model-form>
+
+        </x-slot>
+
+    </x-subpages.card>
 
 </x-app-layout>

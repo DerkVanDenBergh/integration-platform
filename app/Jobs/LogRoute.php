@@ -9,11 +9,11 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class LogRoute implements ShouldQueue
+class LogProcessable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $route;
+    protected $processable;
     protected $type;
     protected $status;
     protected $input;
@@ -27,9 +27,9 @@ class LogRoute implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($route, $type, $status, $input, $output, $logService, $runService)
+    public function __construct($processable, $type, $status, $input, $output, $logService, $runService)
     {
-        $this->route = $route;
+        $this->processable = $processable;
         $this->type = $type;
         $this->status = $status;
         $this->input = $input;
@@ -45,17 +45,17 @@ class LogRoute implements ShouldQueue
      */
     public function handle()
     {
-        $this->logService->setOrigin('route', $this->route->id);
+        $this->logService->setOrigin('processable', $this->processable->id);
         if($this->status == 'success') {
             $level = "info";
         } else {
             $level = "error";
         }
 
-        $this->logService->push('error','just ran with status ' . $this->status . '.', json_encode($this->route));
+        $this->logService->push('error','just ran with status ' . $this->status . '.', json_encode($this->processable));
 
         $this->runService->store([
-            'process_id' => $this->route->id,
+            'process_id' => $this->processable->id,
             'type' => $this->type,
             'status' => $this->status,
             'input' => $this->input,

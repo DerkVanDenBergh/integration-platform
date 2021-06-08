@@ -14,12 +14,12 @@ class Mapping extends Model
         'input_endpoint',
         'output_endpoint',
         'type',
-        'route_id'
+        'processable_id'
     ];
 
-    public function route()
+    public function processable()
     {
-        return $this->belongsTo(Route::class);
+        return $this->belongsTo(Processable::class);
     }
 
     public function fields() {

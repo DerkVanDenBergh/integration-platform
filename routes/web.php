@@ -106,18 +106,18 @@ Route::resource('routes.mappings', MappingController::class)->middleware(['auth'
 
 // Data mapping fields  
 
-Route::get('/routes/{route}/mappings/{mapping}/fields', [MappingFieldController::class, 'edit'])->middleware(['auth']);
+Route::get('/processables/{processable}/mappings/{mapping}/fields', [MappingFieldController::class, 'edit'])->middleware(['auth']);
 
-Route::post('/routes/{route}/mappings/{mapping}/fields', [MappingFieldController::class, 'update'])->middleware(['auth']);
+Route::post('/processables/{processable}/mappings/{mapping}/fields', [MappingFieldController::class, 'update'])->middleware(['auth']);
 
 
 // Mapping steps
 
-Route::get('/routes/{route}/steps', [StepController::class, 'edit'])->middleware(['auth']);
+Route::get('/processables/{processable}/steps', [StepController::class, 'edit'])->middleware(['auth']);
 
-Route::post('/routes/{route}/steps', [StepController::class, 'update'])->middleware(['auth']);
+Route::post('/processables/{processable}/steps', [StepController::class, 'update'])->middleware(['auth']);
 
-Route::post('/routes/{route}/steps/component', [StepController::class, 'component'])->middleware(['auth']);
+Route::post('/processables/{processable}/steps/component', [StepController::class, 'component'])->middleware(['auth']);
 
 
 // Tasks

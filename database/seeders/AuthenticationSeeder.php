@@ -16,25 +16,25 @@ class AuthenticationSeeder extends Seeder
     public function run()
     {
         $authentication_key = new Authentication($this->definition(
-            1000, 
+            2000, 
             'API token', 
             'Token', 
             '',
             '',
             'dfsgjijehhbfaijfjsaibhndkj#@42kjmn3iu2ghjbnaiudas==',
-            1000
+            2000
         ));
         
         $authentication_key->save();
         
         $authentication_basic = new Authentication($this->definition(
-            1001, 
+            2001, 
             'API key', 
             'Basic', 
             'test_user_account',
             'VerySecurePassword123!',
             '', 
-            1001
+            2001
         ));
 
         $authentication_basic->save();
