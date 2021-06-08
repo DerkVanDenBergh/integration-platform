@@ -20,7 +20,7 @@
                         @endforeach
                     @endif
                 @else
-                    <div class="inline-block mr-1">{{ $field->name }} -></div><div class="inline-block sm:rounded-lg bg-gray-200 px-1"> no changes </div>
+                    <div class="inline-block mr-1">{{ $field->name }} -></div><div class="inline-block sm:rounded-lg bg-red-400 text-white px-1"> no output </div>
                 @endif
             @endif
         @else

@@ -55,7 +55,7 @@ class LogProcessable implements ShouldQueue
         $this->logService->push('error','just ran with status ' . $this->status . '.', json_encode($this->processable));
 
         $this->runService->store([
-            'process_id' => $this->processable->id,
+            'processable_id' => $this->processable->id,
             'type' => $this->type,
             'status' => $this->status,
             'input' => $this->input,

@@ -9,12 +9,12 @@ class StepFunction
         // virtual
     }
 
-    private function getArgument($arguments, $name)
+    protected function getArgument($arguments, $name)
     {
         // TODO this can be done faster, for example by swapping argument and parameter around
         foreach($arguments as $argument) {
-            if($argument->step_function_parameter->parameter_name == $name) {
-                return($argument->value);
+            if($argument['step_function_parameter']['parameter_name'] == $name) {
+                return($argument['value']);
             }
         }
 

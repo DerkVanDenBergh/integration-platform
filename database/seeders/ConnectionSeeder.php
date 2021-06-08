@@ -19,7 +19,7 @@ class ConnectionSeeder extends Seeder
             2000, 
             'Beeceptor User Management', 
             'A connection to Mintegration Beeceptor User Management', 
-            'https://mintegration-user-management.free.beeceptor.com', 
+            'mintegration-user-management.free.beeceptor.com', 
             1002, 
             false
         ));
@@ -30,7 +30,7 @@ class ConnectionSeeder extends Seeder
             2001, 
             'Beeceptor Employee Management', 
             'A connection to Mintegration Beeceptor Employee Management', 
-            'https://mintegration-employee-management.free.beeceptor.com', 
+            'mintegration-employee-management.free.beeceptor.com', 
             1002, 
             false
         ));

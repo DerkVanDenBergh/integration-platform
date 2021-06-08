@@ -84,7 +84,7 @@ class StepController extends Controller
 
         }
 
-        return redirect('/processables/' . $processable->id)->with('success', 'Steps of processable with name "' . $processable->title . '" have succesfully been updated!');
+        return redirect("/{$processable->processableType()}s/" . $processable->id)->with('success', 'Steps of processable with name "' . $processable->title . '" have succesfully been updated!');
     }
 
     /**
@@ -96,6 +96,8 @@ class StepController extends Controller
     public function component(Request $request)
     {
         $functions = $this->functionService->findAllWithParameters();
+        $functions->prepend((object) ['id' => '', 'name' => '', 'description' => '', 'step_function_parameters' => []]);
+
         $view = $this->renderStepComponent($request['number'], $functions);
 
         return json_encode( ['view' => $view]);
@@ -103,6 +105,6 @@ class StepController extends Controller
 
     public function renderStepComponent($number, $functions)
     {
-        return view('components.subpages.components.processable-step-form', compact('number', 'functions'))->render();
+        return view('components.forms.components.step', compact('number', 'functions'))->render();
     } 
 }

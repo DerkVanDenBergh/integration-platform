@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Task;
+use App\Models\Processable;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Gate;
 
-use App\Services\TaskService;
+use App\Services\ProcessableService;
 use App\Services\MappingService;
 use App\Services\MappingFieldService;
 use App\Services\DataModelService;
@@ -18,7 +18,7 @@ use App\Services\RunService;
 
 class TaskController extends Controller
 {
-    protected $taskService;
+    protected $processableService;
     protected $mappingService;
     protected $modelFieldService;
     protected $mappingFieldService;
@@ -28,7 +28,7 @@ class TaskController extends Controller
     protected $runService;
 
     public function __construct(
-        TaskService $taskService,
+        ProcessableService $processableService,
         MappingService $mappingService,
         MappingFieldService $mappingFieldService,
         DataModelFieldService $modelFieldService,
@@ -37,7 +37,7 @@ class TaskController extends Controller
         StepService $stepService,
         RunService $runService
     ) {
-        $this->taskService = $taskService;
+        $this->processableService = $processableService;
         $this->mappingService = $mappingService;
         $this->modelFieldService = $modelFieldService;
         $this->mappingFieldService = $mappingFieldService;
@@ -54,7 +54,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = $this->taskService->findAllFromUser(auth()->user()->id);
+        $tasks = $this->processableService->findAllProcessablesFromUserByType(auth()->user()->id, Processable::TASK);
 
         return view('models.tasks.index', compact('tasks'));
     }
@@ -78,13 +78,15 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'title' => ['required', Rule::unique('tasks')->where('user_id', auth()->user()->id), 'max:255'],
+            'title' => ['required', Rule::unique('processables')->where('user_id', auth()->user()->id), 'max:255'],
+            'interval' => ['nullable', 'integer'],
             'description' => ['nullable']
         ]);
 
         $validatedData['user_id'] = auth()->user()->id;
+        $validatedData['type_id'] = Processable::TASK;
 
-        $route = $this->taskService->store($validatedData);
+        $task = $this->processableService->store($validatedData);
 
         return redirect('/tasks')->with('success', 'Task with name "' . $task->title . '" has succesfully been created!');
     }
@@ -92,32 +94,43 @@ class TaskController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Task  $task
+     * @param  \App\Models\Processable  $task
      * @return \Illuminate\Http\Response
      */
-    public function show(Task $task)
+    public function show(Processable $task)
     {
-        Gate::authorize('mutate_or_view_task', $task);
+        Gate::authorize('mutate_or_view_processable', $task);
 
-        $mapping = $this->mappingService->findByTaskId($task->id);
+        $mapping = $this->mappingService->findByProcessableId($task->id);
         $mappingFields = $this->mappingFieldService->findAllFromMapping($mapping->id);
 
         $models = $this->modelService->findAllFromUser(auth()->user()->id);
 
         $endpoints = $this->endpointService->findAllFromUser(auth()->user()->id);
 
-        $steps = $this->stepService->findAllFromTask($task->id);
+        $steps = $this->stepService->findAllFromProcessable($task->id);
 
-        $runs = $this->runService->findAllFromTask($task->id);
+        $runs = $this->runService->findAllFromProcessable($task->id);
 
         if($mapping->output_endpoint != null) {
             $outputEndpoint = $this->endpointService->findById($mapping->output_endpoint);
             $outputModel = $this->modelService->findById($outputEndpoint->model_id);
-            $outputModelFields = $this->modelFieldService->findAllFromModel($outputModel->id);
+            
+            if($outputModel) {
+                $outputModelFields = $this->modelFieldService->findAllFromModel($outputModel->id);
+            } else {
+                $inputModelFields = null;
+            }
 
             $inputEndpoint = $this->endpointService->findById($mapping->input_endpoint);
-            $inputModel = $this->modelService->findById($mapping->input_model);
-            $inputModelFields = $this->modelFieldService->findAllFromModel($inputModel->id);
+            $inputModel = $this->modelService->findById($inputEndpoint->model_id);
+
+            if($inputModel) {
+                $inputModelFields = $this->modelFieldService->findAllFromModel($inputModel->id);
+            } else {
+                $inputModelFields = null;
+            }
+            
 
             return view('models.tasks.show', compact('task', 'mapping', 'mappingFields', 'models', 'endpoints','steps','outputModel','outputModelFields','inputModel','inputModelFields', 'runs'));
         }
@@ -128,12 +141,12 @@ class TaskController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Task  $task
+     * @param  \App\Models\Processable  $task
      * @return \Illuminate\Http\Response
      */
-    public function edit(Task $task)
+    public function edit(Processable $task)
     {
-        Gate::authorize('mutate_or_view_task', $task);
+        Gate::authorize('mutate_or_view_processable', $task);
 
         return view('models.tasks.edit', compact('task'));
     }
@@ -142,22 +155,23 @@ class TaskController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Task  $task
+     * @param  \App\Models\Processable  $task
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Task $task)
+    public function update(Request $request, Processable $task)
     {
-        Gate::authorize('mutate_or_view_task', $task);
+        Gate::authorize('mutate_or_view_processable', $task);
 
         $validatedData = $request->validate([
-            'title' => ['required', Rule::unique('tasks')->where('user_id', auth()->user()->id)->ignore($task->id), 'max:255'],
+            'title' => ['required', Rule::unique('processables')->where('user_id', auth()->user()->id)->ignore($task->id), 'max:255'],
             'description' => ['nullable'],
+            'interval' => ['nullable', 'integer'],
             'active' => ['nullable']
         ]);
 
-        // TODO: make sure the route cant be set to active if one of the endpoints in the mapping is not filled
+        // TODO: make sure the task cant be set to active if one of the endpoints in the mapping is not filled
 
-        $task = $this->taskService->update($validatedData, $task);
+        $task = $this->processableService->update($validatedData, $task);
 
         return redirect('/tasks/' . $task->id)->with('success', 'Task with name ' . $task->title . ' has successfully been updated!');
     }
@@ -165,14 +179,14 @@ class TaskController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Task  $task
+     * @param  \App\Models\Processable  $task
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Task $task)
+    public function destroy(Processable $task)
     {
-        Gate::authorize('mutate_or_view_task', $task);
+        Gate::authorize('mutate_or_view_processable', $task);
 
-        $this->taskService->delete($task);
+        $this->processableService->delete($task);
 
         return redirect('/tasks')->with('success', 'Task with name "' . $task->title . '" has succesfully been deleted!');
     }

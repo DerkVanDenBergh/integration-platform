@@ -26,10 +26,7 @@
         {{ __('Save') }}
     </x-buttons.button>
 
-    <a href="#" id="addElementButton" class="mt-5 bg-gray-100 hover:bg-green-400 hover:text-white transition text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
-        <x-icons.svg-plus class="h-5 w-5 mr-2"></x-icons.svg-plus>
-        <span>Add step</span>
-    </a>
+    <x-buttons.link id="addElementButton" :active="__(true)" :action="__('#')" :caption="__('Add step')" :icon="__('plus')"/>
 
 </form>
 
@@ -48,33 +45,41 @@
                 var stepId            = $(this).closest(".step-container").attr('id');
 
                 var argumentContainer = $(this).closest(".step-container").find(".argument-container");
+                var descriptionContainer = $(this).closest(".step-container").find(".description-container");
                 
                 argumentContainer.empty();
+                descriptionContainer.empty();
 
                 var functions         = {!! json_encode($functions) !!};
 
                 var result            = functions.find(f => f.id === parseInt(valueSelected));
-                var counter           = 1;
+                
+                if(result) {
+                    var counter           = 1;
 
-                result.step_function_parameters.forEach(parameter => {
+                    descriptionContainer.append(result.description);
 
-                    if(parameter.is_nullable) {
-                        requiredText = 'required="required"';
-                    } else {
-                        requiredText = "";
-                    }
-                    
-                    argumentInputHtml = '<div class="col-span-2 py-4">' +
-                                            '<label class="block font-medium text-sm text-gray-700" for="steps[' + stepId + '][arguments][' + parameter.id + ']">' +
-                                                'Parameter ' + counter + ': ' + parameter.name + 
-                                            '</label>' +
-                                            '<input class="rounded-md shadow-sm border-gray-300 focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50 disabled:bg-gray-600 block mt-1 w-full" id="steps[' + stepId + '][arguments][' + parameter.id + ']" type="text" name="steps[' + stepId + '][arguments][' + parameter.id + ']" ' + requiredText + ' autofocus="autofocus">' +
-                                        '</div>';
-                    
-                    argumentContainer.append(argumentInputHtml);
+                    result.step_function_parameters.forEach(parameter => {
 
-                    counter++;
-                })
+                        if(parameter.is_nullable) {
+                            requiredText = 'required="required"';
+                        } else {
+                            requiredText = "";
+                        }
+                        
+                        argumentInputHtml = '<div class="col-span-2 py-4">' +
+                                                '<label class="block font-medium text-sm text-gray-700" for="steps[' + stepId + '][arguments][' + parameter.id + ']">' +
+                                                    'Parameter ' + counter + ': ' + parameter.name + 
+                                                '</label>' +
+                                                '<input class="rounded-md shadow-sm border-gray-300 focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50 disabled:bg-gray-600 block mt-1 w-full" id="steps[' + stepId + '][arguments][' + parameter.id + ']" type="text" name="steps[' + stepId + '][arguments][' + parameter.id + ']" ' + requiredText + ' autofocus="autofocus">' +
+                                            '</div>';
+                        
+                        argumentContainer.append(argumentInputHtml);
+
+                        counter++;
+                    })
+                }
+                
             });
 
             $(document).on("click", "#addElementButton", function() {

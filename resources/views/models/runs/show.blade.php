@@ -5,16 +5,18 @@
     </x-slot>
 
     <x-subpages.card :header="__('Details')">
+
         <x-slot name="content">
+
             <div class="w-full mb-5">
-                <x-forms.label :value="__('Status')" />
+                <x-forms.components.primitives.label :value="__('Status')" />
 
                 {{ $run->status }}
             <div>
             
             
             <div class="w-full my-5 break-words">
-                <x-forms.label :value="__('Input')" />
+                <x-forms.components.primitives.label :value="__('Input')" />
 
                 @if($run->input && ($run->input != ''))
                     {{ $run->input }}
@@ -25,7 +27,7 @@
             
 
             <div class="w-full my-5 break-words">
-                <x-forms.label :value="__('Output')" />
+                <x-forms.components.primitives.label :value="__('Output')" />
 
                 @if($run->output && ($run->output != ''))
                     {{ $run->output }}
@@ -35,6 +37,7 @@
             <div>
             
         </x-slot>
+
     </x-subpages.card>
 
 </x-app-layout>

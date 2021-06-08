@@ -5,16 +5,18 @@
     </x-slot>
 
     <x-subpages.card :header="__('Details')">
+
         <x-slot name="content">
+
             <div class="w-full mb-5">
-                <x-forms.label for="input_model" :value="__('Title')" />
+                <x-forms.components.primitives.label for="input_model" :value="__('Title')" />
 
                 {{ $log->title }}
             <div>
             
             
             <div class="w-full my-5 break-words">
-                <x-forms.label for="input_model" :value="__('Description')" />
+                <x-forms.components.primitives.label for="input_model" :value="__('Description')" />
 
                 @if($log->message)
                     {{ $log->message }}
@@ -26,13 +28,14 @@
 
             @if($log->stacktrace)
                 <div class="w-full my-5">
-                    <x-forms.label for="input_model" :value="__('Stacktrace')" />
+                    <x-forms.components.primitives.label for="input_model" :value="__('Stacktrace')" />
 
                     {{ $log->stacktrace }}
                 <div>
             @endif
             
         </x-slot>
+
     </x-subpages.card>
 
 </x-app-layout>

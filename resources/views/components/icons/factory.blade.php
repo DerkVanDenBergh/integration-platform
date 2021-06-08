@@ -27,6 +27,10 @@
     @case('view')
         <x-icons.svg-view class="h-5 w-5 mr-2"/>
         @break
+
+    @case('play')
+        <x-icons.svg-play class="h-5 w-5 mr-2"/>
+        @break
     
     @default
 

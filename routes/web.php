@@ -99,9 +99,16 @@ Route::post('/connections/{connection}/authentications/create', [AuthenticationC
 Route::resource('routes', RouteController::class)->middleware(['auth']);
 
 
+// Tasks
+
+Route::resource('tasks', TaskController::class)->middleware(['auth']);
+
+
 // Data mappings
 
-Route::resource('routes.mappings', MappingController::class)->middleware(['auth']);
+Route::get('/processables/{processable}/mappings/{mapping}/edit', [MappingController::class, 'edit'])->middleware(['auth']);
+
+Route::post('/processables/{processable}/mappings/{mapping}', [MappingController::class, 'update'])->middleware(['auth']);
 
 
 // Data mapping fields  
@@ -118,11 +125,6 @@ Route::get('/processables/{processable}/steps', [StepController::class, 'edit'])
 Route::post('/processables/{processable}/steps', [StepController::class, 'update'])->middleware(['auth']);
 
 Route::post('/processables/{processable}/steps/component', [StepController::class, 'component'])->middleware(['auth']);
-
-
-// Tasks
-
-Route::resource('tasks', TaskController::class)->middleware(['auth']);
 
 
 // Roles

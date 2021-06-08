@@ -4,4 +4,4 @@
     {{ $fields }}
 </div>
 
-<x-buttons.link :active="__(true)" :action="__('/' . $resource . '/' . $model->id . '/edit')" :caption="__('Edit')" :icon="__('edit')"/>
+<x-buttons.link :active="__($showEdit ?? true)" :action="__('/' . $resource . '/' . $model->id . '/edit')" :caption="__('Edit')" :icon="__('edit')"/>

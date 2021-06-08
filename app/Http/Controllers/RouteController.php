@@ -55,7 +55,7 @@ class RouteController extends Controller
      */
     public function index()
     {
-        $routes = $this->processableService->findAllRoutesFromUser(auth()->user()->id);
+        $routes = $this->processableService->findAllProcessablesFromUserByType(auth()->user()->id, Processable::ROUTE);
 
         return view('models.routes.index', compact('routes'));
     }
@@ -79,12 +79,12 @@ class RouteController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'title' => ['required', Rule::unique('routes')->where('user_id', auth()->user()->id), 'max:255'],
+            'title' => ['required', Rule::unique('processables')->where('user_id', auth()->user()->id), 'max:255'],
             'description' => ['nullable']
         ]);
 
         $validatedData['user_id'] = auth()->user()->id;
-        $validatedData['type_id'] = 1;
+        $validatedData['type_id'] = Processable::ROUTE;
 
         $route = $this->processableService->store($validatedData);
 
@@ -115,43 +115,22 @@ class RouteController extends Controller
 
         if($mapping->output_endpoint != null) {
             $outputEndpoint = $this->endpointService->findById($mapping->output_endpoint);
-
             $outputModel = $this->modelService->findById($outputEndpoint->model_id);
 
-            $outputModelFields = $this->modelFieldService->findAllFromModel($outputModel->id);
+            if($outputModel) {
+                $outputModelFields = $this->modelFieldService->findAllFromModel($outputModel->id);
+            } else {
+                $inputModelFields = null;
+            }
 
             $inputModel = $this->modelService->findById($mapping->input_model);
 
             $inputModelFields = $this->modelFieldService->findAllFromModel($inputModel->id);
 
-            return view(
-                'models.routes.show', 
-                compact(
-                    'route', 
-                    'mapping', 
-                    'mappingFields',
-                    'models', 
-                    'endpoints',
-                    'steps',
-                    'outputModel',
-                    'outputModelFields',
-                    'inputModel',
-                    'inputModelFields', 
-                    'runs'
-                )
-            );
+            return view('models.routes.show', compact('route', 'mapping', 'mappingFields','models', 'endpoints','steps','outputModel','outputModelFields','inputModel','inputModelFields', 'runs'));
         }
 
-        return view(
-            'models.routes.show', 
-            compact(
-                'route', 
-                'mapping', 
-                'mappingFields',
-                'models', 
-                'endpoints',
-                'steps', 
-                'runs'
+        return view('models.routes.show', compact('route', 'mapping', 'mappingFields','models', 'endpoints', 'steps', 'runs'
             )
         );
     }
@@ -181,7 +160,7 @@ class RouteController extends Controller
         Gate::authorize('mutate_or_view_processable', $route);
 
         $validatedData = $request->validate([
-            'title' => ['required', Rule::unique('routes')->where('user_id', auth()->user()->id)->ignore($route->id), 'max:255'],
+            'title' => ['required', Rule::unique('processables')->where('user_id', auth()->user()->id)->ignore($route->id), 'max:255'],
             'description' => ['nullable'],
             'active' => ['nullable']
         ]);

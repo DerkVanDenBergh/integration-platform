@@ -10,7 +10,7 @@ class Run extends Model
     use HasFactory;
 
     protected $fillable = [
-        'process_id',
+        'processable_id',
         'type',
         'status',
         'input',

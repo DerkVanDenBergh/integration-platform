@@ -28,7 +28,7 @@
     
         <x-slot name="content">
 
-            <x-views.data-model-view  :fields="$fields" :showEdit="__(true)" :showEndpointActions="__(false)" :showDelete="__(true)" :nestedResource="__('/models/' . $model->id)" :resource="__('fields')"/>
+            <x-views.data-model-view  :fields="$fields" :showEdit="__(true)" :showDelete="__(true)" :nestedResource="__('models/' . $model->id)" :resource="__('fields')"/>
 
         </x-slot>
 

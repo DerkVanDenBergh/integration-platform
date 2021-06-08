@@ -7,7 +7,7 @@
     
         <x-slot name="content">
 
-            <x-tables.model-table :fields="array('name', 'email')" :list="$users" :resource="__('users')" :showEdit="__(false)">
+            <x-tables.model-table :fields="array('name', 'email')" :list="$users" :resource="__('users')">
 
                 <x-slot name="headers">
                     <th class="w-3/8 py-2">Name</th>

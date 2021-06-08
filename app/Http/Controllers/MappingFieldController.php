@@ -46,25 +46,27 @@ class MappingFieldController extends Controller
     public function edit(Processable $processable, Mapping $mapping)
     {
         // TODO Look if i can rework this. A bit of a mess
-        if($mapping->type == 'processable') {
-            $availableFields = $this->modelFieldService->findAllAttributesFromModel($mapping->input_model);
-            $availableSteps = $this->stepService->findAllStepsWithReturnValueFromProcessable($processable->id);
-
-            $availableFields->map(function ($field) {
-                $field['field_type'] = 'model';
-                return $field;
-            });
-
-            $availableSteps->map(function ($step) {
-                $step['field_type'] = 'step';
-                return $step;
-            });
-
-            $availableFields = $availableFields->concat($availableSteps);
-        } else {
-            // TODO make this compatible with tasks and input_endpoint
-            $availableFields = $this->modelFieldService->findAllAttributesFromModel($mapping->input_model);
+        if($processable->type_id == $processable::ROUTE) {
+            $model = $mapping->input_model;
+        } else if($processable->type_id == $processable::TASK) {
+            $endpoint = $this->endpointService->findById($mapping->input_endpoint);
+            $model = $endpoint->model_id;
         }
+
+        $availableFields = $this->modelFieldService->findAllAttributesFromModel($model);
+        $availableSteps = $this->stepService->findAllStepsWithReturnValueFromProcessable($processable->id);
+
+        $availableFields->map(function ($field) {
+            $field['field_type'] = 'model';
+            return $field;
+        });
+
+        $availableSteps->map(function ($step) {
+            $step['field_type'] = 'step';
+            return $step;
+        });
+
+        $availableFields = $availableFields->concat($availableSteps);
 
         $availableFields->prepend((object) ['id' => '', 'name' => '', 'field_type' => '']);
 
@@ -104,6 +106,6 @@ class MappingFieldController extends Controller
             }
         }
 
-        return redirect('/processables/' . $processable->id)->with('success', 'Mapping of processable with name "' . $processable->title . '" has succesfully been updated!');
+        return redirect("/{$processable->processableType()}s/" . $processable->id)->with('success', 'Mapping of processable with name "' . $processable->title . '" has succesfully been updated!');
     }
 }

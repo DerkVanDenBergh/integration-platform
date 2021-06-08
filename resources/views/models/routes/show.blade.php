@@ -33,7 +33,27 @@
 
         <x-slot name="content">
 
-            <x-details.mapping-details :mapping="$mapping" :models="$models" :endpoints="$endpoints"/>
+            <x-details.model-details :model="$mapping" :resource="__('mappings')" :showEdit="__(false)">
+            
+                <x-slot name="fields">
+                    
+                    @if($mapping->output_endpoint ?? false)
+
+                        <x-details.components.attribute :span="__(4)" :type="__('select')" :label="__('Input model')" :name="__('input_model')" :optionValue="__('id')" :optionLabel="__('title')" :options="$models" :selected="$mapping->input_model"/>
+
+                        <x-details.components.attribute :span="__(4)" :type="__('select')" :label="__('Output endpoint')" :name="__('output_endpoint')" :optionValue="__('id')" :optionLabel="__('title')" :options="$endpoints" :selected="$mapping->output_endpoint"/>
+
+                    @else
+
+                        <x-alerts.empty :caption="__('No I/O defined yet...')" :message="__('Let\'s get this route started! Select \'add I/O\' to select your input and output models.')" class="col-span-4"/>
+
+                    @endif
+                
+                </x-slot>
+
+            </x-details.model-details>
+
+            <x-buttons.link :active="__(true)" :action="__('/processables/' . $mapping->processable_id . '/mappings/' . $mapping->id . '/edit')" :caption="__('Edit I/O')" :icon="__('switch')"/>
         
         </x-slot>
     
@@ -44,33 +64,37 @@
     
         <x-slot name="content">
 
-            <x-alerts.info :caption="__('Did you know?')" :message="__('You can use the values of fields and earlier steps in your steps! To do so, you need to write them in a special manner.')" class="mb-3">
-        
-                <x-slot name="content">
+            @if($steps->count() > 0)
 
-                    @if($inputModelFields ?? false)
-                        A couple of examples for your route:
-                        <div class="inline-block sm:rounded-lg bg-gray-200 px-1.5 pb-0.5 mr-1 mt-1"> 
-                            ![{{ $inputModelFields[0]->name }}]
-                        </div>
-                        @if($inputModelFields->count() > 1)
+                <x-alerts.info :caption="__('Did you know?')" :message="__('You can use the values of fields and earlier steps in your steps! To do so, you need to write them in a special manner.')" class="mb-3">
+            
+                    <x-slot name="content">
+
+                        @if($inputModelFields ?? false)
+                            A couple of examples for your route:
                             <div class="inline-block sm:rounded-lg bg-gray-200 px-1.5 pb-0.5 mr-1 mt-1"> 
-                                ![{{ $inputModelFields[1]->name }}]
+                                ![{{ $inputModelFields[0]->name }}]
+                            </div>
+                            @if($inputModelFields->count() > 1)
+                                <div class="inline-block sm:rounded-lg bg-gray-200 px-1.5 pb-0.5 mr-1 mt-1"> 
+                                    ![{{ $inputModelFields[1]->name }}]
+                                </div>
+                            @endif
+                        @else
+                            A couple of examples:
+                            <div class="inline-block sm:rounded-lg bg-gray-200 px-1.5 pb-0.5 mr-1 mt-1"> 
+                                ![id]
+                            </div>
+                            <div class="inline-block sm:rounded-lg bg-gray-200 px-1.5 pb-0.5 mr-1 mt-1"> 
+                                ![name]
                             </div>
                         @endif
-                    @else
-                        A couple of examples:
-                        <div class="inline-block sm:rounded-lg bg-gray-200 px-1.5 pb-0.5 mr-1 mt-1"> 
-                            ![id]
-                        </div>
-                        <div class="inline-block sm:rounded-lg bg-gray-200 px-1.5 pb-0.5 mr-1 mt-1"> 
-                            ![name]
-                        </div>
-                    @endif
 
-                </x-slot>
+                    </x-slot>
 
-            </x-alerts.info>
+                </x-alerts.info>
+
+            @endif
 
             <x-tables.model-table :fields="array('order', 'name')" :list="$steps" :resource="__('steps')" :showEdit="__(false)" :showDelete="__(false)" :showCreate="__(false)" :showView="__(false)">
 
@@ -119,7 +143,7 @@
     
         <x-slot name="content">
 
-            <x-tables.model-table :fields="array('id', 'status', 'created_at')" :list="$runs" :resource="__('runs')" :showEdit="__(false)" :showDelete="__(false)" showCreate="__(false)">
+            <x-tables.model-table :fields="array('id', 'status', 'created_at')" :list="$runs" :resource="__('runs')" :showEdit="__(false)" :showDelete="__(false)" :showCreate="__(false)">
                 
                 <x-slot name="headers">
                     <th class="w-1/4 py-2">ID</th>

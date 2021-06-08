@@ -27,8 +27,7 @@ class ProcessableService
         $processable->save();
 
         $this->mappingService->store([
-            'processable_id' => $processable->id,
-            'type' => 'task'
+            'processable_id' => $processable->id
         ]);
 
         $this->logService->push('info','created processable with id ' . $processable->id . '.', json_encode($processable));
@@ -102,9 +101,9 @@ class ProcessableService
         return $processables;
     }
 
-    public function findAllRoutesFromUser($id)
+    public function findAllProcessablesFromUserByType($id, $type)
     {
-        $processables = Processable::where('user_id', $id)->where('type_id', 1)->get();
+        $processables = Processable::where('user_id', $id)->where('type_id', $type)->get();
 
         $this->logService->push('info','requesteed all processables associated with user with id ' . $id . '.');
 

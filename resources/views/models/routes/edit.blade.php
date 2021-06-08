@@ -4,35 +4,30 @@
         {{ __($route->title . ' - edit') }}
     </x-slot>
 
-    <x-forms.model-form :action="__('/routes/') . $route->id">
-
-        <x-slot name="method">
-            <input name="_method" type="hidden" value="PUT">
-        </x-slot>
-
-        <x-slot name="fields">
-
-            <div class="col-span-4">
-                <x-forms.label for="title" :value="__('Name')" />
-
-                <x-forms.input id="title" class="block mt-1 w-full" type="text" name="title" value="{{ $route->title }}" required autofocus />
-            </div>
-
-            <div class="col-span-4">
-                <x-forms.label for="description" :value="__('Description')" />
-
-                <x-forms.input id="description" class="block mt-1 w-full" type="text" name="description" value="{{ $route->description }}"  autofocus />
-            </div>
-
-            <div class="col-span-1">
-                <label for="active" class="inline-flex items-center">
-                    <input id="active" type="checkbox" @if($route->active) checked @endif class="rounded border-gray-300 text-green-400 shadow-sm focus:border-green-400 focus:ring focus:ring-green-200 focus:ring-opacity-50" name="active">
-                    <span class="ml-2 text-sm text-gray-600">{{ __('Active') }}</span>
-                </label>
-            </div>
-
-        </x-slot>
+    <x-subpages.card>
     
-    </x-forms.model-form>
+        <x-slot name="content">
+
+            <x-forms.model-form :action="__('/routes/') . $route->id">
+
+                <x-slot name="method">
+                    <input name="_method" type="hidden" value="PUT">
+                </x-slot>
+
+                <x-slot name="fields">
+
+                    <x-forms.components.attribute :span="__(4)" :type="__('text')" :label="__('Name')" :name="__('title')" :value="$route->title" :required="__(true)"/>
+
+                    <x-forms.components.attribute :span="__(4)" :type="__('text')" :label="__('Description')" :name="__('description')" :value="$route->description"/>
+
+                    <x-forms.components.attribute :span="__(1)" :type="__('checkbox')" :label="__('Active')" :name="__('active')" :checked="$route->active"/>
+                    
+                </x-slot>
+            
+            </x-forms.model-form>
+
+        </x-slot>
+
+    </x-subpages.card>
 
 </x-app-layout>

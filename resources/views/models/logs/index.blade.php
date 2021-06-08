@@ -23,4 +23,6 @@
 
     </x-subpages.card>
 
+    {{ $logs }}
+
 </x-app-layout>

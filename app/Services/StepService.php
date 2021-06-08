@@ -113,7 +113,7 @@ class StepService
         foreach($steps as $step) {
             $function = $this->stepFunctionService->findById($step->step_function_id);
 
-            $arguments = $this->stepArgumentService->findAllFromStep($step->id);
+            $arguments = $this->stepArgumentService->findAllFromStep($step->id)->toArray();
                 
             $data[$step->name] = $this->stepFunctionService->executeFunction($function, $arguments, $data);
         }

@@ -18,6 +18,7 @@ class CreateProcessablesTable extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->string('slug')->nullable();
+            $table->integer('interval')->nullable();
             $table->boolean('active')->default(false);
             $table->timestamps();
 

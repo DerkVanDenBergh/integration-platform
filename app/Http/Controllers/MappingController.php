@@ -60,7 +60,7 @@ class MappingController extends Controller
 
         $this->mappingService->update($validatedData, $mapping);
 
-        return redirect('/processables/' . $processable->id)->with('success', 'Mapping of processable with name "' . $processable->title . '" has succesfully been updated!');
+        return redirect("/{$processable->processableType()}s/" . $processable->id)->with('success', 'Mapping of processable with name "' . $processable->title . '" has succesfully been updated!');
 
     }
 }

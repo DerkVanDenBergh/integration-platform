@@ -12,6 +12,9 @@ use App\Services\LogService;
 use App\Services\RunService;
 use App\Services\StepService;
 
+use App\Exceptions\BreakOnStepFunctionException;
+use App\Exceptions\StepFunctionNotFoundException;
+
 use App\Jobs\LogProcessable;
 
 class HookController extends Controller
@@ -64,36 +67,37 @@ class HookController extends Controller
         $data = $this->hookService->validateInputModel($mapping, $request->toArray());
 
         if($data == []) {
-            LogProcessable::dispatchAfterResponse($processable, 'processable', 'failure', json_encode($data), '', $this->logService, $this->runService);
+            LogProcessable::dispatchAfterResponse($processable, 'processable', 'failure', json_encode($request->toArray()), 'error: input data not compatible with processable.', $this->logService, $this->runService);
 
             return response()->json([
                 'error' => 'input data not compatible with processable.'
             ], 400);
         }
 
-        $data = $this->stepService->processSteps($processable, $data);
-
-        $output_model = $this->hookService->fillOutputModel($mapping, $data);
-
         try {
+
+            $data = $this->stepService->processSteps($processable, $data);
+
+            $output_model = $this->hookService->fillOutputModel($mapping, $data);
+
             $response = $this->hookService->sendModelToEndpoint($output_model, $mapping);
 
-            LogProcessable::dispatchAfterResponse($processable, 'processable', 'success', json_encode($data), json_encode($output_model), $this->logService, $this->runService);
-        } catch (exception $e) {
+            LogProcessable::dispatchAfterResponse($processable, 'processable', 'success', json_encode($request), json_encode($output_model), $this->logService, $this->runService);
+        } catch (BreakOnStepFunctionException $e){
             $response =  response()->json([
-                'error' => $e->getMessage();
+                'status' => 'aborted'
+            ], 200);
+
+            LogProcessable::dispatchAfterResponse($processable, 'processable', 'aborted', json_encode($request), 'error: ' . $e->getMessage(), $this->logService, $this->runService);
+        } catch (StepFunctionNotFoundException | Exception $e) {
+            $response =  response()->json([
+                'error' => $e->getMessage()
             ], 400);
 
-            LogProcessable::dispatchAfterResponse($processable, 'processable', 'failure', json_encode($data), 'error:' + $e->getMessage(), $this->logService, $this->runService);
-        } finally {
-            return $response;
-        }
-
-        
+            LogProcessable::dispatchAfterResponse($processable, 'processable', 'failure', json_encode($request), 'error: ' . $e->getMessage(), $this->logService, $this->runService);
+        } 
 
         return $response;
-
-        
     }
 
     public function put()

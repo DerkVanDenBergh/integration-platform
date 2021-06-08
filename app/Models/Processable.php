@@ -17,11 +17,18 @@ class Processable extends Model
         'type_id',
         'description',
         'active',
+        'interval',
         'slug',
         'user_id'
     ];
 
     public function mapping() {
         return $this->hasOne( 'App\Models\Mapping', 'processable_id', 'id' );
+    }
+
+    public function processableType() {
+        $processableType = ProcessableType::find($this->type_id);
+
+        return $processableType->name;
     }
 }
