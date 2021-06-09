@@ -190,4 +190,25 @@ class TaskController extends Controller
 
         return redirect('/tasks')->with('success', 'Task with name "' . $task->title . '" has succesfully been deleted!');
     }
+
+    /**
+     * Execute the specified task.
+     *
+     * @param  \App\Models\Processable  $task
+     * @return \Illuminate\Http\Response
+     */
+    public function execute(Processable $task)
+    {
+        Gate::authorize('mutate_or_view_processable', $task);
+
+        $response = $this->processableService->executeTask($task);
+
+        if($response->getStatusCode() == 200) {
+            return redirect('/tasks/' . $task->id)->with('success', 'Task with name "' . $task->title . '" has succesfully executed!');
+        } else {
+            return redirect('/tasks/' . $task->id)->with('error', 'Task with name "' . $task->title . '" has encountered an error during execution. Check run for more details!');
+        }
+
+        
+    }
 }

@@ -8,9 +8,8 @@ use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Subscriber\Oauth\Oauth1;
 
-class HookService
+class RequestService
 {
-    protected $processableService;
     protected $mappingService;
     protected $modelService;
     protected $mappingFieldService;
@@ -19,7 +18,6 @@ class HookService
     protected $stepService;
 
     public function __construct(
-        ProcessableService $processableService,
         MappingService $mappingService,
         DataModelService $modelService,
         MappingFieldService $mappingFieldService,
@@ -27,7 +25,6 @@ class HookService
         EndpointService $endpointService,
         StepService $stepService
     ) {
-        $this->processableService = $processableService;
         $this->mappingService = $mappingService;
         $this->modelService = $modelService;
         $this->mappingFieldService = $mappingFieldService;
@@ -39,6 +36,7 @@ class HookService
     public function validateAuthentication($processable, $data)
     {
         // TODO check for authentication on requests
+        return true;
     }
 
     public function validateInputModel($mapping, $data)
@@ -147,20 +145,14 @@ class HookService
         }
     }
 
-    public function sendModelToEndpoint($model, $mapping)
+    private function sendRequest($endpoint, $authentication, $model = [])
     {
-        $endpoint = $this->endpointService->findById($mapping->output_endpoint);
-
         $url = 'https://' . $this->endpointService->getUrlById($endpoint->id);
 
-        $authentication = $endpoint->authentication()->first();
-
         if($authentication) {
-
             switch (strtoupper($authentication->type)) {
                 case "BASIC":
-                    $response = Http::withBasicAuth($authentication->username, $authentication->password)
-                        ->post($url, $model);
+                    $client = Http::withBasicAuth($authentication->username, $authentication->password);
                     break;
                 case "OAUTH1":
 
@@ -182,19 +174,61 @@ class HookService
                     ]);
 
                     // Now you don't need to add the auth parameter
-                    $response = $client->post('?' . http_build_query(self::rawurlencode_array($model)));
+                    $url = '?' . http_build_query(self::rawurlencode_array($model));
+                    $model = null;
 
                     break;
                 case "TOKEN":
-                    $response = Http::withToken($authentication->token)
-                        ->post($url, $model);
+                    $client = Http::withToken($authentication->token);
                     break;
-                
             }
         } else {
-            $response = Http::post($url, $model);
+            $client = Http();
+        }
+
+        switch(strtoupper($endpoint->method)) {
+            case "GET":
+                $response = $client->get($url, $model);
+                break;
+
+            case "POST":
+                $response = $client->post($url, $model);
+                break;
+
+            case "PUT":
+                $response = $client->put($url, $model);
+                break;
+
+            case "DELETE":
+                $response = $client->delete($url, $model);
+                break;
+
+            default:
+                $response = $client->get($url, $model);
         }
         
+        return $response;
+    }
+
+    public function sendModelToEndpoint($model, $mapping)
+    {
+        $endpoint = $this->endpointService->findById($mapping->output_endpoint);
+
+        $authentication = $endpoint->authentication()->first();
+
+        $response = $this->sendRequest($endpoint, $authentication, $model);
+
+        return $response;
+    }
+
+    public function retrieveModelFromEndpoint($mapping)
+    {
+        $endpoint = $this->endpointService->findById($mapping->input_endpoint);
+
+        $authentication = $endpoint->authentication()->first();
+
+        $response = $this->sendRequest($endpoint, $authentication);
+
         return $response;
     }
 

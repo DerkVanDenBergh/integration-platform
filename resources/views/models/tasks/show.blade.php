@@ -24,7 +24,7 @@
             
             </x-details.model-details>
 
-            <x-buttons.link :active="__(true)" :action="__('/processables/' . $task->id . '/execute')" :caption="__('Execute')" :icon="__('play')"/>
+            <x-buttons.link :active="__(true)" :action="__('/tasks/' . $task->id . '/execute')" :caption="__('Execute')" :icon="__('play')"/>
 
         </x-slot>
 

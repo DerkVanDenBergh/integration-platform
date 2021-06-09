@@ -36,7 +36,7 @@ use App\Http\Controllers\RunController;
 
 Route::get('/hooks/{slug}', [HookController::class, 'get'])->name('hook.get');
 Route::post('/hooks/{slug}', [HookController::class, 'post'])->name('hook.post');
-Route::patch('/hooks/{slug}', [HookController::class, 'patch'])->name('hook.patch');
+Route::patch('/hooks/{slug}', [HookController::class, 'put'])->name('hook.patch');
 Route::put('/hooks/{slug}', [HookController::class, 'put'])->name('hook.put');
 Route::delete('/hooks/{slug}', [HookController::class, 'delete'])->name('hook.delete');
 
@@ -102,6 +102,8 @@ Route::resource('routes', RouteController::class)->middleware(['auth']);
 // Tasks
 
 Route::resource('tasks', TaskController::class)->middleware(['auth']);
+
+Route::get('/tasks/{task}/execute', [TaskController::class, 'execute'])->middleware(['auth']);
 
 
 // Data mappings

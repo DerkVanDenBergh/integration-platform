@@ -57,4 +57,11 @@ class RunService
 
        return $runs;
     }
+
+    public function findLatestFromProcessable($id)
+    {
+       $run = Run::orderBy('created_at', 'desc')->where('processable_id', $id)->first();
+
+       return $run;
+    }
 }

@@ -5,16 +5,39 @@ namespace App\Services;
 use App\Models\Processable;
 
 use Illuminate\Support\Str;
+
+use App\Services\RequestService;
+use App\Services\MappingService;
+use App\Services\DataModelService;
 use App\Services\LogService;
+use App\Services\RunService;
+use App\Services\StepService;
+
+use App\Jobs\LogProcessable;
 
 class ProcessableService
 {
+    protected $requestService;
     protected $mappingService;
+    protected $modelService;
     protected $logService;
+    protected $runService;
+    protected $stepService;
 
-    public function __construct(MappingService $mappingService,  LogService $logService) {
+    public function __construct(
+        RequestService $requestService, 
+        MappingService $mappingService,
+        DataModelService $modelService,
+        LogService $logService,
+        RunService $runService, 
+        StepService $stepService
+    ) {
+        $this->requestService = $requestService;
         $this->mappingService = $mappingService;
+        $this->modelService = $modelService;
         $this->logService = $logService;
+        $this->runService = $runService;
+        $this->stepService = $stepService;
     }
 
     public function store(array $data)
@@ -108,5 +131,85 @@ class ProcessableService
         $this->logService->push('info','requesteed all processables associated with user with id ' . $id . '.');
 
         return $processables;
+    }
+
+    public function validateProcessable($processable) 
+    {
+        if(!$processable->active) {
+            throw new ProcessableNotActiveException('processable is not active.');
+        }
+    }
+
+    public function validateAuthentication($processable, $request)
+    {
+        $authenticated = $this->requestService->validateAuthentication($processable, $request); 
+
+        if(!$authenticated) {
+            throw new ProcessableNotAuthorizedException('invalid authentication.');
+        }
+    }
+
+    public function validateData($processable, $request, $mapping)
+    {
+        $data = $this->requestService->validateInputModel($mapping, $request);
+
+        if($data == []) {
+            throw new RequestNotCompatibleWithProcessibleModelException('data not compatible with model.');
+        }
+
+        return $data;
+    }
+
+    public function generateRequest($processable, $request, $mapping)
+    {
+        $this->validateProcessable($processable);
+
+        if($processable->type_id == $processable::ROUTE) {
+            $this->validateAuthentication($processable, $request);
+        }
+
+        $data = $this->stepService->processSteps($processable, $this->validateData($processable, $request, $mapping));
+
+        $output_model = $this->requestService->fillOutputModel($mapping, $data);
+
+        return $output_model;
+    }
+
+    public function process($processable, $request)
+    {
+        try {
+            $mapping = $this->mappingService->findByProcessableId($processable->id);
+
+            $output_model = $this->generateRequest($processable, $request, $mapping);
+
+            $response = $this->requestService->sendModelToEndpoint($output_model, $mapping);
+
+            LogProcessable::dispatchAfterResponse($processable, 'processable', 'success', json_encode($request), json_encode($response->json()), $this->logService, $this->runService);
+        } catch (BreakOnStepFunctionException | ProcessableNotActiveException $e){
+            $response =  response()->json(['status' => 'aborted'], 200);
+
+            LogProcessable::dispatchAfterResponse($processable, 'processable', 'aborted', json_encode($request), 'error: ' . $e->getMessage(), $this->logService, $this->runService);
+        } catch (ProcessableNotAuthorizedException $e){
+            $response =  response()->json(['status' => $e->getMessage()], 403);
+
+            LogProcessable::dispatchAfterResponse($processable, 'processable', 'failure', json_encode($request), 'error: ' . $e->getMessage(), $this->logService, $this->runService);
+        } catch (StepFunctionNotFoundException | RequestNotCompatibleWithProcessibleModelException | Exception $e) {
+            $response =  response()->json(['error' => $e->getMessage()], 400);
+
+            LogProcessable::dispatchAfterResponse($processable, 'processable', 'failure', json_encode($request), 'error: ' . $e->getMessage(), $this->logService, $this->runService);
+        } 
+
+        return $response;
+    }
+
+    public function executeTask($processable)
+    {
+        $mapping = $this->mappingService->findByProcessableId($processable->id);
+
+        $request = $this->requestService->retrieveModelFromEndpoint($mapping);
+
+        $response = $this->process($processable, $request->json());
+
+        return $response;
     }
 }
