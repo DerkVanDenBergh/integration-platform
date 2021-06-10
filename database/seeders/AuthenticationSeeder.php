@@ -58,10 +58,10 @@ class AuthenticationSeeder extends Seeder
             'password' => $password,
             'token' => $token,
             'connection_id' => $connection_id,
-            'oauth1_consumer_key',
-            'oauth1_consumer_secret',
-            'oauth1_token',
-            'oauth1_token_secret'
+            'oauth1_consumer_key' => $oauth1_consumer_key,
+            'oauth1_consumer_secret' => $oauth1_consumer_secret,
+            'oauth1_token' => $oauth1_token,
+            'oauth1_token_secret' => $oauth1_token_secret
         ];
 
         return $parameters;

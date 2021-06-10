@@ -34,6 +34,16 @@ class StepFunctionSeeder extends Seeder
         ));
 
         $text_var->save();
+
+        $parse_json = new StepFunction($this->definition(
+            1002, 
+            'Parse JSON', 
+            'Parse a JSON string into a variable.',
+            'parse_json',
+            true
+        ));
+
+        $parse_json->save();
     }
 
     private function definition($id, $name, $description, $function_name, $has_return_value)

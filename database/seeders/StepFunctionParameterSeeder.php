@@ -47,6 +47,17 @@ class StepFunctionParameterSeeder extends Seeder
         ));
 
         $text_var_parameter_1->save();
+
+        $parse_json_parameter_1 = new StepFunctionParameter($this->definition(
+            1003, 
+            'JSON', 
+            'json',
+            'text', 
+            1002,
+            false
+        ));
+
+        $parse_json_parameter_1->save();
     }
 
     private function definition($id, $name, $parameter_name, $data_type, $step_function_id, $is_nullable)

@@ -121,16 +121,24 @@
 
             <x-slot name="content">
 
-                <x-views.data-mapping-view 
-                    :mapping="$mapping" :mappingFields="$mappingFields" 
-                    :input="$inputModel" :inputFields="$inputModelFields"  
-                    :output="$outputModel" :outputFields="$outputModelFields">
-                </x-views.data-mapping-view>
+                @if(isset($inputModelFields) and isset($outputModelFields))
 
-                <a href="/processables/{{ $mapping->processable_id }}/mappings/{{ $mapping->id }}/fields" class="mt-5 bg-gray-100 hover:bg-green-400 hover:text-white transition text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
-                    <x-icons.svg-edit class="h-5 w-5 mr-2"></x-icons.svg-edit>
-                    <span>Edit mapping</span>
-                </a>
+                    <x-views.data-mapping-view 
+                        :mapping="$mapping" :mappingFields="$mappingFields" 
+                        :input="$inputModel" :inputFields="$inputModelFields"  
+                        :output="$outputModel" :outputFields="$outputModelFields">
+                    </x-views.data-mapping-view>
+
+                     <a href="/processables/{{ $mapping->processable_id }}/mappings/{{ $mapping->id }}/fields" class="mt-5 bg-gray-100 hover:bg-green-400 hover:text-white transition text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
+                        <x-icons.svg-edit class="h-5 w-5 mr-2"></x-icons.svg-edit>
+                        <span>Edit mapping</span>
+                    </a>
+
+                @else
+
+                    <x-alerts.warning :caption="__('You forgot something!')" :message="__('One of your endpoints does not have a model yet!')" class="mb-3"/>
+
+                @endif
 
             </x-slot>
 
