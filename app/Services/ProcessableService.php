@@ -196,7 +196,7 @@ class ProcessableService
 
             $response = $this->requestService->sendModelToEndpoint($output_model, $mapping);
 
-            LogProcessable::dispatchAfterResponse($processable, 'processable', 'success', json_encode($request), json_encode($response->json()), $this->logService, $this->runService);
+            LogProcessable::dispatchAfterResponse($processable, 'processable', 'success', json_encode($request), strval($response->getBody()), $this->logService, $this->runService);
         } catch (ProcessableDoesNotExistException $e) {
             $response =  response()->json(['status' => 'processable does not exist'], 400);
 
