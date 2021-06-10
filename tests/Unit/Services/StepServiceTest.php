@@ -10,7 +10,7 @@ use App\Services\StepFunctionService;
 use App\Services\StepArgumentService;
 
 use App\Models\StepFunction;
-use App\Models\Route;
+use App\Models\Processable;
 use App\Models\Step;
 use App\Models\User;
 use App\Models\Role;
@@ -21,7 +21,7 @@ class StepServiceTest extends TestCase
 {
     protected $stepService;
 
-    protected $route;
+    protected $processable;
     protected $stepFunction;
     protected $role;
     protected $user;
@@ -66,15 +66,16 @@ class StepServiceTest extends TestCase
 
         $this->user->save();
 
-        $this->route = new Route([
+        $this->processable = new Processable([
             'title' => $this->faker->text,
             'description' => $this->faker->text,
+            'type_id' => Processable::ROUTE,
             'active' => true,
             'slug' => $this->faker->text,
             'user_id' => $this->user->id
         ]);
         
-        $this->route->save();
+        $this->processable->save();
 
         $this->stepFunction = new StepFunction([
             'name' => $this->faker->text,
@@ -87,7 +88,7 @@ class StepServiceTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->route->delete();
+        $this->processable->delete();
         $this->stepFunction->delete();
         $this->role->delete();
         $this->user->delete;
@@ -144,7 +145,7 @@ class StepServiceTest extends TestCase
         $this->assertTrue($this->stepService->findById($id) == null);
     }
 
-    public function test_validRouteIdShouldResultInDeletedStepsFromRoute()
+    public function test_validProcessableIdShouldResultInDeletedStepsFromProcessable()
     {
         $steps = [
             $this->createTestEntity(),
@@ -154,11 +155,11 @@ class StepServiceTest extends TestCase
             $this->createTestEntity()
         ];
 
-        $this->assertTrue($this->stepService->findAllFromRoute($this->route->id)->count() == 5);
+        $this->assertTrue($this->stepService->findAllFromProcessable($this->processable->id)->count() == 5);
 
-        $this->stepService->deleteAllFromRoute($this->route->id);
+        $this->stepService->deleteAllFromProcessable($this->processable->id);
 
-        $this->assertTrue($this->stepService->findAllFromRoute($this->route->id)->count() == 0);
+        $this->assertTrue($this->stepService->findAllFromProcessable($this->processable->id)->count() == 0);
     }
 
     public function test_validIdShouldResultInFoundStep()
@@ -191,23 +192,23 @@ class StepServiceTest extends TestCase
         }
     }
 
-    public function test_callToFindAllStepsWithReturnValueFromRouteShouldResultInMultipleSteps()
+    public function test_callToFindAllStepsWithReturnValueFromProcessableShouldResultInMultipleSteps()
     {
         $this->stepFunction->has_return_value = true;
         $this->stepFunction->save();
         
-        $this->assertTrue($this->stepService->findAllStepsWithReturnValueFromRoute($this->route->id)->count() == 0);
+        $this->assertTrue($this->stepService->findAllStepsWithReturnValueFromProcessable($this->processable->id)->count() == 0);
 
         $this->stepFunction->has_return_value = false;
         $this->stepFunction->save();
 
-        $this->assertTrue($this->stepService->findAllStepsWithReturnValueFromRoute($this->route->id)->count() == 0);
+        $this->assertTrue($this->stepService->findAllStepsWithReturnValueFromProcessable($this->processable->id)->count() == 0);
 
         $this->stepFunction->has_return_value = true;
         $this->stepFunction->save();
     }
 
-    public function test_callToFindAllFromRouteShouldResultInMultipleSteps()
+    public function test_callToFindAllFromProcessableShouldResultInMultipleSteps()
     {
         $steps = [
             $this->createTestEntity(),
@@ -216,14 +217,14 @@ class StepServiceTest extends TestCase
             $this->createTestEntity()
         ];
 
-        $this->assertTrue($this->stepService->findAllFromRoute($this->route->id)->count() == 4);
+        $this->assertTrue($this->stepService->findAllFromProcessable($this->processable->id)->count() == 4);
 
         foreach($steps as $step) {
             $this->stepService->delete($step);
         }
     }
 
-    public function test_callToFindAllFromEmptyRouteShouldResultInNoSteps()
+    public function test_callToFindAllFromEmptyProcessableShouldResultInNoSteps()
     {
         $steps = [
             $this->createTestEntity(),
@@ -232,30 +233,30 @@ class StepServiceTest extends TestCase
             $this->createTestEntity()
         ];
 
-        $this->assertTrue($this->stepService->findAllFromRoute($this->route->id + 1)->count() == 0);
+        $this->assertTrue($this->stepService->findAllFromProcessable($this->processable->id + 1)->count() == 0);
 
         foreach($steps as $step) {
             $this->stepService->delete($step);
         }
     }
 
-    private function createTestEntity($route = 'generate', $name = 'generate', $stepFunction = 'generate', $order = 'generate')
+    private function createTestEntity($processable = 'generate', $name = 'generate', $stepFunction = 'generate', $order = 'generate')
     {
         // Fill arguments with random data if they are empty
-        $route = ($route == 'generate') ? $this->route->id : $route;
+        $processable = ($processable == 'generate') ? $this->processable->id : $processable;
         $name = ($name == 'generate') ? $this->faker->text : $name;
         $stepFunction = ($stepFunction == 'generate') ? $this->stepFunction->id : $stepFunction;
         $order = ($order == 'generate') ? $this->faker->randomDigit : $order;
 
         
         $step = $this->stepService->store([
-            'route_id' => $route,
+            'processable_id' => $processable,
             'name' => $name,
             'step_function_id' => $stepFunction,
             'order' => $order
         ]);
 
-        $this->assertTrue($step->route_id == $route);
+        $this->assertTrue($step->processable_id == $processable);
         $this->assertTrue($step->name == $name);
         $this->assertTrue($step->step_function_id == $stepFunction);
         $this->assertTrue($step->order == $order);

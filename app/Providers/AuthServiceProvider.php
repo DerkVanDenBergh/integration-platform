@@ -6,7 +6,7 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 use Illuminate\Support\Facades\Gate;
 
 use App\Models\Role;
-use App\Models\Route;
+use App\Models\Processable;
 use App\Models\Connection;
 use App\Models\Authentication;
 use App\Models\Endpoint;
@@ -91,8 +91,8 @@ class AuthServiceProvider extends ServiceProvider
             return $user->id === $dataModel->user_id;
         });
 
-        Gate::define('mutate_or_view_route', function ($user, Route $route) {
-            return $user->id === $route->user_id;
+        Gate::define('mutate_or_view_processable', function ($user, Processable $processable) {
+            return $user->id === $processable->user_id;
         });
     }
 }

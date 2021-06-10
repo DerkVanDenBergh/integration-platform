@@ -115,8 +115,6 @@ class EndpointService
         } else {
             return null;
         }
-
-        
     }
 
     public function getProtocols()
@@ -158,7 +156,7 @@ class EndpointService
             case 'tcp':
                 $options = collect([
                     (object) [
-                        'option' => 'Reveive'
+                        'option' => 'Receive'
                     ],
                     (object) [
                         'option' => 'Send'

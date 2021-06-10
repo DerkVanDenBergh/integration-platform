@@ -4,28 +4,28 @@
         {{ __('Connection - create from template') }}
     </x-slot>
 
-    <x-subpages.model-form :action="__('/connections/create/template')">
-
-        <x-slot name="method">
-            <input name="_method" type="hidden" value="POST">
-        </x-slot>
-
-        <x-slot name="fields">
-
-            <div class="col-span-2">
-                <x-forms.label for="title" :value="__('Name')" />
-
-                <x-forms.input id="title" class="block mt-1 w-full" type="text" name="title" :value="old('title')" required autofocus />
-            </div>
-
-            <div class="col-span-2">
-                <x-forms.label for="template_id" :value="__('Template')" />
-
-                <x-forms.select id="template_id" :value="__('id')" :label="__('title')" :options="$templates" class="block mt-1 w-full" name="template_id" required autofocus />
-            </div>
-            
-        </x-slot>
+    <x-subpages.card>
     
-    </x-subpages.model-form>
+        <x-slot name="content">
+
+            <x-forms.model-form :action="__('/connections/create/template')">
+
+                <x-slot name="method">
+                    <input name="_method" type="hidden" value="POST">
+                </x-slot>
+
+                <x-slot name="fields">
+
+                    <x-forms.components.attribute :span="__(2)" :type="__('text')" :label="__('Name')" :name="__('title')" :value="old('title')" :required="__(true)"/>
+
+                    <x-forms.components.attribute :span="__(2)" :type="__('select')" :label="__('Template')" :name="__('template_id')" :optionValue="__('id')" :optionLabel="__('title')" :options="$templates" :required="__(true)"/>
+                    
+                </x-slot>
+            
+            </x-forms.model-form>
+        
+        </x-slot>
+
+    </x-subpages.card>
 
 </x-app-layout>

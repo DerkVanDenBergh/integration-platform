@@ -51,10 +51,17 @@ class RunService
        return $runs;
     }
 
-    public function findAllFromRoute($id)
+    public function findAllFromProcessable($id)
     {
-       $runs = Run::orderBy('created_at', 'desc')->where('type', 'route')->where('process_id', $id)->get();
+       $runs = Run::orderBy('created_at', 'desc')->where('processable_id', $id)->get();
 
        return $runs;
+    }
+
+    public function findLatestFromProcessable($id)
+    {
+       $run = Run::orderBy('created_at', 'desc')->where('processable_id', $id)->first();
+
+       return $run;
     }
 }

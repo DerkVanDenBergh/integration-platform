@@ -1,19 +1,17 @@
 <x-app-layout>
     
     <x-slot name="header">
-        {{ __($route->title . ' - view') }}
+        {{ __($processable->title . ' - view') }}
     </x-slot>
 
     <x-subpages.card :header="__('Mapping')">
+
         <x-slot name="content">
-            <x-subpages.components.model-fields-repeater 
-                :availableFields="$availableFields"
-                :form="__(true)"
-                :fields="$fields" 
-                :mapping="$mapping">
-            
-            </x-subpages.components.model-fields-repeater>
+
+            <x-forms.data-model-form :availableFields="$availableFields" :form="__(true)" :fields="$fields" :mapping="$mapping" />
+
         </x-slot>
+
     </x-subpages.card>
 
 </x-app-layout>

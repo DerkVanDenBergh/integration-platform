@@ -50,7 +50,7 @@ class LogService
 
     public function findAll()
     {
-       $logs = Log::orderBy('created_at', 'desc')->get();
+       $logs = Log::orderBy('created_at', 'desc')->paginate(20);
 
        return $logs;
     }

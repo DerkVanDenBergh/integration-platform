@@ -12,6 +12,7 @@
         "guzzlehttp/oauth-subscriber": "*",
         "laravel/framework": "^8.12",
         "laravel/tinker": "^2.5",
+        "nesbot/carbon": "^2.49",
         "nyholm/psr7": "^1.4",
         "phpunit/php-code-coverage": "^9.2",
         "symfony/psr-http-message-bridge": "^2.1"

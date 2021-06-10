@@ -10,7 +10,7 @@ class Step extends Model
     use HasFactory;
 
     protected $fillable = [
-        'route_id',
+        'processable_id',
         'name',
         'step_function_id',
         'order'

@@ -16,10 +16,10 @@ class ConnectionSeeder extends Seeder
     public function run()
     {
         $beeceptor_user_management = new Connection($this->definition(
-            1000, 
+            2000, 
             'Beeceptor User Management', 
             'A connection to Mintegration Beeceptor User Management', 
-            'https://mintegration-user-management.free.beeceptor.com', 
+            'mintegration-user-management.free.beeceptor.com', 
             1002, 
             false
         ));
@@ -27,10 +27,10 @@ class ConnectionSeeder extends Seeder
         $beeceptor_user_management->save();
         
         $beeceptor_b = new Connection($this->definition(
-            1001, 
+            2001, 
             'Beeceptor Employee Management', 
             'A connection to Mintegration Beeceptor Employee Management', 
-            'https://mintegration-employee-management.free.beeceptor.com', 
+            'mintegration-employee-management.free.beeceptor.com', 
             1002, 
             false
         ));

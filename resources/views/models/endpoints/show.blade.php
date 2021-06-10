@@ -4,59 +4,50 @@
         {{ __($connection->title . ' - ' . $endpoint->title . ' - view') }}
     </x-slot>
 
-    <x-subpages.model-view :header="__('Details')" :model="$endpoint" :resource="__('endpoints')">
+    <x-subpages.card :header="__('Details')">
+    
+        <x-slot name="content">
 
-        <x-slot name="fields">
+            <x-details.model-details :model="$endpoint" :resource="__('endpoints')">
 
-            <div class="col-span-2">
-                <x-forms.label for="title" :value="__('Name')" />
+                <x-slot name="fields">
 
-                <x-forms.input id="title" class="block mt-1 w-full" type="text" name="title" value="{{ $endpoint->title }}" required disabled autofocus />
-            </div>
+                    <x-details.components.attribute :span="__(2)" :type="__('text')" :label="__('Name')" :name="__('title')" :value="$endpoint->title"/>
 
-            <div class="col-span-2">
-                <x-forms.label for="protocol" :value="__('Protocol')" />
+                    <x-details.components.attribute :span="__(2)" :type="__('text')" :label="__('Protocol')" :name="__('protocol')" :value="$endpoint->protocol"/>
 
-                <x-forms.input id="protocol" class="block mt-1 w-full" type="text" name="protocol" value="{{ $endpoint->protocol }}" required disabled autofocus />
-            </div>
+                    <x-details.components.attribute :span="__(2)" :type="__('text')" :label="__('Endpoint')" :name="__('endpoint')" :value="$endpoint->endpoint"/>
+                    
+                    @if($endpoint->port)
 
-            <div class="col-span-2">
-                <x-forms.label for="endpoint" :value="__('Endpoint')" />
+                        <x-details.components.attribute :span="__(1)" :type="__('integer')" :label="__('Port')" :name="__('port')" :value="$endpoint->port"/>
 
-                <x-forms.input id="endpoint" class="block mt-1 w-full" type="text" name="endpoint" value="{{ $endpoint->endpoint }}" required disabled autofocus />
-            </div>
+                        <x-details.components.attribute :span="__(1)" :type="__('text')" :label="__('Method')" :name="__('method')" :value="$endpoint->method"/>
+
+                    @else
+
+                        <x-details.components.attribute :span="__(2)" :type="__('text')" :label="__('Method')" :name="__('method')" :value="$endpoint->method"/>
+
+                    @endif
+
+                    <x-details.components.attribute :span="__(4)" :type="__('select')" :label="__('Authentication')" :name="__('authentication_id')" :optionValue="__('id')" :optionLabel="__('title')" :options="$authentications" :selected="$endpoint->authentication_id"/>
+
+                </x-slot>
             
-            @if($endpoint->port)
-                <div class="col-span-1">
-                    <x-forms.label for="port" :value="__('Port')" />
-
-                    <x-forms.input id="port" class="block mt-1 w-full" type="integer" name="port" value="{{ $endpoint->port }}" disabled autofocus />
-                </div>
-
-                <div class="col-span-1">
-                    <x-forms.label for="method" :value="__('Method')" />
-
-                    <x-forms.input id="method" class="block mt-1 w-full" type="text" name="method" value="{{ $endpoint->method }}" disabled autofocus />
-                </div>
-            @else
-                <div class="col-span-2">
-                    <x-forms.label for="method" :value="__('Method')" />
-
-                    <x-forms.input id="method" class="block mt-1 w-full" type="text" name="method" value="{{ $endpoint->method }}" disabled autofocus />
-                </div>
-            @endif
-
-            <div class="col-span-4">
-                <x-forms.label for="authentication_id" :value="__('Authentication')" />
-
-                <x-forms.select id="authentication_id" :value="__('id')" :label="__('title')" :options="$authentications" :selected="$endpoint->authentication_id" class="block mt-1 w-full" name="authentication_id" required disabled autofocus />
-            </div>
-
+            </x-details.model-details>
 
         </x-slot>
-    
-    </x-subpages.model-view>
 
-    <x-subpages.model-fields :header="__('Model')" :fields="$fields" :showEdit="__(false)" :showDelete="__(false)" :showCreate="__(false)" :showEndpointActions="__(true)" :endpoint="$endpoint"></x-subpages.model-fields>
+    </x-subpages.card>
+
+    <x-subpages.card :header="__('Model')">
+    
+        <x-slot name="content">
+
+            <x-views.data-model-view :fields="$fields" :showEdit="__(false)" :showDelete="__(false)" :showCreate="__(false)" :showEndpointActions="__(true)" :endpoint="$endpoint"/>
+
+        </x-slot>
+
+    </x-subpages.card>
 
 </x-app-layout>

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Step;
 use Illuminate\Http\Request;
 
-use App\Models\Route;
+use App\Models\Processable;
 
 use App\Services\StepService;
 use App\Services\StepFunctionService;
@@ -34,13 +34,13 @@ class StepController extends Controller
      * @param  \App\Models\Step  $step
      * @return \Illuminate\Http\Response
      */
-    public function edit(Route $route)
+    public function edit(Processable $processable)
     {
-        $steps = $this->stepService->findAllFromRoute($route->id);
+        $steps = $this->stepService->findAllFromProcessable($processable->id);
 
         $functions = $this->functionService->findAllWithParameters();
 
-        return view('models.steps.index', compact('steps', 'route', 'functions'));
+        return view('models.steps.index', compact('steps', 'processable', 'functions'));
     }
 
     /**
@@ -50,21 +50,21 @@ class StepController extends Controller
      * @param  \App\Models\Step  $step
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Route $route, Step $step)
+    public function update(Request $request, Processable $processable, Step $step)
     {
         $data = $request->validate([
             "steps"    => ['required', 'array'],
-            "steps.*.name"  => ['required', 'string', 'max:255'], // TODO make this a unique rule for within route
+            "steps.*.name"  => ['required', 'string', 'max:255'], // TODO make this a unique rule for within processable
             "steps.*.step_function_id" => ['required', 'integer'],
             'steps.*.arguments' => ['required', 'array', 'min:1']
         ]);
 
-        $this->stepService->deleteAllFromRoute($route->id);
+        $this->stepService->deleteAllFromProcessable($processable->id);
 
         $order = 1;
 
         foreach($data['steps'] as $step) {
-            $step['route_id'] = $route->id;
+            $step['processable_id'] = $processable->id;
             $step['order'] = $order;
             
             $arguments = $step['arguments'];
@@ -84,7 +84,7 @@ class StepController extends Controller
 
         }
 
-        return redirect('/routes/' . $route->id)->with('success', 'Steps of route with name "' . $route->title . '" have succesfully been updated!');
+        return redirect("/{$processable->processableType()}s/" . $processable->id)->with('success', 'Steps of processable with name "' . $processable->title . '" have succesfully been updated!');
     }
 
     /**
@@ -96,6 +96,8 @@ class StepController extends Controller
     public function component(Request $request)
     {
         $functions = $this->functionService->findAllWithParameters();
+        $functions->prepend((object) ['id' => '', 'name' => '', 'description' => '', 'step_function_parameters' => []]);
+
         $view = $this->renderStepComponent($request['number'], $functions);
 
         return json_encode( ['view' => $view]);
@@ -103,6 +105,6 @@ class StepController extends Controller
 
     public function renderStepComponent($number, $functions)
     {
-        return view('components.subpages.components.route-step-form', compact('number', 'functions'))->render();
+        return view('components.forms.components.step', compact('number', 'functions'))->render();
     } 
 }

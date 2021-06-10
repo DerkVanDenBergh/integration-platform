@@ -3,29 +3,28 @@
         {{ __($model->title . ' - edit') }}
     </x-slot>
 
+    <x-subpages.card>
     
-    <x-subpages.model-form :action="__('/models/') . $model->id">
+        <x-slot name="content">
 
-        <x-slot name="method">
-            <input name="_method" type="hidden" value="PUT">
+            <x-forms.model-form :action="__('/models/') . $model->id">
+
+                <x-slot name="method">
+                    <input name="_method" type="hidden" value="PUT">
+                </x-slot>
+
+                <x-slot name="fields">
+
+                    <x-forms.components.attribute :span="__(4)" :type="__('text')" :label="__('Name')" :name="__('title')" :value="$model->title" :required="__(true)"/>
+
+                    <x-forms.components.attribute :span="__(4)" :type="__('text')" :label="__('Description')" :name="__('description')" :value="$model->description"/>
+                    
+                </x-slot>
+            
+            </x-forms.model-form>
+
         </x-slot>
 
-        <x-slot name="fields">
-
-            <div class="col-span-4">
-                <x-forms.label for="title" :value="__('Name')" />
-
-                <x-forms.input id="title" class="block mt-1 w-full" type="text" name="title" value="{{ $model->title }}" required autofocus />
-            </div>
-            
-            <div class="col-span-4">
-                <x-forms.label for="description" :value="__('Description')" />
-
-                <x-forms.input id="description" class="block mt-1 w-full" type="text" name="description" value="{{ $model->description }}" autofocus />
-            </div>
-            
-        </x-slot>
-    
-    </x-subpages.model-form>
+    </x-subpages.card>
 
 </x-app-layout>

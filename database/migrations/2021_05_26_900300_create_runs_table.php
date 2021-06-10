@@ -19,8 +19,19 @@ class CreateRunsTable extends Migration
             $table->text('input');
             $table->text('output');
             $table->string('status');
-            $table->integer('process_id');
             $table->timestamps();
+
+            // Foreign keys
+
+            $table->unsignedBigInteger('processable_id');
+        });
+
+        Schema::table('runs', function (Blueprint $table) {
+            $table->foreign('processable_id')
+                  ->references('id')
+                  ->on('processables')
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
         });
     }
 

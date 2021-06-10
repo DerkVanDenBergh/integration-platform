@@ -20,14 +20,14 @@ class CreateStepsTable extends Migration
             $table->timestamps();
 
             // Foreign keys
-            $table->unsignedBigInteger('route_id');
+            $table->unsignedBigInteger('processable_id');
             $table->unsignedBigInteger('step_function_id');
         });
 
         Schema::table('steps', function (Blueprint $table) { 
-            $table->foreign('route_id')
+            $table->foreign('processable_id')
                   ->references('id')
-                  ->on('routes')
+                  ->on('processables')
                   ->onUpdate('cascade')
                   ->onDelete('cascade');
 

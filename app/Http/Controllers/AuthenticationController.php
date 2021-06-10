@@ -54,7 +54,7 @@ class AuthenticationController extends Controller
 
         $type = $validatedData['option'];
 
-        return view('models.authentications.forms.create.' . strtolower($type), compact('connection', 'type'));
+        return view('models.authentications.create', compact('connection', 'type'));
     }
 
     /**
@@ -95,7 +95,7 @@ class AuthenticationController extends Controller
     {
         Gate::authorize('mutate_or_view_authentication', $authentication);
 
-        return view('models.authentications.forms.edit.' . strtolower($authentication->type), compact('authentication'));
+        return view('models.authentications.edit', compact('authentication'));
     }
 
     /**

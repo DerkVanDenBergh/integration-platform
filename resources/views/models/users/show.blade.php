@@ -1,32 +1,29 @@
 <x-app-layout>
+
     <x-slot name="header">
         {{ __($user->title . ' - view') }}
     </x-slot>
 
-    <x-subpages.model-view :model="$user" :resource="__('users')">
+    <x-subpages.card>
+    
+        <x-slot name="content">
 
-        <x-slot name="fields">
+            <x-details.model-details :model="$user" :resource="__('users')">
 
-            <div class="col-span-4">
-                <x-forms.label for="name" :value="__('Name')" />
+                <x-slot name="fields">
 
-                <x-forms.input id="name" class="block mt-1 w-full" type="text" name="title" value="{{ $user->name }}" required disabled autofocus />
-            </div>
+                    <x-details.components.attribute :span="__(2)" :type="__('text')" :label="__('Name')" :name="__('name')" :value="$user->name" />
 
-            <div class="col-span-2">
-                <x-forms.label for="email" :value="__('E-mail')" />
+                    <x-details.components.attribute :span="__(2)" :type="__('email')" :label="__('E-mail')" :name="__('email')" :value="$user->email" />
 
-                <x-forms.input id="email" class="block mt-1 w-full" type="text" name="email" value="{{ $user->email }}" required disabled autofocus />
-            </div>
-
-            <div class="col-span-2">
-                <x-forms.label for="role_id" :value="__('Role')" />
-
-                <x-forms.select id="role_id" :value="__('id')" :label="__('title')" :selected="$user->role_id" :options="$roles" class="block mt-1 w-full" name="role_id" required disabled autofocus />
-            </div>
+                    <x-details.components.attribute :span="__(4)" :type="__('select')" :label="__('Role')" :name="__('role_id')" :optionValue="__('id')" :optionLabel="__('title')" :options="$roles" :selected="$user->role_id"/>
+                    
+                </x-slot>
+            
+            </x-details.model-details>
 
         </x-slot>
-    
-    </x-subpages.model-view>
+
+    </x-subpages.card>
 
 </x-app-layout>

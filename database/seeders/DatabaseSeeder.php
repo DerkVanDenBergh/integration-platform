@@ -24,20 +24,9 @@ class DatabaseSeeder extends Seeder
         $this->call(TemplateSeeder::class);
         $this->call(StepFunctionSeeder::class);
         $this->call(StepFunctionParameterSeeder::class);
+        $this->call(ProcessableTypeSeeder::class);
         
-        // Dummy data
-        // $this->call(DataModelSeeder::class);
-        // $this->call(DataModelFieldSeeder::class);
-        // $this->call(ConnectionSeeder::class);
-        // $this->call(AuthenticationSeeder::class);
-        // $this->call(EndpointSeeder::class);
-        // $this->call(RouteSeeder::class);
-        // $this->call(MappingSeeder::class);
-        // $this->call(MappingFieldSeeder::class);
-        // $this->call(StepSeeder::class);
-        // $this->call(StepArgumentSeeder::class);
-        
-        foreach(['role','user','data_model','data_model_field','connection','authentication','endpoint','route','mapping','mapping_field','step', 'step_argument', 'step_function', 'step_function_parameter'] as $model) {
+        foreach(['role','user','data_model','data_model_field','connection','authentication','endpoint','processable','mapping','mapping_field','step', 'step_argument', 'step_function', 'step_function_parameter'] as $model) {
             $this->increaseSequence($model);
         }
         
@@ -50,7 +39,7 @@ class DatabaseSeeder extends Seeder
         $driver = config("database.connections.{$connection}.driver");
 
         if($driver == 'pgsql') {
-            \Illuminate\Support\Facades\DB::statement("ALTER SEQUENCE {$model}s_id_seq RESTART 2000;");
+            \Illuminate\Support\Facades\DB::statement("ALTER SEQUENCE {$model}s_id_seq RESTART 3000;");
         }
 
         

@@ -67,29 +67,17 @@ class MappingService
        return $mappings;
     }
 
-    public function findByRouteId($id)
+    public function findByProcessableId($id)
     {
-       $mapping = Mapping::where('route_id', $id)->first();
+       $mapping = Mapping::where('processable_id', $id)->first();
 
         if($mapping) {
-            $this->logService->push('info','requested mapping from route with id ' . $mapping->route_id . '.', json_encode($mapping));
+            $this->logService->push('info','requested mapping from processable with id ' . $mapping->processable_id . '.', json_encode($mapping));
         } else {
-            $this->logService->push('warning','requested mapping from route with id ' . $id . ' but was not found.');
+            $this->logService->push('warning','requested mapping from processable with id ' . $id . ' but was not found.');
         }
 
 
        return $mapping;
-    }
-
-    public function createMappingForRoute($id)
-    {
-        $mapping = new Mapping();
-
-        $mapping->route_id = $id;
-        $mapping->type = 'route';
-
-        $mapping->save();
-
-        return $mapping;
     }
 }

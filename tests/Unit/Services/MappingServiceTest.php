@@ -10,7 +10,7 @@ use App\Services\LogService;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\DataModel;
-use App\Models\Route;
+use App\Models\Processable;
 use App\Models\Connection;
 use App\Models\Endpoint;
 use App\Models\Mapping;
@@ -21,9 +21,10 @@ class MappingServiceTest extends TestCase
 {
     protected $mappingService;
 
-    protected $route;
+    protected $processable;
     protected $inputModel;
     protected $outputEndpoint;
+    protected $secondOutputEndpoint;
     protected $role;
     protected $connection;
     protected $user;
@@ -61,15 +62,16 @@ class MappingServiceTest extends TestCase
 
         $this->user->save();
 
-        $this->route = new Route([
+        $this->processable = new Processable([
             'title' => $this->faker->text,
             'description' => $this->faker->text,
+            'type_id' => Processable::ROUTE,
             'active' => true,
             'slug' => $this->faker->text,
             'user_id' => $this->user->id
         ]);
         
-        $this->route->save(); 
+        $this->processable->save(); 
 
         $this->inputModel = new DataModel([
             'title' => $this->faker->text,
@@ -99,6 +101,16 @@ class MappingServiceTest extends TestCase
         ]);
 
         $this->outputEndpoint->save();
+
+        $this->secondOutputEndpoint = new Endpoint([
+            'title' => $this->faker->text,
+            'endpoint' => $this->faker->text,
+            'protocol' => 'HTTP',
+            'method' => 'POST',
+            'connection_id' => $this->connection->id
+        ]);
+
+        $this->secondOutputEndpoint->save();
     }
 
     protected function tearDown(): void
@@ -106,6 +118,7 @@ class MappingServiceTest extends TestCase
         $this->role->delete();
         $this->inputModel->delete();
         $this->outputEndpoint->delete();
+        $this->secondOutputEndpoint->delete();
         $this->connection->delete();
         $this->role->delete();
         $this->user->delete();
@@ -132,10 +145,10 @@ class MappingServiceTest extends TestCase
         $mapping = $this->createTestEntity();
 
         $mapping = $this->mappingService->update([
-            'type' => 'test_update'
+            'output_endpoint' => $this->secondOutputEndpoint->id
         ], $mapping);
 
-        $this->assertTrue($mapping->type == 'test_update');
+        $this->assertTrue($mapping->output_endpoint == $this->secondOutputEndpoint->id);
 
         $this->mappingService->delete($mapping);
     }
@@ -147,7 +160,7 @@ class MappingServiceTest extends TestCase
         $mapping = $this->createTestEntity();
         
         $mapping = $this->mappingService->update([
-            'type' => null
+            'output_endpoint' => 'test'
         ], $mapping);
     }
 
@@ -166,7 +179,7 @@ class MappingServiceTest extends TestCase
     {
         $mapping = $this->createTestEntity();
 
-        $this->assertTrue($this->mappingService->findById($mapping->id)->type == $mapping->type);
+        $this->assertTrue($this->mappingService->findById($mapping->id)->id == $mapping->id);
 
         $this->mappingService->delete($mapping);
     }
@@ -192,40 +205,37 @@ class MappingServiceTest extends TestCase
         }
     }
 
-    public function test_callToFindMappingFromRouteWithValidRouteIdShouldResultInSingleMapping()
+    public function test_callToFindMappingFromProcessableWithValidProcessableIdShouldResultInSingleMapping()
     {
         $run = $this->createTestEntity();
 
-        $this->assertTrue($this->mappingService->findByRouteId($this->route->id)->type == $run->type);
+        $this->assertTrue($this->mappingService->findByProcessableId($this->processable->id)->type == $run->type);
 
         $this->mappingService->delete($run);
     }
 
-    public function test_callToFindMappingFromRouteWithBadRouteIdShouldResultInSingleMapping()
+    public function test_callToFindMappingFromProcessableWithBadProcessableIdShouldResultInSingleMapping()
     {
-        $this->assertTrue($this->mappingService->findByRouteId(99999999) == null);
+        $this->assertTrue($this->mappingService->findByProcessableId(99999999) == null);
     }
 
-    private function createTestEntity($inputModel = 'generate', $outputEndpoint = 'generate', $mappingType = 'generate', $route = 'generate')
+    private function createTestEntity($inputModel = 'generate', $outputEndpoint = 'generate', $processable = 'generate')
     {
         // Fill arguments with random data if they are empty
         $inputModel = ($inputModel == 'generate') ? $this->inputModel->id : $inputModel;
         $outputEndpoint = ($outputEndpoint == 'generate') ? $this->outputEndpoint->id : $outputEndpoint;
-        $mappingType = ($mappingType == 'generate') ? 'route' : $mappingType;
-        $route = ($route == 'generate') ? $this->route->id : $route;
+        $processable = ($processable == 'generate') ? $this->processable->id : $processable;
 
         
         $mapping = $this->mappingService->store([
             'input_model' => $inputModel,
             'output_endpoint' => $outputEndpoint,
-            'type' => $mappingType,
-            'route_id' => $route
+            'processable_id' => $processable
         ]);
 
         $this->assertTrue($mapping->input_model == $inputModel);
         $this->assertTrue($mapping->output_endpoint == $outputEndpoint);
-        $this->assertTrue($mapping->type == $mappingType);
-        $this->assertTrue($mapping->route_id == $route);
+        $this->assertTrue($mapping->processable_id == $processable);
 
         return $mapping;
     }

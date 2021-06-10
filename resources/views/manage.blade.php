@@ -27,7 +27,7 @@
                     </x-slot>
 
                     <x-slot name="description">
-                        For ensuring the right eyes can see the right information.
+                        For ensuring the right eyes can see the right information, and the wrong cannot.
                     </x-slot>
 
                     <x-slot name="link">

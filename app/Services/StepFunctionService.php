@@ -7,7 +7,9 @@ use App\Models\StepFunction;
 
 use App\Services\LogService;
 
-use App\Logic\StepFunctions\Factory\StepFunctionFactory;
+use App\Logic\StepFunction\Factory\StepFunctionFactory;
+
+use App\Exceptions\StepFunctionNotFoundException;
 
 class StepFunctionService
 {
@@ -80,7 +82,7 @@ class StepFunctionService
     }
 
     // TODO get rid of $originalData
-    public function parseArguments($arguments, $data, $originalData, $keys = [])
+    public function parseArguments(&$arguments, $data, $originalData, $keys = [])
     {
         foreach($data as $key=>$value) {
 
@@ -93,12 +95,22 @@ class StepFunctionService
             } else {
                 array_push($currentKeys, $key);
 
-                foreach($arguments as $argument) {
-                    if(strpos($argument->value, '![' . implode('.', $currentKeys) . ']') !== false) {
-                        $argument->value = str_replace('![' . implode('.', $currentKeys) . ']', $this->array_access($originalData, $currentKeys), $argument->value);
+                foreach($arguments as $aKey=>$aValue) {
+                    if(strpos($aValue['value'], '![' . implode('.', $currentKeys) . ']') !== false) {
+                        $arguments[$aKey]['value'] = str_replace('![' . implode('.', $currentKeys) . ']', $this->array_access($originalData, $currentKeys), $aValue['value']);
                     }
                 }
             }
+        }
+
+        return $arguments;
+    }
+
+    public function cleanupArguments($arguments) {
+
+        // remove the dynamic arguments that were not matched from value and replace with ''
+        foreach($arguments as $key=>$value) {
+            $arguments[$key]['value'] = preg_replace('/\!\[(.*?)\]/', '', $value['value']);
         }
 
         return $arguments;
@@ -122,10 +134,14 @@ class StepFunctionService
 
     public function executeFunction($stepFunction, $arguments, $data)
     {
+        $parsedArguments = $this->cleanupArguments($this->parseArguments($arguments, $data, $data));
+
         $function = StepFunctionFactory::create($stepFunction->function_name);
 
-        $arguments = $this->parseArguments($arguments, $data, $data);
+        if(!$function) {
+            throw new StepFunctionNotFoundException('Stepfunction does not exist.');
+        } 
 
-        return $function->execute($arguments, $data);
+        return $function->execute($parsedArguments, $data);
     }
 }
