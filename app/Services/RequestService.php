@@ -183,7 +183,7 @@ class RequestService
                     break;
             }
         } else {
-            $client = Http();
+            $client = Http::timeout(7);
         }
 
         switch(strtoupper($endpoint->method)) {
