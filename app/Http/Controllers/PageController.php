@@ -30,7 +30,7 @@ class PageController extends Controller
         $mostActiveUser = $runs->select('users.name', DB::raw('COUNT(processables.user_id) as count'))
             ->groupBy('users.name')
             ->orderBy('count', 'desc')
-            ->first()->name;
+            ->first();
 
             $runs = Run::whereBetween('runs.created_at', [$from, $to])
             ->join('processables', 'runs.processable_id', '=', 'processables.id')
@@ -51,7 +51,7 @@ class PageController extends Controller
         $mostActiveProcessable = $runs->select('processables.title', DB::raw('COUNT(runs.processable_id) as count'))
             ->groupBy('processables.title')
             ->orderBy('count', 'desc')
-            ->first()->title;
+            ->first();
 
         return view('dashboard', compact('mostActiveUser', 'amountOfRoutes', 'amountOfTasks', 'mostActiveProcessable'));
     }
