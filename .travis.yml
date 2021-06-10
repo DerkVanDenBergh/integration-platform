@@ -31,4 +31,4 @@ deploy:
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 notifications:
-  webhooks: https://mintegration.herokuapp.com/hooks/travis-ci
+  webhooks: https://mintegration.herokuapp.com/hooks/7Wm05BddBt6qGvvLPzSyyphFW
