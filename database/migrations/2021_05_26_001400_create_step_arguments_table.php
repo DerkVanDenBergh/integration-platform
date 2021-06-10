@@ -15,7 +15,7 @@ class CreateStepArgumentsTable extends Migration
     {
         Schema::create('step_arguments', function (Blueprint $table) {
             $table->id();
-            $table->string('value')->nullable();
+            $table->text('value')->nullable();
             $table->timestamps();
 
             // Foreign keys

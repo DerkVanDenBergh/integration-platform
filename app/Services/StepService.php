@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\DataModel;
+use App\Models\Mapping;
+use App\Models\MappingField;
 use App\Models\Step;
 
 use App\Services\LogService;
@@ -55,10 +57,24 @@ class StepService
     public function deleteAllFromProcessable($id)
     {
         $steps = Step::where('processable_id', $id)->get();
-        
+
         foreach($steps as $step) {
             $this->delete($step);
         }
+
+        
+
+        $mapping = Mapping::where('processable_id', $id)->first();
+
+        if($mapping) {
+
+            $mappingFields = MappingField::where('mapping_id', $mapping->id)->where('input_field_type', 'step')->get();
+            
+            foreach($mappingFields as $mappingField) {
+                $mappingField->delete($mappingField);
+            }
+        }
+        
     }
 
     public function findById($id)
