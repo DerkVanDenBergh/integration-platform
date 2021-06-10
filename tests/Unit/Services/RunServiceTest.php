@@ -9,7 +9,7 @@ use App\Services\LogService;
 
 use App\Models\Role;
 use App\Models\Run;
-use App\Models\Route;
+use App\Models\Processable;
 use App\Models\User;
 
 use PDOException; 
@@ -20,7 +20,7 @@ class RunServiceTest extends TestCase
 
     protected $faker;
     
-    protected $route;
+    protected $processable;
     protected $role;
     protected $user;
 
@@ -55,20 +55,21 @@ class RunServiceTest extends TestCase
 
         $this->user->save();
 
-        $this->route = new Route([
+        $this->processable = new Processable([
             'title' => $this->faker->text,
             'description' => $this->faker->text,
+            'type_id' => Processable::ROUTE,
             'active' => true,
             'slug' => $this->faker->text,
             'user_id' => $this->user->id
         ]);
         
-        $this->route->save();
+        $this->processable->save();
     }
 
     protected function tearDown(): void
     {
-        $this->route->delete();
+        $this->processable->delete();
         $this->user->delete();
         $this->role->delete();
 
@@ -154,7 +155,7 @@ class RunServiceTest extends TestCase
         }
     }
 
-    public function test_callToFindAllFromRouteShouldResultInMultipleRuns()
+    public function test_callToFindAllFromProcessableShouldResultInMultipleRuns()
     {
         $runs = [
             $this->createTestEntity(),
@@ -163,14 +164,14 @@ class RunServiceTest extends TestCase
             $this->createTestEntity()
         ];
 
-        $this->assertTrue($this->runService->findAllFromRoute($this->route->id)->count() == 4);
+        $this->assertTrue($this->runService->findAllFromProcessable($this->processable->id)->count() == 4);
 
         foreach($runs as $run) {
             $this->runService->delete($run);
         }
     }
 
-    public function test_callToFindAllFromEmptyRouteShouldResultInNoRuns()
+    public function test_callToFindAllFromEmptyProcessableShouldResultInNoRuns()
     {
         $runs = [
             $this->createTestEntity(),
@@ -179,7 +180,7 @@ class RunServiceTest extends TestCase
             $this->createTestEntity()
         ];
 
-        $this->assertTrue($this->runService->findAllFromRoute($this->route->id + 1)->count() == 0);
+        $this->assertTrue($this->runService->findAllFromProcessable($this->processable->id + 1)->count() == 0);
 
         foreach($runs as $run) {
             $this->runService->delete($run);
@@ -189,22 +190,22 @@ class RunServiceTest extends TestCase
     private function createTestEntity($process = 'generate', $type = 'generate', $status = 'generate', $input = 'generate', $output = 'generate')
     {
         // Fill arguments with random data if they are empty
-        $process = ($process == 'generate') ? $this->route->id : $process;
-        $type = ($type == 'generate') ? 'route' : $type;
+        $process = ($process == 'generate') ? $this->processable->id : $process;
+        $type = ($type == 'generate') ? 'processable' : $type;
         $status = ($status == 'generate') ? 'success' : $status;
         $input = ($input == 'generate') ? $this->faker->text : $input;
         $output = ($output == 'generate') ? $this->faker->text : $output;
 
         
         $run = $this->runService->store([
-            'process_id' => $process,
+            'processable_id' => $process,
             'type' => $type,
             'status' => $status,
             'input' => $input,
             'output' => $output
         ]);
 
-        $this->assertTrue($run->process_id == $process);
+        $this->assertTrue($run->processable_id == $process);
         $this->assertTrue($run->type == $type);
         $this->assertTrue($run->status == $status);
         $this->assertTrue($run->input == $input);

@@ -10,7 +10,7 @@ use App\Services\LogService;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\DataModel;
-use App\Models\Route;
+use App\Models\Processable;
 use App\Models\Endpoint;
 use App\Models\Mapping;
 use App\Models\Connection;
@@ -23,7 +23,7 @@ class DataModelServiceTest extends TestCase
 
     protected $role;
     protected $user;
-    protected $route;
+    protected $processable;
     protected $inputModel;
     protected $outputModel;
     protected $outputEndpoint;
@@ -63,15 +63,16 @@ class DataModelServiceTest extends TestCase
 
         $this->user->save();
 
-        $this->route = new Route([
+        $this->processable = new Processable([
             'title' => $this->faker->text,
             'description' => $this->faker->text,
+            'type_id' => Processable::ROUTE,
             'active' => true,
             'slug' => $this->faker->text,
             'user_id' => $this->user->id
         ]);
         
-        $this->route->save(); 
+        $this->processable->save(); 
 
         $this->inputModel = new DataModel([
             'title' => $this->faker->text,
@@ -115,8 +116,7 @@ class DataModelServiceTest extends TestCase
         $this->mapping = new Mapping([
             'input_model' => $this->inputModel->id,
             'output_endpoint' => $this->outputEndpoint->id,
-            'type' => 'route',
-            'route_id' => $this->route->id
+            'processable_id' => $this->processable->id
         ]);
 
         $this->mapping->save();
@@ -129,7 +129,7 @@ class DataModelServiceTest extends TestCase
 
         $this->role->delete();
         $this->user->delete();
-        $this->route->delete();
+        $this->processable->delete();
         $this->inputModel->delete();
         $this->outputModel->delete();
         $this->outputEndpoint->delete();

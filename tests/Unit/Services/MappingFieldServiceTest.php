@@ -11,7 +11,7 @@ use App\Models\Role;
 use App\Models\User;
 use App\Models\DataModel;
 use App\Models\DataModelField;
-use App\Models\Route;
+use App\Models\Processable;
 use App\Models\Connection;
 use App\Models\Endpoint;
 use App\Models\Mapping;
@@ -25,7 +25,7 @@ class MappingFieldServiceTest extends TestCase
 
     protected $role;
     protected $user;
-    protected $route;
+    protected $processable;
     protected $inputModel;
     protected $outputModel;
     protected $connection;
@@ -67,15 +67,16 @@ class MappingFieldServiceTest extends TestCase
 
         $this->user->save();
 
-        $this->route = new Route([
+        $this->processable = new Processable([
             'title' => $this->faker->text,
             'description' => $this->faker->text,
+            'type_id' => Processable::ROUTE,
             'active' => true,
             'slug' => $this->faker->text,
             'user_id' => $this->user->id
         ]);
         
-        $this->route->save(); 
+        $this->processable->save(); 
 
         $this->inputModel = new DataModel([
             'title' => $this->faker->text,
@@ -119,8 +120,7 @@ class MappingFieldServiceTest extends TestCase
         $this->mapping = new Mapping([
             'input_model' => $this->inputModel->id,
             'output_endpoint' => $this->outputEndpoint->id,
-            'type' => 'route',
-            'route_id' => $this->route->id
+            'processable_id' => $this->processable->id
         ]);
 
         $this->mapping->save();
@@ -153,7 +153,7 @@ class MappingFieldServiceTest extends TestCase
         $this->connection->delete();
         $this->outputModel->delete();
         $this->inputModel->delete();
-        $this->route->delete();
+        $this->processable->delete();
         $this->user->delete();
         $this->role->delete();
 

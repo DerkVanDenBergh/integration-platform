@@ -9,7 +9,7 @@ use App\Services\LogService;
 
 use App\Models\Role;
 use App\Models\StepArgument;
-use App\Models\Route;
+use App\Models\Processable;
 use App\Models\User;
 use App\Models\StepFunction;
 use App\Models\StepFunctionParameter;
@@ -23,7 +23,7 @@ class StepFunctionParameterTest extends TestCase
 
     protected $faker;
     
-    protected $route;
+    protected $processable;
     protected $role;
     protected $user;
     protected $stepFunction;
@@ -61,15 +61,16 @@ class StepFunctionParameterTest extends TestCase
 
         $this->user->save();
 
-        $this->route = new Route([
+        $this->processable = new Processable([
             'title' => $this->faker->text,
             'description' => $this->faker->text,
+            'type_id' => Processable::ROUTE,
             'active' => true,
             'slug' => $this->faker->text,
             'user_id' => $this->user->id
         ]);
         
-        $this->route->save();
+        $this->processable->save();
 
         $this->stepFunction = new StepFunction([
             'name' => $this->faker->text,
@@ -80,7 +81,7 @@ class StepFunctionParameterTest extends TestCase
         $this->stepFunction->save(); 
 
         $this->step = new Step([
-            'processable_id' => $this->route->id,
+            'processable_id' => $this->processable->id,
             'name' => $this->faker->text,
             'step_function_id' => $this->stepFunction->id,
             'order' => 1
@@ -101,7 +102,7 @@ class StepFunctionParameterTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->route->delete();
+        $this->processable->delete();
         $this->stepFunction->delete();
         $this->step->delete();
         $this->parameter->delete();

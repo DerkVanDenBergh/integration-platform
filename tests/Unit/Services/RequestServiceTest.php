@@ -4,10 +4,10 @@ namespace Tests\Unit\Services;
 
 use Tests\TestCase;
 
-use App\Services\HookService;
+use App\Services\RequestService;
 use App\Services\MappingService;
 use App\Services\LogService;
-use App\Services\RouteService;
+use App\Services\ProcessableService;
 use App\Services\DataModelService;
 use App\Services\MappingFieldService;
 use App\Services\DataModelFieldService;
@@ -20,7 +20,7 @@ use App\Models\Role;
 use App\Models\User;
 use App\Models\DataModel;
 use App\Models\DataModelField;
-use App\Models\Route;
+use App\Models\Processable;
 use App\Models\Connection;
 use App\Models\Endpoint;
 use App\Models\Mapping;
@@ -28,13 +28,13 @@ use App\Models\MappingField;
 
 use PDOException; 
 
-class HookServiceTest extends TestCase
+class RequestServiceTest extends TestCase
 {
-    protected $hookService;
+    protected $requestService;
 
     protected $role;
     protected $user;
-    protected $route;
+    protected $processable;
     protected $inputModel;
     protected $outputModel;
     protected $connection;
@@ -53,21 +53,21 @@ class HookServiceTest extends TestCase
 
         // Create needed services
         $logService = new LogService();
-        $this->hookService = new HookService(
-            new RouteService(
-                new MappingService($logService),
-                $logService
-            ),
-            new MappingService($logService),
-            new DataModelService($logService),
-            new MappingFieldService($logService),
-            new DataModelFieldService($logService),
+        $mappingService = new MappingService($logService);
+        $stepService = new StepService(
+            $logService,
+            new StepFunctionService($logService),
+            new StepArgumentService($logService)
+        );
+        $modelService = new DataModelService($logService);
+
+        $this->requestService = new RequestService(
+            $mappingService, 
+            $modelService,
+            new MappingFieldService($logService), 
+            new DataModelFieldService($logService), 
             new EndpointService($logService),
-            new StepService(
-                $logService,
-                new StepFunctionService($logService),
-                new StepArgumentService($logService)
-            )
+            $stepService
         );
 
         // Set up faker
@@ -93,15 +93,16 @@ class HookServiceTest extends TestCase
 
         $this->user->save();
 
-        $this->route = new Route([
+        $this->processable = new Processable([
             'title' => $this->faker->text,
             'description' => $this->faker->text,
+            'type_id' => Processable::ROUTE,
             'active' => true,
             'slug' => $this->faker->text,
             'user_id' => $this->user->id
         ]);
         
-        $this->route->save(); 
+        $this->processable->save(); 
 
         $this->inputModel = new DataModel([
             'title' => $this->faker->text,
@@ -145,8 +146,7 @@ class HookServiceTest extends TestCase
         $this->mapping = new Mapping([
             'input_model' => $this->inputModel->id,
             'output_endpoint' => $this->outputEndpoint->id,
-            'type' => 'route',
-            'route_id' => $this->route->id
+            'processable_id' => $this->processable->id
         ]);
 
         $this->mapping->save();
@@ -188,7 +188,7 @@ class HookServiceTest extends TestCase
         $this->connection->delete();
         $this->outputModel->delete();
         $this->inputModel->delete();
-        $this->route->delete();
+        $this->processable->delete();
         $this->user->delete();
         $this->role->delete();
         $this->mappingField->delete();
@@ -217,7 +217,7 @@ class HookServiceTest extends TestCase
             'unrelevant_field_2' => 'test'
         ];
 
-        $processedModel = $this->hookService->validateInputModel($this->mapping, $data);
+        $processedModel = $this->requestService->validateInputModel($this->mapping, $data);
 
         $targetModel = [
             'relevant_field' => 'test'
@@ -232,7 +232,7 @@ class HookServiceTest extends TestCase
             'relevant_field' => 'test'
         ];
 
-        $processedModel = $this->hookService->fillOutputModel($this->mapping, $data);
+        $processedModel = $this->requestService->fillOutputModel($this->mapping, $data);
 
         $targetModel = [
             'target_field' => 'test'
