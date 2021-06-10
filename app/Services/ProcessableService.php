@@ -15,6 +15,14 @@ use App\Services\StepService;
 
 use App\Jobs\LogProcessable;
 
+use App\Exceptions\ProcessableNotActiveException;
+use App\Exceptions\RequestNotCompatibleWithProcessibleModelException;
+use App\Exceptions\ProcessableDoesNotExistException;
+use App\Exceptions\ProcessableNotAuthorizedException;
+use App\Exceptions\BreakOnStepFunctionException;
+use App\Exceptions\Exception;
+
+
 class ProcessableService
 {
     protected $requestService;
@@ -135,6 +143,10 @@ class ProcessableService
 
     public function validateProcessable($processable) 
     {
+        if(!$processable) {
+            throw new ProcessableDoesNotExistException('processable does not exist.');
+        }
+
         if(!$processable->active) {
             throw new ProcessableNotActiveException('processable is not active.');
         }
@@ -162,8 +174,6 @@ class ProcessableService
 
     public function generateRequest($processable, $request, $mapping)
     {
-        $this->validateProcessable($processable);
-
         if($processable->type_id == $processable::ROUTE) {
             $this->validateAuthentication($processable, $request);
         }
@@ -178,6 +188,8 @@ class ProcessableService
     public function process($processable, $request)
     {
         try {
+            $this->validateProcessable($processable);
+
             $mapping = $this->mappingService->findByProcessableId($processable->id);
 
             $output_model = $this->generateRequest($processable, $request, $mapping);
@@ -185,11 +197,14 @@ class ProcessableService
             $response = $this->requestService->sendModelToEndpoint($output_model, $mapping);
 
             LogProcessable::dispatchAfterResponse($processable, 'processable', 'success', json_encode($request), json_encode($response->json()), $this->logService, $this->runService);
-        } catch (BreakOnStepFunctionException | ProcessableNotActiveException $e){
+        } catch (ProcessableDoesNotExistException $e) {
+            $response =  response()->json(['status' => 'processable does not exist'], 400);
+
+        } catch (BreakOnStepFunctionException | ProcessableNotActiveException $e) {
             $response =  response()->json(['status' => 'aborted'], 200);
 
             LogProcessable::dispatchAfterResponse($processable, 'processable', 'aborted', json_encode($request), 'error: ' . $e->getMessage(), $this->logService, $this->runService);
-        } catch (ProcessableNotAuthorizedException $e){
+        } catch (ProcessableNotAuthorizedException $e) {
             $response =  response()->json(['status' => $e->getMessage()], 403);
 
             LogProcessable::dispatchAfterResponse($processable, 'processable', 'failure', json_encode($request), 'error: ' . $e->getMessage(), $this->logService, $this->runService);

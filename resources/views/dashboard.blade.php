@@ -6,10 +6,14 @@
     <div class="py-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 grid grid-cols-2 gap-6">
 
-            <x-views.components.dashboard-card :caption="__('Check \'em out')" :link="__('/users')" :span="__(2)"> 'mostActiveUser', 'amountOfRoutes', 'amountOfTasks', 'mostActiveProcessable'
+            <x-views.components.dashboard-card :caption="__('Check \'em out')" :link="__('/users')" :span="__(2)">
                 
                 <x-slot name="title">
-                    {{ $mostActiveUser }}
+                    @if(isset($mostActiveUser))
+                        {{ $mostActiveUser->name }}
+                    @else
+                        No users have had activity!
+                    @endif
                 </x-slot>
 
                 <x-slot name="description">
@@ -45,7 +49,11 @@
             <x-views.components.dashboard-card :caption="__('Configure')" :link="__('/routes')" :span="__(2)">
 
                 <x-slot name="title">
-                    {{ $mostActiveProcessable }}
+                    @if(isset($mostActiveProcessable))
+                        {{ $mostActiveProcessable->title }}
+                    @else
+                        No processables have had activity!
+                    @endif
                 </x-slot>
 
                 <x-slot name="description">
