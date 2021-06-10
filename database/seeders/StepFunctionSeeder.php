@@ -40,7 +40,7 @@ class StepFunctionSeeder extends Seeder
             'Parse JSON', 
             'Parse a JSON string into a variable.',
             'parse_json',
-            true
+            false
         ));
 
         $parse_json->save();
