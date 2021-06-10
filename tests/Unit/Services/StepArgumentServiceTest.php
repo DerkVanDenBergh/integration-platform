@@ -146,7 +146,7 @@ class StepArgumentServiceTest extends TestCase
         $stepArgument = $this->createTestEntity();
         
         $stepArgument = $this->stepArgumentService->update([
-            'value' => null
+            'parameter_id' => null
         ], $stepArgument);
     }
 
