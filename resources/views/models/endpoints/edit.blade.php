@@ -19,7 +19,7 @@
 
                     <x-forms.components.attribute :span="__(2)" :type="__('text')" :label="__('Name')" :name="__('title')" :value="$endpoint->title" :required="__(true)"/>
 
-                    <x-forms.components.attribute :span="__(2)" :type="__('select')" :label="__('Authentication')" :name="__('authentication_id')" :optionValue="__('id')" :optionLabel="__('title')" :options="$authentications" :required="__(true)" :selected="$endpoint->authentication_id"/>
+                    <x-forms.components.attribute :span="__(2)" :type="__('select')" :label="__('Authentication')" :name="__('authentication_id')" :optionValue="__('id')" :optionLabel="__('title')" :options="$authentications" :selected="$endpoint->authentication_id"/>
 
                     <x-forms.components.attribute :span="__(2)" :type="__('text')" :label="__('Endpoint')" :name="__('endpoint')" :value="$endpoint->endpoint" :required="__(true)"/>
 

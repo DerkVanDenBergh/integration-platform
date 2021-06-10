@@ -175,7 +175,7 @@ class RequestService
 
                     // Now you don't need to add the auth parameter
                     $url = '?' . http_build_query(self::rawurlencode_array($model));
-                    $model = null;
+                    $model = [];
 
                     break;
                 case "TOKEN":
