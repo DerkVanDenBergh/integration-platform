@@ -188,23 +188,23 @@ class RequestService
 
         switch(strtoupper($endpoint->method)) {
             case "GET":
-                $response = $client->get($url, $model);
+                $model ? $response = $client->get($url, $model) : $response = $client->get($url);
                 break;
 
             case "POST":
-                $response = $client->post($url, $model);
+                $model ? $response = $client->post($url, $model) : $response = $client->post($url);
                 break;
 
             case "PUT":
-                $response = $client->put($url, $model);
+                $model ? $response = $client->put($url, $model) : $response = $client->put($url);
                 break;
 
             case "DELETE":
-                $response = $client->delete($url, $model);
+                $model ? $response = $client->delete($url, $model) : $response = $client->delete($url);
                 break;
 
             default:
-                $response = $client->get($url, $model);
+                $model ? $response = $client->get($url, $model) : $response = $client->get($url);
         }
         
         return $response;
